@@ -4,7 +4,6 @@ import { StyleSheet, StatusBar, View } from 'react-native'
 const RootLayout = () => {
   return (
     
-    // <StatusBar style="auto" />
       <View style={{ flex: 1 }}>
         <Stack>
           <Stack.Screen name='index' options={{ title: 'Home' }} />
@@ -16,16 +15,7 @@ const RootLayout = () => {
       </View>
   )
 }
-/* 
-Stack:
-  |
-  |
-  |eventDetails
-  |publicEventPage
-  |createEvent
-  |index
--------------
-*/
+
 export default RootLayout
 
 const styles = StyleSheet.create({
