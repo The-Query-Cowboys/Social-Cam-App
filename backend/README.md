@@ -76,7 +76,7 @@ this was written by Oscar/Rafal, covers seeding, prisma and stuff
 
 https://docs.google.com/document/d/1gDW7A42dLiJrkxSDA8zimhaLvciTx3NLtOvG4Mo4puk/edit?pli=1&tab=t.0
 
-this written by kakwai, covers appwrite example, **written in node, please change to TS**
+this written by kakai, covers appwrite example, **written in node, please change to TS**
 
 ```
 //imports and stuff
@@ -85,12 +85,15 @@ import { Client, Storage, ID } from "appwrite";
 import { InputFile } from "node-appwrite/file"
 
 //This is a free tier app write account.  The cloud can be access via the link below
-//https://cloud.appwrite.io/console/project-kc2423342123/storage/bucket-67f6dd13001c966c1c51
+//https://cloud.appwrite.io/console/project-67f8f680002b6a18bfc3/storage
 //It has project id and a bucket id, pictures have their own id
 
+//useremail: randomguy1234@gmail.com
+//password: randomguy1234.
+
 const APIEndpoint = 'https://cloud.appwrite.io/v1'
-const projectId = 'kc2423342123'
-const bucketId = '67f6dd13001c966c1c51'
+const projectId = '67f8f680002b6a18bfc3'
+const bucketId = '67f8f69b003be8ed659d'
 
 //create new instances of client and storage
 const client = new Client();
