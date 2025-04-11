@@ -1,9 +1,4 @@
-import {config} from 'dotenv';
-import { PrismaClient, Prisma } from '@prisma/client'
-
-config({path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env'});
-
-const prisma = new PrismaClient()
+import { prisma } from "./prisma-client";
 
 export async function seedTestDatabase() {
     //deletes everything under user
