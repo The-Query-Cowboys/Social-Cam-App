@@ -1,98 +1,145 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# installation
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+npm i -g @nestjs/cli
+npm install
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+# create project, only if first time prisma project **This has already be done and can be skipped for this**
+nest new prisma
 
-## Description
+# create config files, only if first time prisma project **This has already be done and can be skipped for this**
+npx prisma init
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This creates a folder "prisma" and a schema.prisma file
 
-## Project setup
+please update prisma file with connection **this is done for this project**
 
-```bash
-$ npm install
-```
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  relationMode = "prisma"
+  directUrl = env("DIRECT_URL")
+}
 
-## Compile and run the project
+generator client {
+  provider = "prisma-client-js"
+}
 
-```bash
-# development
-$ npm run start
+# please create a .env file under "BACKEND", add these 2 lines.
 
-# watch mode
-$ npm run start:dev
+DATABASE_URL="postgresql://postgres.qldazwkczfyhhcxwwxly:BabaMghtdfs@aws-0-eu-west-2.pooler.supabase.com:6543/postgres?pgbouncer=true"
+DIRECT_URL="postgresql://postgres.qldazwkczfyhhcxwwxly:BabaMghtdfs@aws-0-eu-west-2.pooler.supabase.com:5432/postgres"
 
-# production mode
-$ npm run start:prod
-```
+# where is what
 
-## Run tests
+prisma/schema.prisma -- contains the database connector, and table schemas
+prisma/seed.ts -- this one has the whole data stuff
+cloud -- folder will have all the cloud stuff to appwrite
+src/app.service.ts and app.controller.ts -- these ones will be for the API
 
-```bash
-# unit tests
-$ npm run test
+# how to run
 
-# e2e tests
-$ npm run test:e2e
+this will connect to the db and create tables
+npx prisma migrate dev --name init
 
-# test coverage
-$ npm run test:cov
-```
+This will run the seeding(deletes/inserts and stuff)
+npx ts-node prisma/seed.ts
 
-## Deployment
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+# useful links
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Our supabase database link is
+https://supabase.com/dashboard/project/qldazwkczfyhhcxwwxly/editor
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+Our appwrite (CLOUD) link is
+https://cloud.appwrite.io/console/project-kc2423342123/storage
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+# tutorials
+this was written by Oscar/Rafal, covers seeding, prisma and stuff
+https://docs.google.com/document/d/1gDW7A42dLiJrkxSDA8zimhaLvciTx3NLtOvG4Mo4puk/edit?pli=1&tab=t.0
 
-## Resources
+this written by kakwai, covers appwrite example, **written in node, please change to TS**
 
-Check out a few resources that may come in handy when working with NestJS:
+//imports and stuff
+//need to run npm i appwrite node-appwrite
+import { Client, Storage, ID } from "appwrite";
+import { InputFile } from "node-appwrite/file"
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+//This is a free tier app write account.  The cloud can be access via the link below
+//https://cloud.appwrite.io/console/project-kc2423342123/storage/bucket-67f6dd13001c966c1c51
+//It has project id and a bucket id, pictures have their own id
 
-## Support
+const APIEndpoint = 'https://cloud.appwrite.io/v1'
+const projectId = 'kc2423342123'
+const bucketId = '67f6dd13001c966c1c51'
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+//create new instances of client and storage
+const client = new Client();
+const storage = new Storage(client);
 
-## Stay in touch
+client
+    .setEndpoint(APIEndpoint) // Your API Endpoint
+    .setProject(projectId) // Your project ID
+;
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+//****************************************************
+//now, here is how to do the various add,list,deletes, etc
+//this is asynchronous process! please bearthat in mind when developing
+//****************************************************
 
-## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+//to save a file
+const savePromise = storage.createFile(
+    bucketId,
+    ID.unique(), //this thing generates a unique id that it stores it with!
+    InputFile.fromPath("./images/marker.png", "marker.png" ) //this one is the input file
+)
+
+let newFile = ""
+
+savePromise.then(function (response) {
+    console.log(response, "<< file saved")
+    const newFileId = response.$id
+    console.log(newFileId, "<<newFile id")
+}, function (error) {
+    console.log(error), "<< failed to save"
+})
+
+
+
+//to get whole file back
+
+const randomTestPicture = "67f78edf0037471b9f60"
+const promise = storage.getFile(bucketId, randomTestPicture);
+
+promise.then(function (response) {
+    console.log(response); // Success
+}, function (error) {
+    console.log(error); // Failure
+});
+
+//to view file url! this is probably what we want
+const result = storage.getFileView('bucketId', randomTestPicture)
+
+console.log(result, "<<image url")
+
+
+//to list files in a bucket
+
+const files = await storage.listFiles(
+    bucketId
+    //,[] quesries (optional)
+    //, "<SEARCH>" search (optional)
+)
+
+console.log(files, "<<< files")
+
+//to delete file
+
+const deleteFileResult = await storage.deleteFile(
+    bucketId,
+    "67f8d8b8003aafb59bf5"
+)
+
+console.log(deleteFileResult, "<<deleted file")
+
