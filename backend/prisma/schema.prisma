@@ -5,10 +5,10 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
   relationMode = "prisma"
-  directUrl = env("DIRECT_URL")
+  directUrl    = env("DIRECT_URL")
 }
 
 generator client {
@@ -18,13 +18,78 @@ generator client {
 // Add db tables below here as models
 // Once you've added tables run npx prisma migrate dev --name init
 
-
 model User {
- user_id Int @id @default(autoincrement())
- username String
- nickname String
- description String
- password String
- avatar_url String
- email String
+  user_id     Int         @id @default(autoincrement())
+  username    String
+  nickname    String
+  description String
+  password    String
+  avatar_url  String
+  email       String
+  UserEvent   UserEvent[]
+}
+
+model UserEvent {
+  userEvent_id Int @id @default(autoincrement())
+  event_id     Int
+  user_id      Int
+  status_id    Int
+
+  //Foreign keys
+  event  Event      @relation(fields: [event_id], references: [event_id])
+  user   User       @relation(fields: [user_id], references: [user_id])
+  status UserStatus @relation(fields: [status_id], references: [status_id])
+}
+
+model UserStatus {
+  status_id Int         @id @default(autoincrement())
+  status    String
+  UserEvent UserEvent[]
+}
+
+model Event {
+  event_id          Int         @id @default(autoincrement())
+  event_owner_id    Int
+  event_title       String
+  event_description String
+  event_image_url   String
+  album_id          Int
+  event_date        DateTime    @default(now())
+  event_location    String
+  private           Boolean
+  UserEvent         UserEvent[]
+  Comment           Comment[]
+}
+
+model Comment {
+  comment_id Int    @id @default(autoincrement())
+  event_id   Int
+  comment    String
+  Votes      Int
+
+  //Foreign keys
+  event Event @relation(fields: [event_id], references: [event_id])
+}
+
+model Album {
+  album_id   Int       @id @default(autoincrement())
+  album_name String    @db.VarChar(30)
+  Picture    Picture[]
+}
+
+model Picture {
+  album_id    Int
+  picture_id  Int    @id @default(autoincrement())
+  picture_url String @db.VarChar(100)
+  type_id     Int
+
+  //Foreign keys
+  album Album       @relation(fields: [album_id], references: [album_id])
+  type  PictureType @relation(fields: [type_id], references: [type_id])
+}
+
+model PictureType {
+  type_id Int       @id @default(autoincrement())
+  type    String    @db.VarChar(30)
+  Picture Picture[]
 }
