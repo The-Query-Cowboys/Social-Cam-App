@@ -1,18 +1,26 @@
 # installation
 
+```
 npm i -g @nestjs/cli
 npm install
+```
 
-# create project, only if first time prisma project **This has already be done and can be skipped for this**
-nest new prisma
+# create project 
+** only if first time prisma project This has already be done and can be skipped for this **
 
-# create config files, only if first time prisma project **This has already be done and can be skipped for this**
-npx prisma init
+```nest new prisma```
+
+# create config files, only if first time prisma project 
+
+** This has already be done and can be skipped for this **
+
+```npx prisma init```
 
 This creates a folder "prisma" and a schema.prisma file
 
 please update prisma file with connection **this is done for this project**
 
+```
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -23,42 +31,54 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+```
 
 # please create a .env file under "BACKEND", add these 2 lines.
 
+```
 DATABASE_URL="postgresql://postgres.qldazwkczfyhhcxwwxly:BabaMghtdfs@aws-0-eu-west-2.pooler.supabase.com:6543/postgres?pgbouncer=true"
 DIRECT_URL="postgresql://postgres.qldazwkczfyhhcxwwxly:BabaMghtdfs@aws-0-eu-west-2.pooler.supabase.com:5432/postgres"
+```
 
 # where is what
 
 prisma/schema.prisma -- contains the database connector, and table schemas
+
 prisma/seed.ts -- this one has the whole data stuff
+
 cloud -- folder will have all the cloud stuff to appwrite
+
 src/app.service.ts and app.controller.ts -- these ones will be for the API
 
 # how to run
 
 this will connect to the db and create tables
-npx prisma migrate dev --name init
+
+```npx prisma migrate dev --name init```
 
 This will run the seeding(deletes/inserts and stuff)
-npx ts-node prisma/seed.ts
+
+```npx ts-node prisma/seed.ts```
 
 
 # useful links
 
 Our supabase database link is
+
 https://supabase.com/dashboard/project/qldazwkczfyhhcxwwxly/editor
 
 Our appwrite (CLOUD) link is
+
 https://cloud.appwrite.io/console/project-kc2423342123/storage
 
 # tutorials
 this was written by Oscar/Rafal, covers seeding, prisma and stuff
+
 https://docs.google.com/document/d/1gDW7A42dLiJrkxSDA8zimhaLvciTx3NLtOvG4Mo4puk/edit?pli=1&tab=t.0
 
 this written by kakwai, covers appwrite example, **written in node, please change to TS**
 
+```
 //imports and stuff
 //need to run npm i appwrite node-appwrite
 import { Client, Storage, ID } from "appwrite";
@@ -143,3 +163,4 @@ const deleteFileResult = await storage.deleteFile(
 
 console.log(deleteFileResult, "<<deleted file")
 
+```
