@@ -24,7 +24,7 @@ model User {
   nickname    String
   description String
   password    String
-  avatar_url  String
+  storage_id  String
   email       String
   UserEvent   UserEvent[]
 }
@@ -52,7 +52,7 @@ model Event {
   event_owner_id    Int
   event_title       String
   event_description String
-  event_image_url   String
+  storage_id        String
   album_id          Int
   event_date        DateTime    @default(now())
   event_location    String
@@ -65,7 +65,6 @@ model Comment {
   comment_id Int    @id @default(autoincrement())
   event_id   Int
   comment    String
-  Votes      Int
 
   //Foreign keys
   event Event @relation(fields: [event_id], references: [event_id])
@@ -80,7 +79,7 @@ model Album {
 model Picture {
   album_id    Int
   picture_id  Int    @id @default(autoincrement())
-  picture_url String @db.VarChar(100)
+  storage_id String @db.VarChar(100)
   type_id     Int
 
   //Foreign keys
