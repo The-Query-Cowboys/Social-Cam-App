@@ -65,6 +65,7 @@ model Comment {
   comment_id Int    @id @default(autoincrement())
   event_id   Int
   comment    String
+  votes      Int
 
   //Foreign keys
   event Event @relation(fields: [event_id], references: [event_id])
