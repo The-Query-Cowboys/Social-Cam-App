@@ -84,7 +84,7 @@ this was written by Oscar/Rafal, covers seeding, prisma and stuff
 
 https://docs.google.com/document/d/1gDW7A42dLiJrkxSDA8zimhaLvciTx3NLtOvG4Mo4puk/edit?pli=1&tab=t.0
 
-this written by kakai, covers appwrite example, **written in node, please change to TS**
+this written by kawai, covers appwrite example, **written in node, please change to TS**
 
 ```
 //imports and stuff

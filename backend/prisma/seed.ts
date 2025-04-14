@@ -50,7 +50,7 @@ export async function seedTestDatabase() {
     ];
 
     //Insert test data into users table
-    await prisma.user.createMany({ data: users});
+    await prisma.user.createMany({ data: users });
 
     const events = [
         {
@@ -75,7 +75,7 @@ export async function seedTestDatabase() {
         }
     ]
 
-    await prisma.event.createMany({data: events});
+    await prisma.event.createMany({ data: events });
 
     const pictures = [
         {
@@ -95,7 +95,7 @@ export async function seedTestDatabase() {
         }
     ]
 
-    await prisma.picture.createMany({data: pictures});
+    await prisma.picture.createMany({ data: pictures });
 
     const albums = [
         {
@@ -106,7 +106,7 @@ export async function seedTestDatabase() {
         }
     ]
 
-    await prisma.album.createMany({data: albums})
+    await prisma.album.createMany({ data: albums })
 
     const userEvents = [
         {
@@ -141,37 +141,40 @@ export async function seedTestDatabase() {
         },
     ]
 
-    await prisma.userEvent.createMany({data: userEvents});
+    await prisma.userEvent.createMany({ data: userEvents });
 
     const userStatuses = [
-        {status: "invited"},
-        {status: "attending"},
-        {status: "attended"}
+        { status: "invited" },
+        { status: "attending" },
+        { status: "attended" }
     ]
 
-    await prisma.userStatus.createMany({data: userStatuses});
+    await prisma.userStatus.createMany({ data: userStatuses });
 
     const pictureTypes = [
-        {type: "event"},
-        {type: "profile"},
-        {type: "album"}
+        { type: "event" },
+        { type: "profile" },
+        { type: "album" }
     ]
 
-    await prisma.pictureType.createMany({data: pictureTypes});
+    await prisma.pictureType.createMany({ data: pictureTypes });
 
     const comments = [
         {
             event_id: 1,
             comment: "Looking forward to it",
             user_id: 2,
-            comment_date: "2025-04-14T10:00:00Z"
+            comment_date: "2025-04-14T10:00:00Z",
+            votes: 4
         },
         {
             event_id: 2,
             comment: "Test comment",
-            user_id: 1
+            user_id: 1,
+            comment_date: "2025-04-14T10:00:00Z",
+            votes: 4
         }
     ]
 
-    await prisma.comment.createMany({data: comments})
+    await prisma.comment.createMany({ data: comments })
 }
