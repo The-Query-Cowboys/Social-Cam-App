@@ -56,6 +56,7 @@ model Event {
   album_id          Int
   event_date        DateTime    @default(now())
   event_date_end    DateTime    @default(now())
+  album_release_time Int   @default(0)
   event_location    String
   private           Boolean
   UserEvent         UserEvent[]
