@@ -1,26 +1,38 @@
 import '../global.css'
 import { Stack } from 'expo-router'
-import { StyleSheet, StatusBar, View,Text } from 'react-native'
+import { StyleSheet, StatusBar, View, Text } from 'react-native'
+import { ThemeProvider, useTheme } from './context/ThemeContext'
 
 const RootLayout = () => {
   return (
-        <Stack screenOptions={{
+    <ThemeProvider>
+      <LayoutContent />
+    </ThemeProvider>
+  )
+}
 
-          headerStyle:{backgroundColor:'#ddd'},
-          headerTintColor:'#333',
-        }
-        }>
-          <Stack.Screen name='index' options={{ title: 'Home' }} />
-          <Stack.Screen name='eventDetails' options={{ title: 'Event Details' }} />
-          <Stack.Screen name='publicEventPage' options={{ title: 'All Events nearby' }} />
-          <Stack.Screen name='createEvent' options={{ title: 'Create new event' }} />
-          <Stack.Screen name='logInPage' options={{ title: 'Login' }} />
-        </Stack>
+const LayoutContent = () => {
+  const { isDarkMode } = useTheme();
+
+  return (
+    <Stack screenOptions={{
+      headerStyle: {
+        backgroundColor: isDarkMode ? '#1a1a1a' : '#ddd',
+      },
+      headerTintColor: isDarkMode ? '#fff' : '#333',
+      contentStyle: {
+        backgroundColor: isDarkMode ? '#000' : '#fff',
+      },
+    }}>
+      <Stack.Screen name='index' options={{ title: 'Home' }} />
+      <Stack.Screen name='eventDetails' options={{ title: 'Event Details' }} />
+      <Stack.Screen name='publicEventPage' options={{ title: 'Events nearby' }} />
+      <Stack.Screen name='createEvent' options={{ title: 'Create new event' }} />
+      <Stack.Screen name='logInPage' options={{ title: 'Login' }} />
+    </Stack>
   )
 }
 
 export default RootLayout
 
-const styles = StyleSheet.create({
-
-})
+const styles = StyleSheet.create({})
