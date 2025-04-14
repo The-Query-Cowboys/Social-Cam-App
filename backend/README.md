@@ -40,6 +40,12 @@ DATABASE_URL="postgresql://postgres.qldazwkczfyhhcxwwxly:BabaMghtdfs@aws-0-eu-we
 DIRECT_URL="postgresql://postgres.qldazwkczfyhhcxwwxly:BabaMghtdfs@aws-0-eu-west-2.pooler.supabase.com:5432/postgres"
 ```
 
+For local testing db also create ``.env.test``:
+```
+DATABASE_URL="postgresql://[username]:[password]@localhost:5432/social_cam_test?schema=public"
+DIRECT_URL="postgresql://[username]:[password]@localhost:5432/social_cam_test"
+```
+
 # where is what
 
 prisma/schema.prisma -- contains the database connector, and table schemas
