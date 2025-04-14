@@ -60,6 +60,7 @@ export async function seedTestDatabase() {
             storage_id: "67f937f70039b87ada61",
             album_id: 1,
             event_date: "2025-04-25T14:00:00Z",
+            event_date_end: "2025-04-25T17:00:00Z",
             event_location: "Manchester",
             private: true,
         },
