@@ -66,6 +66,8 @@ model Comment {
   event_id   Int
   comment    String
   votes      Int
+  user_id   Int
+  comment_date DateTime @default(now())
 
   //Foreign keys
   event Event @relation(fields: [event_id], references: [event_id])
