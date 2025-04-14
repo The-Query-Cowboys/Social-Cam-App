@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Image } from 'react-native'
 import { Link } from 'expo-router'
 
-import icon from '../assets/images/favicon.png'
+import icon from '../assets/favicon.png'
 import React from 'react'
 
 const Home = () => {
