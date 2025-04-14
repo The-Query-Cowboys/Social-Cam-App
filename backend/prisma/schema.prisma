@@ -23,7 +23,7 @@ model User {
   username    String
   nickname    String
   description String
-  password    String
+  auth_id     String
   storage_id  String
   email       String
   UserEvent   UserEvent[]
