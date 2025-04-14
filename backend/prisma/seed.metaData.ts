@@ -11,7 +11,7 @@ export async function seedUserStatusDatabase() {
     const userStatuses = [
         {"status": 'invited'},
         {"status": 'attending'},
-        {"status": 'atended'}
+        {"status": 'attended'}
     ]
 
    // Perform the insert
