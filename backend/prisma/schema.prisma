@@ -56,6 +56,7 @@ model Event {
   album_id          Int
   event_date        DateTime    @default(now())
   event_date_end    DateTime    @default(now())
+  album_delay       Int         @default(0)
   event_location    String
   private           Boolean
   UserEvent         UserEvent[]
@@ -66,7 +67,7 @@ model Comment {
   comment_id Int    @id @default(autoincrement())
   event_id   Int
   comment    String
-  votes      Int
+  votes      Int    @default(0)
   user_id   Int
   comment_date DateTime @default(now())
 

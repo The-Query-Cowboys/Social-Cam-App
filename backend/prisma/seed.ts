@@ -164,14 +164,12 @@ export async function seedTestDatabase() {
             event_id: 1,
             comment: "Looking forward to it",
             user_id: 2,
-            comment_date: "2025-04-14T10:00:00Z",
-            votes: 0
+            comment_date: "2025-04-14T10:00:00Z"
         },
         {
             event_id: 2,
             comment: "Test comment",
-            user_id: 1,
-            votes: 0
+            user_id: 1
         }
     ]
 
