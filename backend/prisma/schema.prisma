@@ -67,7 +67,7 @@ model Comment {
   comment_id Int    @id @default(autoincrement())
   event_id   Int
   comment    String
-  votes      Int
+  votes      Int    @default(0)
   user_id   Int
   comment_date DateTime @default(now())
 
