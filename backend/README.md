@@ -50,6 +50,8 @@ DIRECT_URL="postgresql://[username]:[password]@localhost:5432/social_cam_test"
 
 prisma/schema.prisma -- contains the database connector, and table schemas
 
+
+
 prisma/seed.ts -- this one has the whole data stuff
 
 cloud -- folder will have all the cloud stuff to appwrite
@@ -62,9 +64,9 @@ this will connect to the db and create tables
 
 ```npx prisma migrate dev --name init```
 
-This will run the seeding(deletes/inserts and stuff)
+This will run the seeding into metadata
 
-```npx ts-node prisma/seed.ts```
+```npx ts-node prisma/seed.metaData.ts```
 
 
 # useful links
