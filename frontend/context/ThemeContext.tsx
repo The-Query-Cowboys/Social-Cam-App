@@ -31,4 +31,4 @@ const useTheme = () => {
   return context;
 }; 
 
-export useTheme
+export  {useTheme,ThemeProvider}

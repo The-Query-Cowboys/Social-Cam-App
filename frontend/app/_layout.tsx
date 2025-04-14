@@ -1,7 +1,7 @@
 import '../global.css'
 import { Stack } from 'expo-router'
 import { StyleSheet, StatusBar, View, Text } from 'react-native'
-import { ThemeProvider, useTheme } from './context/ThemeContext'
+import { ThemeProvider, useTheme } from '../context/ThemeContext'
 
 const RootLayout = () => {
   return (
