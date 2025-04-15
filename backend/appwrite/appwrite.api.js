@@ -1,6 +1,8 @@
 //imports
 import { Client, Storage, ID } from "appwrite";
 import { InputFile } from "node-appwrite/file"
+import * as dotenv from 'dotenv'
+dotenv.config()
 
 //create new instances of client and storage
 const client = new Client();
