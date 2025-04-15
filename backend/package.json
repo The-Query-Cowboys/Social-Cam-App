@@ -21,16 +21,21 @@
     "seed": "ts-node prisma/runSeed.ts",
     "setup-test-db": "psql -f ./prisma/setup-local-db.sql",
     "push:test": "dotenv -e .env.test -- prisma db push",
-    "seed:test": "dotenv -e .env.test ts-node prisma/runSeed.ts"
+    "seed:test": "dotenv -e .env.test ts-node prisma/runSeed.ts",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@blazity/nest-file-fastify": "^1.0.0",
+    "@fastify/multipart": "^9.0.3",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/platform-fastify": "^11.0.15",
     "@prisma/client": "^6.6.0",
+    "appwrite": "^17.0.1",
     "dotenv": "^16.5.0",
+    "node-appwrite": "^15.0.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },

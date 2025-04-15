@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { User, Prisma } from '@prisma/client';
+import { appwriteSave, appwriteGetImageUrl, appwriteGetFile, appwriteDeleteFile } from 'appwrite/appwrite.api'
 
 @Injectable()
 export class UsersService {
@@ -11,7 +12,7 @@ export class UsersService {
         return this.prisma.user.findMany()
     }
 
-    async getUserById(userId): Promise<User| null> {
+    async getUserById(userId): Promise<User | null> {
         return this.prisma.user.findUnique({ where: { user_id: userId } })
     }
 
@@ -43,7 +44,43 @@ export class UsersService {
         }
     }
 
-    async createUser(userData): Promise<User| null> {
-        return this.prisma.user.create({data: userData})
+    async updateUserById(userId, userData): Promise<User | null> {
+        return this.prisma.user.update({
+            where: { 
+                user_id: userId 
+            },
+            data: {
+                nickname: userData.nickname,
+                description: userData.description,
+                auth_id: userData.auth_id,
+                email: userData.email,
+                storage_id: userData.storage_id
+            }
+        })
+    }
+
+    async createUser(userData): Promise<User | null> {
+        return this.prisma.user.create({ data: userData })
+    }
+
+    //saves an image into appwrite
+    async saveImage(file) {
+        const newFileId = await appwriteSave(file)
+        return newFileId
+    }
+
+    //returns an imageurl
+    async getImageURL(image_id) {
+        return appwriteGetImageUrl(image_id)
+    }
+
+    //returns a image file
+    async getFile(image_id) {
+        return appwriteGetFile(image_id)
+    }
+
+    //delete a image file
+    async deleteFile(image_id) {
+        return appwriteDeleteFile(image_id)
     }
 }

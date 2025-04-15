@@ -1,21 +1,25 @@
-import { Controller, Get, Param, ParseIntPipe, Query, Body, Post } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Query, Body, Post, UseInterceptors, Patch } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { Prisma } from '@prisma/client';
+import { FileInterceptor, UploadedFile, MemoryStorageFile } from '@blazity/nest-file-fastify';
+
 
 @Controller('/api/users')
 export class UsersController {
   constructor(private readonly appService: UsersService) { }
 
+  //get all users
   @Get('')
   getAllUsers() {
     return this.appService.getAllUsers();
   }
 
+  //get one user
   @Get(':user_id')
   getOneUser(@Param('user_id', ParseIntPipe) user_id: number) {
     return this.appService.getUserById(user_id);
   }
 
+  //get all events for that user id
   @Get(':user_id/events')
   getUserEvents(@Param('user_id', ParseIntPipe) user_id: number, @Query('status') status) {
     if (status) {
@@ -27,10 +31,43 @@ export class UsersController {
     }
   }
 
-  @Post() 
+  //save a new user
+  @Post()
+  @UseInterceptors(FileInterceptor('file'))
   async createUser(
-    @Body() userData: { username: string; nickname: string; description: string; auth_id: string; storage_id: string; email: string; }) 
-    { 
-      return this.appService.createUser(userData);  
+    @UploadedFile() file: MemoryStorageFile,
+    @Body() userData: { username: string; nickname: string; description: string; auth_id: string; email: string; }
+  ) {
+    return this.appService.saveImage(file)
+      .then((newImageId) => {
+        if (newImageId.length > 0) {
+          userData["storage_id"] = newImageId
+          return this.appService.createUser(userData)
+        }
+      })
+  }
+
+  //patch a user.  Things that can change are nickname, description, auth_id, email and profile picture
+  //deletes old profile picture and assign new one
+  @Patch('/:user_id')
+  @UseInterceptors(FileInterceptor('file'))
+  async patchUser(
+    @Param('user_id', ParseIntPipe) user_id: number,
+    @UploadedFile() file: MemoryStorageFile,        //undefined if no picture is passed
+    @Body() userData: { username: string; nickname: string; description: string; auth_id: string; email: string; }    //this is new user data 
+  ) {
+    //if there is a new profile picture, we need to replace it
+    const currentUser = await this.appService.getUserById(user_id)
+
+    if (file !== undefined) {
+      userData["storage_id"] = await this.appService.saveImage(file)
+      await this.appService.deleteFile(currentUser?.storage_id)
     }
+    else {
+      userData["storage_id"] = currentUser?.storage_id
+    }
+
+    //update user
+    return this.appService.updateUserById(user_id, userData)
+  }
 }
