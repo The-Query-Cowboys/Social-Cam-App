@@ -10,10 +10,15 @@ import {
 } from '@nestjs/common';
 import { EventsService } from './events.service';
 
-@Controller('events')
+@Controller('/api/events')
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
+  @Get()
+  async fetchEvents() {
+    console.log('getting events in controller');
+    return this.eventsService.fetchEvents();
+  }
   @Post()
   async createEvent(
     @Body()
