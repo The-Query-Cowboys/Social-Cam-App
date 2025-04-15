@@ -9,4 +9,9 @@ export class PicturesController {
     getPicture(@Param('picture_id', ParseIntPipe) picture_id: number) {
         return this.appService.getPictureById(picture_id);
     }
+
+    @Get('album/:album_id')
+    getAlbumPictures(@Param('album_id', ParseIntPipe) album_id: number) {
+        return this.appService.getAllAlbumPictures(album_id);
+    }
 }
