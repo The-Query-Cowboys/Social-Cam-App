@@ -1,40 +1,42 @@
-import { Injectable } from '@nestjs/common';
+import { appwriteSave, appwriteGetImageUrl, appwriteGetFile, appwriteDeleteFile } from 'appwrite/appwrite.api'
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { User, Prisma } from '@prisma/client';
-import { appwriteSave, appwriteGetImageUrl, appwriteGetFile, appwriteDeleteFile } from 'appwrite/appwrite.api'
 
 @Injectable()
 export class UsersService {
-
     constructor(private prisma: PrismaService) { }
 
     async getAllUsers(): Promise<User[]> {
-        return this.prisma.user.findMany()
+        return this.prisma.user.findMany();
     }
 
     async getUserById(userId): Promise<User | null> {
-        return this.prisma.user.findUnique({ where: { user_id: userId } })
+        const user = await this.prisma.user.findUnique({
+            where: { user_id: userId },
+        });
+        if (!user) {
+            throw new NotFoundException(`User_id ${userId} was not found`);
+        }
+        return user;
     }
 
     async getUserEvents(userId: number, statusQuery?: number[]) {
         if (statusQuery) {
             return this.prisma.event.findMany({
                 where: {
-                    UserEvent:
-                    {
+                    UserEvent: {
                         some: {
                             user_id: userId,
-                            status_id: { in: statusQuery }
+                            status_id: { in: statusQuery },
                         },
                     },
                 },
             });
-        }
-        else {
+        } else {
             return this.prisma.event.findMany({
                 where: {
-                    UserEvent:
-                    {
+                    UserEvent: {
                         some: {
                             user_id: userId,
                         },
@@ -44,10 +46,14 @@ export class UsersService {
         }
     }
 
+    async createUser(userData): Promise<User | null> {
+        return this.prisma.user.create({ data: userData });
+    }
+
     async updateUserById(userId, userData): Promise<User | null> {
         return this.prisma.user.update({
-            where: { 
-                user_id: userId 
+            where: {
+                user_id: userId
             },
             data: {
                 nickname: userData.nickname,
@@ -57,10 +63,6 @@ export class UsersService {
                 storage_id: userData.storage_id
             }
         })
-    }
-
-    async createUser(userData): Promise<User | null> {
-        return this.prisma.user.create({ data: userData })
     }
 
     //saves an image into appwrite and returns image id
