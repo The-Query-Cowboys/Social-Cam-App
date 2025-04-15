@@ -7,8 +7,12 @@ import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
 @QueueEventsListener('notifications')
-export class NotificationQueueEvents {
+export class NotificationQueueEvents extends QueueEventsHost {
   private readonly logger = new Logger(NotificationQueueEvents.name);
+
+  constructor() {
+    super();
+  }
 
   @OnQueueEvent('completed')
   onCompleted(job: { jobId: string; returnvalue: any }) {

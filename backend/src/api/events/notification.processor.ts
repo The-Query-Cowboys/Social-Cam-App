@@ -1,4 +1,4 @@
-import { Processor, InjectQueue } from '@nestjs/bullmq';
+import { Processor, InjectQueue, WorkerHost } from '@nestjs/bullmq';
 import { Injectable, Logger } from '@nestjs/common';
 import { Job, Queue } from 'bullmq';
 import { PrismaService } from '../../prisma.service';
@@ -6,14 +6,16 @@ import { ExpoNotificationService } from '../notifications/expo-notification.serv
 
 @Injectable()
 @Processor('notifications')
-export class NotificationProcessor {
+export class NotificationProcessor extends WorkerHost {
   private readonly logger = new Logger(NotificationProcessor.name);
 
   constructor(
     @InjectQueue('notifications') private notificationsQueue: Queue,
     private prisma: PrismaService,
     private expoNotificationService: ExpoNotificationService,
-  ) {}
+  ) {
+    super();
+  }
 
   async process(job: Job): Promise<any> {
     this.logger.log(`Processing job ${job.id} of type ${job.name}`);
@@ -80,7 +82,7 @@ export class NotificationProcessor {
     });
 
     const validPushTokens = userPushTokens
-      .map((user) => user.push_token)
+      .map((userPushTokens) => userPushTokens.token)
       .filter((token): token is string => !!token && token.length > 0);
 
     // Send event start notification to all users at once
@@ -150,14 +152,17 @@ export class NotificationProcessor {
     const userIds = attendees.map((attendee) => attendee.user_id);
 
     // Get push tokens for all users
-    const users = await this.prisma.user.findMany({
-      where: { id: { in: userIds } },
-      select: { push_token: true },
+    const userPushTokens = await this.prisma.userPushToken.findMany({
+      where: {
+        user_id: {
+          in: userIds,
+        },
+      },
     });
 
     // Collect all valid push tokens
-    const validPushTokens = users
-      .map((user) => user.push_token)
+    const validPushTokens = userPushTokens
+      .map((user) => user.token)
       .filter((token): token is string => !!token && token.length > 0);
 
     // Send event end notification to all users at once

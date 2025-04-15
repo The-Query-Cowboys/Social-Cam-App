@@ -25,7 +25,18 @@ import { EventsModule } from './api/events/events.module';
     }),
     EventsModule,
   ],
-  controllers: [AppController, UsersController, AlbumsController, PicturesController],
-  providers: [AppService, UsersService, AlbumsService, PicturesService, PrismaService],
+  controllers: [
+    AppController,
+    UsersController,
+    AlbumsController,
+    PicturesController,
+  ],
+  providers: [
+    AppService,
+    UsersService,
+    AlbumsService,
+    PicturesService,
+    PrismaService,
+  ],
 })
 export class AppModule {}

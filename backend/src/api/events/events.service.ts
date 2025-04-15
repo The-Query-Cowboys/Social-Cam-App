@@ -145,7 +145,7 @@ export class EventsService {
         );
       }
 
-      if (userEvent.status === 3 && statusId !== 3) {
+      if (userEvent.status_id === 3 && statusId !== 3) {
         throw new BadRequestException(
           'Cannot change status from "attended" to another status',
         );
