@@ -56,10 +56,16 @@ DIRECT_URL="postgresql://postgres.qldazwkczfyhhcxwwxly:BabaMghtdfs@aws-0-eu-west
 
 
 //appwrite connection details
+<<<<<<< HEAD
 APIEndpoint='https://cloud.appwrite.io/v1'
 projectId='67f8f680002b6a18bfc3'
 bucketId='67f8f69b003be8ed659d'
 
+=======
+APPWRITE_API='https://cloud.appwrite.io/v1'
+APPWRITE_PROJECT_ID='67f8f680002b6a18bfc3'
+APPWRITE_BUCKET_ID='67f8f69b003be8ed659d'
+>>>>>>> main
 ```
 
 For local testing db also create ``.env.test``:
