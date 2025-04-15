@@ -1,20 +1,20 @@
 import React from 'react';
-import { TouchableOpacity, Text } from 'react-native';
-import { useTheme } from '../../context/ThemeContext';
+import {TouchableOpacity, Text} from 'react-native';
+import {useTheme} from '../../context/ThemeContext';
 
 const DarkModeToggle = () => {
-  const { isDarkMode, toggleDarkMode } = useTheme();
+    const {colorScheme, toggleColorScheme} = useTheme();
 
-  return (
-    <TouchableOpacity
-      onPress={toggleDarkMode}
-      className={`p-2 rounded-lg ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'}`}
-    >
-      <Text className={isDarkMode ? 'text-white' : 'text-black'}>
-        {isDarkMode ? '🌙' : '☀️'}
-      </Text>
-    </TouchableOpacity>
-  );
-}; 
+    return (
+        <TouchableOpacity
+            onPress={toggleColorScheme}
+            className={`p-2 rounded-lg ${colorScheme ? 'bg-gray-800' : 'bg-gray-200'}`}
+        >
+            <Text className={colorScheme === "light" ? 'text-white' : 'text-black'}>
+                {colorScheme === 'light' ? '🌙' : '☀️'}
+            </Text>
+        </TouchableOpacity>
+    );
+};
 
 export default DarkModeToggle
