@@ -33,11 +33,39 @@ generator client {
 }
 ```
 
-# please create a .env file under "BACKEND", add these 2 lines.
+# possible issues
+
+if error below
+
+PrismaClientInitializationError: error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:9
+   | 
+ 8 |   provider     = "postgresql"
+ 9 |   url          = env("DATABASE_URL")
+
+run
+
+```npx prisma generate```
+
+# please create a .env file under "BACKEND", add these 2 linesTS2307.
 
 ```
+//Database connection details
 DATABASE_URL="postgresql://postgres.qldazwkczfyhhcxwwxly:BabaMghtdfs@aws-0-eu-west-2.pooler.supabase.com:6543/postgres?pgbouncer=true"
 DIRECT_URL="postgresql://postgres.qldazwkczfyhhcxwwxly:BabaMghtdfs@aws-0-eu-west-2.pooler.supabase.com:5432/postgres"
+
+
+//appwrite connection details
+<<<<<<< HEAD
+APIEndpoint='https://cloud.appwrite.io/v1'
+projectId='67f8f680002b6a18bfc3'
+bucketId='67f8f69b003be8ed659d'
+
+=======
+APPWRITE_API='https://cloud.appwrite.io/v1'
+APPWRITE_PROJECT_ID='67f8f680002b6a18bfc3'
+APPWRITE_BUCKET_ID='67f8f69b003be8ed659d'
+>>>>>>> main
 ```
 
 For local testing db also create ``.env.test``:
@@ -62,11 +90,18 @@ src/app.service.ts and app.controller.ts -- these ones will be for the API
 
 this will connect to the db and create tables
 
+** we might need to delete the data before redeploy **
+```npx migrate reset```
+
 ```npx prisma migrate dev --name init```
 
 This will run the seeding into metadata
 
 ```npx ts-node prisma/seed.metaData.ts```
+
+to seed test data
+
+```npm run seed```
 
 
 # useful links
