@@ -82,13 +82,13 @@ model Album {
 }
 
 model Picture {
-  album_id    Int
+  album_id    Int?
   picture_id  Int    @id @default(autoincrement())
   storage_id String @db.VarChar(100)
   type_id     Int
 
   //Foreign keys
-  album Album       @relation(fields: [album_id], references: [album_id])
+  album Album?       @relation(fields: [album_id], references: [album_id])
   type  PictureType @relation(fields: [type_id], references: [type_id])
 }
 

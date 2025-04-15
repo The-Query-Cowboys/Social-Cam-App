@@ -1,4 +1,4 @@
-import { Controller, Get, Param, ParseIntPipe, Post, Body } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Post, Body, Patch, Query } from '@nestjs/common';
 import { AlbumsService } from './albums.service';
 
 @Controller('/api/albums')
@@ -14,5 +14,14 @@ export class AlbumsController {
     createAlbum(
         @Body() albumData: {album_name: string}) {
             return this.appService.createAlbum(albumData);
+    }
+
+    @Patch(':album_id')
+    updateAlbumPictures(
+        @Param('album_id', ParseIntPipe) album_id: number,
+        @Query('action') action: 'add' | 'remove',
+        @Body() body: {pictures: {picture_id: number}[]}
+    ) {
+        return this.appService.modifyAlbumPictures(album_id, action, body.pictures);
     }
 }
