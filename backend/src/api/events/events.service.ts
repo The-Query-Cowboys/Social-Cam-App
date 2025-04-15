@@ -15,6 +15,10 @@ export class EventsService {
     private prisma: PrismaService,
   ) {}
 
+  async fetchEvents() {
+    console.log('fetching events in service');
+    return this.prisma.event.findMany();
+  }
   async createEvent(eventData: {
     event_owner_id: number;
     event_title: string;
