@@ -21,7 +21,8 @@
     "seed": "ts-node prisma/runSeed.ts",
     "setup-test-db": "psql -f ./prisma/setup-local-db.sql",
     "push:test": "dotenv -e .env.test -- prisma db push",
-    "seed:test": "dotenv -e .env.test ts-node prisma/runSeed.ts"
+    "seed:test": "dotenv -e .env.test ts-node prisma/runSeed.ts",
+    "push:prod": "npx prisma migrate dev --name init"
   },
   "dependencies": {
     "@nestjs/bullmq": "^11.0.2",
