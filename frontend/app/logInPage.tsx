@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, Button , Pressable} from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 import { Link } from 'expo-router';
 import { useState } from 'react';
 import React from 'react';
@@ -22,14 +22,13 @@ const logInPage = () => {
       <Text style={styles.text}>log-In </Text>
       <View style={styles.form}>
         <TextInput className="w-full p-3 border border-red-300 rounded-lg"
-          type="text"
           placeholder='Username'
           placeholderTextColor="#666"
           onChangeText={setUsername} />
 
-        <TextInput style={styles.input} type="password" secureTextEntry={true} placeholder='Password' placeholderTextColor="#666" onChangeText={setPassword} />
+        <TextInput style={styles.input} secureTextEntry={true} placeholder='Password' placeholderTextColor="#666" onChangeText={setPassword} />
 
-        <Button color='#000000' title='Login' type='submit' onPress={onClick} />
+        <Button color='#000000' title='Login' onPress={onClick} />
       </View>
 
       <Text>Don't have an account?

@@ -1,34 +1,29 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useColorScheme } from 'react-native';
+import React, {createContext, useContext} from 'react';
+import {useColorScheme} from 'nativewind';
 
 type ThemeContextType = {
-  isDarkMode: boolean;
-  toggleDarkMode: () => void;
+    colorScheme: 'light' | 'dark' | undefined;
+    toggleColorScheme: () => void;
 };
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const systemColorScheme = useColorScheme();
-  const [isDarkMode, setIsDarkMode] = useState(systemColorScheme === 'dark');
+const ThemeProvider = ({children}: { children: React.ReactNode }) => {
+    const {colorScheme, toggleColorScheme} = useColorScheme();
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(prev => !prev);
-  };
-
-  return (
-    <ThemeContext.Provider value={{ isDarkMode, toggleDarkMode }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+    return (
+        <ThemeContext.Provider value={{colorScheme, toggleColorScheme}}>
+            {children}
+        </ThemeContext.Provider>
+    );
 };
 
 const useTheme = () => {
-  const context = useContext(ThemeContext);
-  if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
-  }
-  return context;
-}; 
+    const context = useContext(ThemeContext);
+    if (context === undefined) {
+        throw new Error('useTheme must be used within a ThemeProvider');
+    }
+    return context;
+};
 
-export  {useTheme,ThemeProvider}
+export {useTheme, ThemeProvider}

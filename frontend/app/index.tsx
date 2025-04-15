@@ -1,45 +1,25 @@
-import { StyleSheet, Text, View, Image } from 'react-native'
+import { Text, View, Image } from 'react-native'
 import { Link } from 'expo-router'
-
+// @ts-ignore
 import icon from '../assets/favicon.png'
 import React from 'react'
+import { useTheme } from "@/context/ThemeContext"
 
 const Home = () => {
-  return (
-    <View style={styles.container}>
-      <Image source={icon} style={styles.image} />
+    const { colorScheme } = useTheme()
 
-      <Text style={styles.text}>Home</Text>
-      <Text style={styles.text}>Hello world</Text>
+    const applyTheme = `${colorScheme === 'dark' ? 'text-white bg-black': 'text-black bg-white'}`
 
-      <Link href='/publicEventPage' style={styles.link}>Event Page</Link>
-      <Link href='/createEvent' style={styles.link}>Create Event</Link>
-      <Link href='/logInPage' style={styles.link}>Login</Link>
-
-    </View>
-  )
+    return (
+        <View className={`flex-1 items-center justify-center ${applyTheme}`}>
+            <Image source={icon} className="my-4" />
+            <Text className={`text-xl font-bold mt-2 ${applyTheme}`}>Home</Text>
+            <Text className={`text-xl font-bold mt-2 ${applyTheme}`}>Hello world</Text>
+            <Link href='/publicEventPage' className={`my-2 border-b ${applyTheme}`}>Event Page</Link>
+            <Link href='/createEvent' className={`my-2 border-b ${applyTheme}`}>Create Event</Link>
+            <Link href='/logInPage' className={`my-2 border-b ${applyTheme}`}>Login</Link>
+        </View>
+    )
 }
 
-
 export default Home
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff'
-  },
-  image: {
-    marginVertical: 10,
-  },
-  text: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginTop: 10
-  },
-  link: {
-    marginVertical: 10,
-    borderBottomWidth: 1,
-  }
-})
