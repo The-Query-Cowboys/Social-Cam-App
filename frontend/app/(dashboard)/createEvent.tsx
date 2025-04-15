@@ -7,7 +7,6 @@ const createEvent = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.text}>createEvent page</Text>
-
             <Link href='/' style={styles.link}>Home</Link>
             <Link href='/publicEventPage' style={styles.link}>Event Page</Link>
         </View>

@@ -23,54 +23,48 @@ const signUpPage = () => {
     }
     return (
         <View style={styles.container}>
-                <Text style={styles.text}>Sign Up</Text>
+            <Text style={styles.text}>Sign Up</Text>
             <View style={styles.form}>
-                <TextInput 
-                    style={styles.input} 
-                    type="text" 
-                    placeholder='Name' 
+                <TextInput
+                    style={styles.input}
+                    placeholder='Name'
                     placeholderTextColor="#666"
-                    onChangeText={setName} 
+                    onChangeText={setName}
                 />
-                <TextInput 
-                    style={styles.input} 
-                    type="text" 
-                    placeholder='Nickname' 
+                <TextInput
+                    style={styles.input}
+                    placeholder='Nickname'
                     placeholderTextColor="#666"
-                    onChangeText={setNickname} 
+                    onChangeText={setNickname}
                 />
-                <TextInput 
-                    style={styles.input} 
-                    type="text" 
-                    placeholder='Email' 
+                <TextInput
+                    style={styles.input}
+                    placeholder='Email'
                     placeholderTextColor="#666"
-                    onChangeText={setEmail} 
+                    onChangeText={setEmail}
                 />
-                <TextInput 
-                    style={styles.input} 
-                    type="password" 
-                    secureTextEntry={true} 
-                    placeholder='Password' 
+                <TextInput
+                    style={styles.input}
+                    secureTextEntry={true}
+                    placeholder='Password'
                     placeholderTextColor="#666"
-                    onChangeText={setPassword} 
+                    onChangeText={setPassword}
                 />
-                <TextInput 
-                    style={styles.input} 
-                    type="password" 
-                    secureTextEntry={true} 
-                    placeholder='Confirm Password' 
+                <TextInput
+                    style={styles.input}
+                    secureTextEntry={true}
+                    placeholder='Confirm Password'
                     placeholderTextColor="#666"
-                    onChangeText={setConfirmPassword} 
+                    onChangeText={setConfirmPassword}
                 />
-                <TextInput 
-                    style={styles.input} 
-                    type="text" 
-                    placeholder='Introduce yourself in a few words!' 
-                    numberOfLines={2} 
+                <TextInput
+                    style={styles.input}
+                    placeholder='Introduce yourself in a few words!'
+                    numberOfLines={2}
                     placeholderTextColor="#666"
-                    onChangeText={setDescription} 
+                    onChangeText={setDescription}
                 />
-                <Button color='#000000' type='submit' title='Sign Up' onPress={onClick} />
+                <Button color='#000000' title='Sign Up' onPress={onClick} />
 
                 <Text>Already have an account? <Link href='/logInPage' style={styles.link}>Log In</Link></Text>
             </View>
