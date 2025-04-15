@@ -19,4 +19,8 @@ export class AlbumsService {
 
         return album;
     }
+
+    async createAlbum(albumData): Promise <Album | null> {
+        return this.prisma.album.create({data: albumData})
+    }
 }
