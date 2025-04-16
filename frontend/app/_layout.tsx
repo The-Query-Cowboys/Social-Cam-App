@@ -22,10 +22,6 @@ const LayoutContent = () => {
             contentStyle: {backgroundColor: isDarkMode ? '#000' : '#fff',},
         }}>
             <Stack.Screen name='index' options={{title: 'Home'}}/>
-            <Stack.Screen name='eventDetails' options={{title: 'Event Details'}}/>
-            <Stack.Screen name='publicEventPage' options={{title: 'Events nearby'}}/>
-            <Stack.Screen name='createEvent' options={{title: 'Create new event'}}/>
-            <Stack.Screen name='logInPage' options={{title: 'Login'}}/>
         </Stack>
     )
 }
