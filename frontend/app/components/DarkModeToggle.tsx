@@ -9,9 +9,9 @@ const DarkModeToggle = () => {
     return (
         <TouchableOpacity
             onPress={toggleColorScheme}
-            className={`p-2 rounded-lg ${colorScheme === 'dark' ? 'bg-gray-300' : 'bg-gray-700'}`}
+            className={`p-2 rounded-lg ${colorScheme === 'dark' ? 'bg-gray-200' : 'bg-gray-700'}`}
         >
-            <Text className={colorScheme === "light" ? 'text-white' : 'text-black'}>
+            <Text>
                 {colorScheme === 'light' ? '🌙' : '☀️'}
             </Text>
         </TouchableOpacity>
