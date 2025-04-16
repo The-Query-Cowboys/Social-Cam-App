@@ -17,9 +17,8 @@ const LayoutContent = () => {
 
     return (
         <Stack screenOptions={{
-            headerStyle: {backgroundColor: isDarkMode ? '#1a1a1a' : '#ddd'},
+            headerStyle: {backgroundColor: isDarkMode ? '#605d5d' : '#ddd'},
             headerTintColor: isDarkMode ? '#fff' : '#333',
-            contentStyle: {backgroundColor: isDarkMode ? '#000' : '#fff',},
         }}>
             <Stack.Screen name='index' options={{title: 'Home'}}/>
         </Stack>
