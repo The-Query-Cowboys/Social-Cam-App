@@ -55,18 +55,35 @@ export function appwriteGetFile(storage_id) {
 //to view file url! this is probably what we want
 
 export function appwriteGetImageUrl(storage_id) {
-    return storage.getFileView(process.env.APPWRITE_BUCKET_ID, storage_id) + "&mode=admin"
+    return storage.getFileView(process.env.APPWRITE_BUCKET_ID, storage_id)
+        .then((response) => {
+            return response + "&mode=admin"
+        })
+        .catch((error) => {
+            return error
+        })
 }
 
 //to list files in a bucket
 
 export function appwriteListFiles() {
     return storage.listFiles(process.env.APPWRITE_BUCKET_ID)
+        .then((files) => {
+            return files
+        })
+        .catch((error) => {
+            return error
+        })
 }
 
 //to delete file
 
 export function appwriteDeleteFile(storage_id) {
     return storage.deleteFile(process.env.APPWRITE_BUCKET_ID, storage_id)
+        .then((file) => {
+            return file
+        })
+        .catch((error) => {
+            return error
+        })
 }
-
