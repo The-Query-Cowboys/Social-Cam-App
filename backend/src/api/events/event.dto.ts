@@ -83,11 +83,9 @@ export class UpdateEventDto {
 
   @IsDateString()
   @IsOptional()
-  @Type(() => Date)
   event_date?: string;
 
   @IsDateString()
   @IsOptional()
-  @Type(() => Date)
   event_date_end?: string;
 }

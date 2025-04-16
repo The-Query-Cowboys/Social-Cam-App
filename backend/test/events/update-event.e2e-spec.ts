@@ -191,13 +191,15 @@ describe('Events Controller (e2e)', () => {
         event_date_end: new Date('2025-05-01T14:30:00Z'), // Before existing start date
       };
 
-      await request(app.getHttpServer())
+      const { body } = await request(app.getHttpServer())
         .patch(`/api/events/${testEvent.event_id}`)
         .send(updateData)
         .expect(400);
+
+      expect(body.message).toBe('End date cannot be before start date');
     });
 
-    it('should successfully update the event to move to the Perpetuity Wing', async () => {
+    it('should successfully update the event location', async () => {
       const updateData = {
         event_location: 'Lumon Perpetuity Wing',
         event_description:

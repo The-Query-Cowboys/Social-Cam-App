@@ -72,9 +72,13 @@ export class EventsService {
 
     // Validate dates if both are provided
 
-    const startDate = updateEventDto.event_date || existingEvent.event_date;
-    const endDate =
+    const startDateStr = updateEventDto.event_date || existingEvent.event_date;
+    const endDateStr =
       updateEventDto.event_date_end || existingEvent.event_date_end;
+
+    const startDate = new Date(startDateStr);
+    const endDate = new Date(endDateStr);
+
     if (startDate > endDate) {
       throw new BadRequestException('End date cannot be before start date');
     }
