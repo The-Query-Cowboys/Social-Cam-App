@@ -1,80 +1,54 @@
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
-import { Link } from 'expo-router';
-import { useState } from 'react';
+import {Text, View, TextInput, Button} from 'react-native';
+import {Link} from 'expo-router';
+import {useState} from 'react';
 import React from 'react';
+import {useTheme} from "@/context/ThemeContext";
 
 const logInPage = () => {
+    const {colorScheme} = useTheme()
 
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+    const applyViewTheme = `${colorScheme === 'dark' ? 'text-white bg-black' : 'text-black bg-white'}`
+    const applyTheme = `${colorScheme === 'dark' ? 'text-white bg-black w-full p-3 border border-white rounded-lg' : 'text-black bg-white w-full p-3 border border-black rounded-lg'}`
 
-  const onClick = () => {
-    console.log(username, password)
-    if (username === 'dev' && password === 'dev') {
-      console.log('Login successful')
-    } else {
-      console.log('Login failed')
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+
+    const onClick = () => {
+        console.log(username, password)
+        if (username === 'dev' && password === 'dev') {
+            console.log('Login successful')
+        } else {
+            console.log('Login failed')
+        }
     }
-  }
 
-  return (
-    <View className="flex-1 bg-white items-center justify-center p-4">
-      <Text style={styles.text}>log-In </Text>
-      <View style={styles.form}>
-        <TextInput className="w-full p-3 border border-red-300 rounded-lg"
-          placeholder='Username'
-          placeholderTextColor="#666"
-          onChangeText={setUsername} />
+    return (
+        <View className={`flex-1 items-center justify-center ${applyViewTheme}`}>
+            <Text className={`text-xl mb-5 ${applyViewTheme}`}>
+                Log in
+            </Text>
+            <View>
+                <TextInput className={`text-l mb-5 ${applyTheme}`}
+                           placeholder='Username'
+                           onChangeText={setUsername}
+                />
+                <TextInput className={`text-l mb-5 ${applyTheme}`}
+                           secureTextEntry={true}
+                           placeholder='Password'
+                           onChangeText={setPassword}
+                />
+                <Button title='Login' onPress={onClick}/>
 
-        <TextInput style={styles.input} secureTextEntry={true} placeholder='Password' placeholderTextColor="#666" onChangeText={setPassword} />
+                <Text className={`${applyViewTheme}`}>Don't have an account?
+                    <Link href='/signUpPage' className={`color-blue-500 font-bold underline m-1 ${applyViewTheme}`}>
+                        Sign Up
+                    </Link>
+                </Text>
 
-        <Button color='#000000' title='Login' onPress={onClick} />
-      </View>
-
-      <Text>Don't have an account?
-        <Link href='/signUpPage' style={styles.link}>Sign Up</Link>
-      </Text>
-
-      <Link href='/' style={styles.link}>Home</Link>
-    </View>
-  )
+                <Link href='/' className={`${applyViewTheme}`}>Home</Link>
+            </View>
+        </View>
+    )
 }
 
 export default logInPage
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff'
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#000',
-    padding: 10,
-    borderRadius: 5,
-  },
-  
-  text: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#000'
-  },
-  link: {
-    marginVertical: 50,
-    borderBottomWidth: 1,
-    borderColor: '#000',
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 10,
-  },
-  button: {
-    backgroundColor: '#000',
-    color: '#fff',
-    padding: 10,
-    borderRadius: 5,
-  }
-})

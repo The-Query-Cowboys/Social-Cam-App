@@ -6,7 +6,7 @@ import {useTheme} from "@/context/ThemeContext";
 const PublicEventPage = () => {
     const {colorScheme} = useTheme()
 
-    const applyTheme = `${colorScheme === 'dark' ? 'text-white' : 'text-black'}`
+    const applyTheme = `${colorScheme === 'dark' ? 'text-white bg-black' : 'text-black bg-white'}`
 
     return (
         <View className={`flex-1 items-center justify-center ${applyTheme}`}>

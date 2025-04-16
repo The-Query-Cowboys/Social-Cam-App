@@ -1,8 +1,9 @@
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native'
+import { Text, View, TextInput, Button } from 'react-native'
 import { Link } from 'expo-router'
-
 import { useState } from 'react'
 import React from 'react'
+import {useTheme} from "@/context/ThemeContext";
+
 
 
 const signUpPage = () => {
@@ -12,6 +13,11 @@ const signUpPage = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
+    const { colorScheme } = useTheme()
+
+    const applyViewTheme = `${colorScheme === 'dark' ? 'text-white bg-black': 'text-black bg-white'}`
+    const applyTheme = `${colorScheme === 'dark' ? 'text-white bg-black w-full p-3 border border-white rounded-lg': 'text-black bg-white w-full p-3 border border-black rounded-lg'}`
+
 
     const onClick = () => {
         const user = { name: name, nickname: nickname, description: description, email: email, password: password, confirmPassword: confirmPassword }
@@ -22,55 +28,57 @@ const signUpPage = () => {
         }
     }
     return (
-        <View style={styles.container}>
-            <Text style={styles.text}>Sign Up</Text>
-            <View style={styles.form}>
+        <View className={`flex-1 justify-center items-center ${applyViewTheme}`}>
+            <Text className={`text-xl mb-5 ${applyViewTheme}`}>
+                Enter your details:
+            </Text>
+            <View>
                 <TextInput
-                    style={styles.input}
+                    className={`text-l mb-5 ${applyTheme}`}
                     placeholder='Name'
-                    placeholderTextColor="#666"
-                    onChangeText={setName}
+                    onChangeText={setName} 
                 />
                 <TextInput
-                    style={styles.input}
+                    className={`text-l mb-5 ${applyTheme}`}
                     placeholder='Nickname'
-                    placeholderTextColor="#666"
-                    onChangeText={setNickname}
+                    onChangeText={setNickname} 
                 />
                 <TextInput
-                    style={styles.input}
+                    className={`text-l mb-5 ${applyTheme}`}
                     placeholder='Email'
-                    placeholderTextColor="#666"
-                    onChangeText={setEmail}
+                    onChangeText={setEmail} 
                 />
                 <TextInput
-                    style={styles.input}
-                    secureTextEntry={true}
+                    className={`text-l mb-5 ${applyTheme}`}
+                    secureTextEntry={true} 
                     placeholder='Password'
-                    placeholderTextColor="#666"
-                    onChangeText={setPassword}
+                    onChangeText={setPassword} 
                 />
                 <TextInput
-                    style={styles.input}
-                    secureTextEntry={true}
+                    className={`text-l mb-5 ${applyTheme}`}
+                    secureTextEntry={true} 
                     placeholder='Confirm Password'
-                    placeholderTextColor="#666"
-                    onChangeText={setConfirmPassword}
+                    onChangeText={setConfirmPassword} 
                 />
                 <TextInput
-                    style={styles.input}
-                    placeholder='Introduce yourself in a few words!'
+                    className={`text-l mb-5 ${applyTheme}`}
+                    placeholder='Introduce yourself in a few words!' 
                     numberOfLines={2}
-                    placeholderTextColor="#666"
-                    onChangeText={setDescription}
+                    onChangeText={setDescription} 
                 />
-                <Button color='#000000' title='Sign Up' onPress={onClick} />
+                <Button title='Sign Up' onPress={onClick} />
 
-                <Text>Already have an account? <Link href='/logInPage' style={styles.link}>Log In</Link></Text>
+                <Text className={`text-l mb-5 ${applyViewTheme}`}>Already have an account?
+                    <Link href='/logInPage' className={`m-1 text-blue-500 underline font-bold`}>
+                        Log In
+                    </Link>
+                </Text>
             </View>
         </View>
     )
 }
+
+export default signUpPage
 /* 
 name
 nickname
@@ -79,40 +87,3 @@ password (encrypted)
 email
 */
 
-export default signUpPage
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#fff'
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: '#000',
-        padding: 10,
-        borderRadius: 5,
-    },
-    text: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#000'
-    },
-    link: {
-        marginVertical: 50,
-        borderBottomWidth: 1,
-        borderColor: '#000',
-    },
-    form: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 10,
-    },
-    button: {
-        backgroundColor: '#000',
-        color: '#fff',
-        padding: 10,
-        borderRadius: 5,
-    }
-})

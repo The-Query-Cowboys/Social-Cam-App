@@ -1,38 +1,39 @@
 import { Tabs } from 'expo-router'
-import { StyleSheet, Text, View } from 'react-native'
 import React from 'react-native'
 import { useTheme } from "@/context/ThemeContext"
 
 const dashboardLayout = () => {
     const { colorScheme } = useTheme()
-
+    // not sure if this is necessary, tab styles don't use the same nomenclature as nativewind for strings
     const applyTheme = `${colorScheme === 'dark' ? 'text-white bg-black': 'text-black bg-white'}`
 
   return (
     <Tabs
     screenOptions={{
       headerShown: false,
-      tabBarStyle: { backgroundColor: applyTheme, paddingTop: 10, height: 90 },
-      tabBarActiveTintColor:'#fff',
+      tabBarStyle: { backgroundColor: 'dark', paddingTop: 10, height: 90},
+      tabBarActiveTintColor:'rgba(0,21,255,0.55)',
       tabBarInactiveTintColor: '#000',
     }}
   >
-    <Tabs.Screen 
-      name="Create event"
-      options={{ title: "Create event" }} 
+
+    <Tabs.Screen
+      name="createEvent"
+      options={{ title: "Create event" }}
     />
-      <Tabs.Screen 
-        name="View Events"
-        options={{ title: "View Events", }} 
-      />
-    <Tabs.Screen 
-      name="Event details"
-      options={{ title: "Event details" }} 
+
+    <Tabs.Screen
+    name="publicEventPage"
+    options={{ title: "Public events", }}
     />
+
+    <Tabs.Screen
+      name="eventDetails"
+      options={{ title: "Event details" }}
+    />
+
   </Tabs>
   )
 }
 
 export default dashboardLayout
-
-const styles = StyleSheet.create({})
