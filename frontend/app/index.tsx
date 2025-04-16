@@ -20,9 +20,9 @@ const Home = () => {
             <Image source={icon} className="my-4" />
             <Text className={`text-xl font-bold mt-2 ${applyTheme}`}>Home</Text>
             <Text className={`text-xl font-bold mt-2 ${applyTheme}`}>Hello world</Text>
-            <Link href='/publicEventPage' className={`my-2 border-b ${applyTheme}`}>Event Page</Link>
-            <Link href='/createEvent' className={`my-2 border-b ${applyTheme}`}>Create Event</Link>
-            <Link href='/logInPage' className={`my-2 border-b ${applyTheme}`}>Login</Link>
+            <Link href='/(dashboard)/publicEventPage' className={`my-2 border-b ${applyTheme}`}>Event Page</Link>
+            <Link href='/(dashboard)/createEvent' className={`my-2 border-b ${applyTheme}`}>Create Event</Link>
+            <Link href='/(auth)/logInPage' className={`my-2 border-b ${applyTheme}`}>Login</Link>
         </View>
     )
 }

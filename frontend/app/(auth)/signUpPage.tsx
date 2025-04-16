@@ -69,7 +69,7 @@ const signUpPage = () => {
                 <Button title='Sign Up' onPress={onClick} />
 
                 <Text className={`text-l mb-5 ${applyViewTheme}`}>Already have an account?
-                    <Link href='/logInPage' className={`m-1 text-blue-500 underline font-bold`}>
+                    <Link href='./logInPage.tsx' className={`m-1 text-blue-500 underline font-bold`}>
                         Log In
                     </Link>
                 </Text>
