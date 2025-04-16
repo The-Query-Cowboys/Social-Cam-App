@@ -7,6 +7,7 @@ import {
   IsOptional,
   Min,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateEventDto {
   @IsInt()
@@ -48,5 +49,45 @@ export class CreateEventDto {
 
   @IsDateString()
   @IsOptional()
+  event_date_end?: string;
+}
+export class UpdateEventDto {
+  @IsString()
+  @IsOptional()
+  event_title?: string;
+
+  @IsString()
+  @IsOptional()
+  event_description?: string;
+
+  @IsInt()
+  @IsOptional()
+  album_id?: number;
+
+  @IsString()
+  @IsOptional()
+  storage_id?: string;
+
+  @IsString()
+  @IsOptional()
+  event_location?: string;
+
+  @IsInt()
+  @IsOptional()
+  @Min(0, { message: 'Album delay cannot be negative' })
+  album_delay?: number;
+
+  @IsBoolean()
+  @IsOptional()
+  private?: boolean;
+
+  @IsDateString()
+  @IsOptional()
+  @Type(() => Date)
+  event_date?: string;
+
+  @IsDateString()
+  @IsOptional()
+  @Type(() => Date)
   event_date_end?: string;
 }
