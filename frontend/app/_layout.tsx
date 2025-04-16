@@ -1,7 +1,6 @@
 import '../global.css'
 import {Stack} from 'expo-router'
 import {ThemeProvider, useTheme} from '../context/ThemeContext'
-import DarkModeToggle from "@/app/components/DarkModeToggle";
 
 const RootLayout = () => {
     return (
@@ -21,7 +20,6 @@ const LayoutContent = () => {
             headerStyle: {backgroundColor: isDarkMode ? '#1a1a1a' : '#ddd'},
             headerTintColor: isDarkMode ? '#fff' : '#333',
             contentStyle: {backgroundColor: isDarkMode ? '#000' : '#fff',},
-            headerRight: () => <DarkModeToggle/>
         }}>
             <Stack.Screen name='index' options={{title: 'Home'}}/>
             <Stack.Screen name='eventDetails' options={{title: 'Event Details'}}/>
