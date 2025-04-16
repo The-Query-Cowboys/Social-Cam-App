@@ -10,15 +10,40 @@ export const cleanupAfterAll = async (
   app: INestApplication,
   prisma?: PrismaService,
 ): Promise<void> => {
-  //console.log('Starting test cleanup...');
+  // Clear mocks first
+  jest.clearAllMocks();
+
+  // Try to close any BullMQ resources if they exist
+  try {
+    // Try to get and close any queue instances
+    const mockQueue = app.get('BullQueue_notifications', { strict: false });
+    if (mockQueue && typeof mockQueue.close === 'function') {
+      await mockQueue.close();
+    }
+
+    // Try to get and close any worker instances
+    const mockWorker = app.get('BullWorker_notifications', { strict: false });
+    if (mockWorker && typeof mockWorker.close === 'function') {
+      await mockWorker.close();
+    }
+
+    // Try to get and close any queue events instances
+    const mockQueueEvents = app.get('BullQueueEvents_notifications', {
+      strict: false,
+    });
+    if (mockQueueEvents && typeof mockQueueEvents.close === 'function') {
+      await mockQueueEvents.close();
+    }
+  } catch (error) {
+    // Ignore errors from trying to get mock providers
+  }
 
   // Disconnect Prisma first if provided
   if (prisma) {
     try {
       await prisma.$disconnect();
-      //console.log('Disconnected Prisma');
     } catch (error) {
-      //console.error('Error disconnecting Prisma:', error);
+      // Error handling
     }
   }
 
@@ -34,10 +59,6 @@ export const cleanupAfterAll = async (
         console.log('App close timed out, continuing with tests'),
       ),
     ]);
-
-    // If app.close() finished first, this will run after successful closure
-    // If timeout won first, this will run after the timeout
-    //console.log('Cleanup completed');
   } catch (error) {
     console.error('Unexpected error during cleanup:', error);
   }

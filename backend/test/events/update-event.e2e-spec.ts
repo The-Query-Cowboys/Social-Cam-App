@@ -10,9 +10,14 @@ describe('Events Controller (e2e)', () => {
   let prisma: PrismaService;
   let testEvent: Event;
   let testUserId: number;
+  let mockQueue: any;
+  let mockNotificationService: any;
 
   beforeAll(async () => {
-    app = await setupTestApp();
+    const setup = await setupTestApp();
+    app = setup.app;
+    mockQueue = setup.mockQueue;
+    mockNotificationService = setup.mockNotificationService;
     prisma = app.get<PrismaService>(PrismaService);
 
     // Clean up any existing test data
@@ -227,7 +232,7 @@ describe('Events Controller (e2e)', () => {
       }
     });
 
-    it('should successfully extend the Music Dance Experience duration', async () => {
+    it('should successfully extend the event duration', async () => {
       const updateData = {
         event_date: new Date('2025-05-01T14:30:00Z'), // Earlier start
         event_date_end: new Date('2025-05-01T17:00:00Z'), // Later end

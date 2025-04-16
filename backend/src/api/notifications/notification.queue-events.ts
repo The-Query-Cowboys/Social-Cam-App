@@ -39,4 +39,19 @@ export class NotificationQueueEvents extends QueueEventsHost {
       `Job ${job.jobId} reported progress: ${JSON.stringify(job.data)}`,
     );
   }
+
+  @OnQueueEvent('stalled')
+  onStalled(job: { jobId: string }) {
+    this.logger.warn(`Job ${job.jobId} has been stalled`);
+  }
+
+  @OnQueueEvent('waiting')
+  onWaiting(job: { jobId: string }) {
+    this.logger.log(`Job ${job.jobId} is waiting to be processed`);
+  }
+
+  @OnQueueEvent('removed')
+  onRemoved(job: { jobId: string }) {
+    this.logger.log(`Job ${job.jobId} has been removed`);
+  }
 }
