@@ -11,7 +11,10 @@ import { PicturesController } from './api/pictures.controller';
 import { PrismaService } from './prisma.service';
 import { BullModule } from '@nestjs/bullmq';
 import { EventsModule } from './api/events/events.module';
+import { TokenService } from './api/token.service';
+import { TokenController } from './api/token.controller';
 import { NotificationsModule } from './api/notifications/notifications.module';
+
 
 @Module({
   imports: [
@@ -62,6 +65,7 @@ import { NotificationsModule } from './api/notifications/notifications.module';
     UsersController,
     AlbumsController,
     PicturesController,
+    TokenController,
   ],
   providers: [
     AppService,
@@ -69,6 +73,7 @@ import { NotificationsModule } from './api/notifications/notifications.module';
     AlbumsService,
     PicturesService,
     PrismaService,
+    TokenService,
   ],
 })
 export class AppModule {}

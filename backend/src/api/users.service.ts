@@ -25,32 +25,42 @@ export class UsersService {
     }
 
     async getUserEvents(userId: number, statusQuery?: number[]) {
-        if (statusQuery) {
-            return this.prisma.event.findMany({
-                where: {
-                    UserEvent: {
-                        some: {
-                            user_id: userId,
-                            status_id: { in: statusQuery },
+        try {
+            if (statusQuery) {
+                return this.prisma.event.findMany({
+                    where: {
+                        UserEvent: {
+                            some: {
+                                user_id: userId,
+                                status_id: { in: statusQuery },
+                            },
                         },
                     },
-                },
-            });
-        } else {
-            return this.prisma.event.findMany({
-                where: {
-                    UserEvent: {
-                        some: {
-                            user_id: userId,
+                });
+            } else {
+                return this.prisma.event.findMany({
+                    where: {
+                        UserEvent: {
+                            some: {
+                                user_id: userId,
+                            },
                         },
                     },
-                },
-            });
+                });
+            }
+        }
+        catch {
+            throw new NotFoundException(`User_id ${userId} was not found`);
         }
     }
 
     async createUser(userData): Promise<User | null> {
-        return this.prisma.user.create({ data: userData });
+        try {
+            return this.prisma.user.create({ data: userData })
+        }
+        catch {
+            throw new Error(`failed to create user, please check if account already exists`);
+        }
     }
 
     async updateUserById(userId, userData): Promise<User | null> {
