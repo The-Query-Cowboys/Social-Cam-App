@@ -4,15 +4,15 @@ import { useTheme } from "@/context/ThemeContext"
 
 const dashboardLayout = () => {
     const { colorScheme } = useTheme()
-
+    // not sure if this is necessary, tab styles don't use the same nomenclature as nativewind for strings
     const applyTheme = `${colorScheme === 'dark' ? 'text-white bg-black': 'text-black bg-white'}`
 
   return (
     <Tabs
     screenOptions={{
       headerShown: false,
-      tabBarStyle: { backgroundColor: applyTheme, paddingTop: 10, height: 90 },
-      tabBarActiveTintColor:'#fff',
+      tabBarStyle: { backgroundColor: 'dark', paddingTop: 10, height: 90},
+      tabBarActiveTintColor:'rgba(0,21,255,0.55)',
       tabBarInactiveTintColor: '#000',
     }}
   >

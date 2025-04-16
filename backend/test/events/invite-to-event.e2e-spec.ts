@@ -4,7 +4,7 @@ import { setupTestApp } from '../utils/setup-test';
 import { cleanupAfterAll } from '../utils/end-test';
 import { PrismaService } from '../../src/prisma.service';
 
-describe('GET /api/albums/:event_id', () => {
+describe('POST /api/events/:eventId/invite', () => {
   let app: INestApplication;
   let prisma: PrismaService;
   let mockQueue: any;
@@ -22,14 +22,16 @@ describe('GET /api/albums/:event_id', () => {
     await cleanupAfterAll(app, prisma);
   }, 15000);
 
-  it('200: responds with album id and album name for passed in event_id', async () => {
-    const expected = {
-      album_id: 2,
-      album_name: 'test album',
+  it('201: creates a UserEvent relation for given user and event', async () => {
+    const userId = {
+      userId: 12,
     };
     const { body } = await request(app.getHttpServer())
-      .get('/api/albums/2')
-      .expect(200);
-    expect(body).toEqual(expected);
+      .post('/api/events/1/invite')
+      .send(userId)
+      .expect(201);
+    expect(body.userEvent_id).toBe(7);
+    expect(body.event_id).toBe(1);
+    expect(body.user_id).toBe(12);
   });
 });

@@ -1,13 +1,6 @@
 import { prisma } from './prisma-client';
 
 export async function seedTestDatabase() {
-  //deletes everything under user
-  await prisma.userEvent.deleteMany();
-  await prisma.userPushToken.deleteMany();
-  await prisma.user.deleteMany();
-
-  // If any of you guys want to change this test data feel free.
-
   const users = [
     {
       username: 'kc325423',
@@ -50,10 +43,6 @@ export async function seedTestDatabase() {
       email: 'henry@gmail.com',
     },
   ];
-
-  //Insert test data into users table
-  await prisma.user.createMany({ data: users });
-
   const events = [
     {
       event_owner_id: 2,
@@ -76,9 +65,6 @@ export async function seedTestDatabase() {
       private: false,
     },
   ];
-
-  await prisma.event.createMany({ data: events });
-
   const pictures = [
     {
       album_id: 1,
@@ -96,9 +82,6 @@ export async function seedTestDatabase() {
       type_id: 1,
     },
   ];
-
-  await prisma.picture.createMany({ data: pictures });
-
   const albums = [
     {
       album_name: 'Northcoders graduation',
@@ -107,9 +90,6 @@ export async function seedTestDatabase() {
       album_name: 'test album',
     },
   ];
-
-  await prisma.album.createMany({ data: albums });
-
   const userEvents = [
     {
       event_id: 1,
@@ -142,24 +122,16 @@ export async function seedTestDatabase() {
       status_id: 3,
     },
   ];
-
-  await prisma.userEvent.createMany({ data: userEvents });
-
   const userStatuses = [
     { status: 'invited' },
     { status: 'attending' },
     { status: 'attended' },
   ];
-
-  await prisma.userStatus.createMany({ data: userStatuses });
-
   const pictureTypes = [
     { type: 'event' },
     { type: 'profile' },
     { type: 'album' },
   ];
-
-  await prisma.pictureType.createMany({ data: pictureTypes });
 
   const comments = [
     {
@@ -177,6 +149,28 @@ export async function seedTestDatabase() {
       votes: 4,
     },
   ];
-
-  await prisma.comment.createMany({ data: comments });
+  console.log('reseeding');
+  await prisma.$transaction([
+    //deletes everything under user
+    prisma.$executeRawUnsafe(`TRUNCATE TABLE
+    "UserEvent",
+    "UserPushToken",
+    "User",
+    "Event",
+    "Picture",
+    "Album",
+    "UserStatus",
+    "PictureType",
+    "Comment"
+    RESTART IDENTITY CASCADE;
+  `),
+    prisma.user.createMany({ data: users }),
+    prisma.event.createMany({ data: events }),
+    prisma.picture.createMany({ data: pictures }),
+    prisma.album.createMany({ data: albums }),
+    prisma.userEvent.createMany({ data: userEvents }),
+    prisma.userStatus.createMany({ data: userStatuses }),
+    prisma.pictureType.createMany({ data: pictureTypes }),
+    prisma.comment.createMany({ data: comments }),
+  ]);
 }

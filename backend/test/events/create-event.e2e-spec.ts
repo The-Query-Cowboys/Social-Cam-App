@@ -1,6 +1,7 @@
 import request from 'supertest';
 import { INestApplication } from '@nestjs/common';
 import { setupTestApp } from '../utils/setup-test';
+import { cleanupAfterAll } from '../utils/end-test';
 import { PrismaService } from '../../src/prisma.service';
 
 // model Event {
@@ -22,20 +23,20 @@ import { PrismaService } from '../../src/prisma.service';
 describe('POST /api/events', () => {
   let app: INestApplication;
   let prisma: PrismaService;
+  let mockQueue: any;
+  let mockNotificationService: any;
 
   beforeAll(async () => {
-    app = await setupTestApp();
-
+    const setup = await setupTestApp();
+    app = setup.app;
+    mockQueue = setup.mockQueue;
+    mockNotificationService = setup.mockNotificationService;
     prisma = app.get<PrismaService>(PrismaService);
   });
 
-  beforeEach(async () => {
-    // await prisma.comment.deleteMany({});
-    // await prisma.event.deleteMany({});
-  });
   afterAll(async () => {
-    await app.close();
-  });
+    await cleanupAfterAll(app, prisma);
+  }, 15000);
 
   it('201: successfully creates an event with valid data', async () => {
     const newEvent = {
