@@ -24,9 +24,9 @@ describe('GET /api/users/:user_id', () => {
 
   it('200: responds with the user denoted by given user_id', async () => {
     const { body } = await request(app.getHttpServer())
-      .get('/api/users/13')
+      .get('/api/users/3')
       .expect(200);
-    expect(body.user_id).toBe(13);
+    expect(body.user_id).toBe(3);
     expect(body.username).toBe('OscarFinn');
     expect(body.nickname).toBe('Oscar');
     expect(body.description).toBe('Third test user');

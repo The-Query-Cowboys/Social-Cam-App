@@ -3,6 +3,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../app-test.module'; // Use your test module instead of AppModule
 import { getMockQueueInstance, getMockNotificationService } from './bull-mocks';
+import { seedTestDatabase } from '../../prisma/seed';
 
 export const setupTestApp = async (): Promise<{
   app: INestApplication;
@@ -13,6 +14,7 @@ export const setupTestApp = async (): Promise<{
     imports: [AppModule],
   }).compile();
 
+  await seedTestDatabase();
   const app = moduleFixture.createNestApplication();
   app.useGlobalPipes(
     new ValidationPipe({
@@ -23,7 +25,6 @@ export const setupTestApp = async (): Promise<{
   );
 
   await app.init();
-
   // Get mock instances for use in tests
   const mockQueue = getMockQueueInstance(app);
   const mockNotificationService = getMockNotificationService(app);
