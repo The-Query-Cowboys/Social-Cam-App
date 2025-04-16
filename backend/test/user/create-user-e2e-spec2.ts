@@ -1,18 +1,26 @@
 import request from 'supertest';
 import { INestApplication } from '@nestjs/common';
 import { setupTestApp } from '../utils/setup-test';
+import { cleanupAfterAll } from '../utils/end-test';
+import { PrismaService } from '../../src/prisma.service';
 
-describe('POST /api/users/', () => {
+describe('POST /api/events', () => {
   let app: INestApplication;
+  let prisma: PrismaService;
+  let mockQueue: any;
+  let mockNotificationService: any;
 
   beforeAll(async () => {
-    app = await setupTestApp();
+    const setup = await setupTestApp();
+    app = setup.app;
+    mockQueue = setup.mockQueue;
+    mockNotificationService = setup.mockNotificationService;
+    prisma = app.get<PrismaService>(PrismaService);
   });
 
   afterAll(async () => {
-    await app.close();
-  });
-
+    await cleanupAfterAll(app, prisma);
+  }, 15000);
   it('201: responds with the user denoted by given user_id', async () => {
     const uniqueId = "id" + (new Date().getTime())
 
