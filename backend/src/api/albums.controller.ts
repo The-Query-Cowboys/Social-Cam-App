@@ -1,5 +1,6 @@
-import { Controller, Get, Param, ParseIntPipe, Post, Body, Patch, Query } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Post, Body, Patch, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AlbumsService } from './albums.service';
+import { CreateAlbumDto } from './create-album.dto';
 
 @Controller('/api/albums')
 export class AlbumsController {
@@ -11,8 +12,9 @@ export class AlbumsController {
     }
 
     @Post()
+    @UsePipes(new ValidationPipe({whitelist: true}))
     createAlbum(
-        @Body() albumData: {album_name: string}) {
+        @Body() albumData: CreateAlbumDto) {
             return this.appService.createAlbum(albumData);
     }
 
