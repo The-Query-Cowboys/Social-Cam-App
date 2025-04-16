@@ -10,15 +10,15 @@ export const cleanupAfterAll = async (
   app: INestApplication,
   prisma?: PrismaService,
 ): Promise<void> => {
-  console.log('Starting test cleanup...');
+  //console.log('Starting test cleanup...');
 
   // Disconnect Prisma first if provided
   if (prisma) {
     try {
       await prisma.$disconnect();
-      console.log('Disconnected Prisma');
+      //console.log('Disconnected Prisma');
     } catch (error) {
-      console.error('Error disconnecting Prisma:', error);
+      //console.error('Error disconnecting Prisma:', error);
     }
   }
 
@@ -37,7 +37,7 @@ export const cleanupAfterAll = async (
 
     // If app.close() finished first, this will run after successful closure
     // If timeout won first, this will run after the timeout
-    console.log('Cleanup completed');
+    //console.log('Cleanup completed');
   } catch (error) {
     console.error('Unexpected error during cleanup:', error);
   }

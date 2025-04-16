@@ -27,6 +27,15 @@ export class EventsController {
     return this.eventsService.createEvent(createEventDto);
   }
 
+  @Patch(':eventId')
+  async updateEvent(
+    @Param('eventId') eventId: string,
+    @Body()
+    updateEventDto: UpdateEventDto,
+  ): Promise<Event> {
+    return this.eventsService.updateEvent(parseInt(eventId), updateEventDto);
+  }
+
   @Post(':eventId/invite')
   async inviteToEvent(
     @Param('eventId') eventId: string,
