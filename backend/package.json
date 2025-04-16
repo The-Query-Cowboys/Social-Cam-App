@@ -22,7 +22,7 @@
     "setup-test-db": "psql -f ./prisma/setup-local-db.sql",
     "push:test": "dotenv -e .env.test -- prisma db push",
     "seed:test": "dotenv -e .env.test ts-node prisma/runSeed.ts",
-    "push:prod": "npx prisma migrate dev --name init"
+    "push:prod": "npx prisma migrate dev --name init",
     "postinstall": "prisma generate"
   },
   "dependencies": {
