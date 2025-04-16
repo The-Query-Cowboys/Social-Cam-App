@@ -1,12 +1,19 @@
 import '../global.css'
 import {Stack} from 'expo-router'
 import {ThemeProvider, useTheme} from '../context/ThemeContext'
+import {ClerkProvider} from '@clerk/clerk-expo'
+import {tokenCache} from "@clerk/clerk-expo/token-cache";
 
 const RootLayout = () => {
+
+    const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
     return (
-        <ThemeProvider>
-            <LayoutContent/>
-        </ThemeProvider>
+        <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
+            <ThemeProvider>
+                <LayoutContent/>
+            </ThemeProvider>
+        </ClerkProvider>
     )
 }
 

@@ -5,9 +5,13 @@ import icon from '../assets/favicon.png'
 import React from 'react'
 import { useTheme } from "@/context/ThemeContext"
 import DarkModeToggle from "@/app/components/DarkModeToggle";
+//
+import {SignedIn, SignedOut} from '@clerk/clerk-expo'
 
 const Home = () => {
     const { colorScheme } = useTheme()
+
+    console.log(SignedIn)
 
     const applyTheme = `${colorScheme === 'dark' ? 'text-white bg-black': 'text-black bg-white'}`
 
@@ -23,6 +27,8 @@ const Home = () => {
             <Link href='/(dashboard)/publicEventPage' className={`my-2 border-b ${applyTheme}`}>Event Page</Link>
             <Link href='/(dashboard)/createEvent' className={`my-2 border-b ${applyTheme}`}>Create Event</Link>
             <Link href='/(auth)/logInPage' className={`my-2 border-b ${applyTheme}`}>Login</Link>
+            <SignedIn>Signed in</SignedIn>
+            <SignedOut>Signed out</SignedOut>
         </View>
     )
 }
