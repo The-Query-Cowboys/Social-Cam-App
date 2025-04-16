@@ -9,6 +9,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { EventsService } from './events.service';
+import { CreateEventDto, UpdateEventDto } from './event.dto';
 
 @Controller('/api/events')
 export class EventsController {
@@ -16,26 +17,14 @@ export class EventsController {
 
   @Get()
   async fetchEvents() {
-    console.log('getting events in controller');
     return this.eventsService.fetchEvents();
   }
   @Post()
   async createEvent(
     @Body()
-    eventData: {
-      event_owner_id: number;
-      event_title: string;
-      event_description: string;
-      storage_id: string;
-      album_id: number;
-      event_date: string | Date;
-      event_date_end: string | Date;
-      album_delay?: number;
-      event_location: string;
-      private: boolean;
-    },
-  ) {
-    return this.eventsService.createEvent(eventData);
+    createEventDto: CreateEventDto,
+  ): Promise<Event> {
+    return this.eventsService.createEvent(createEventDto);
   }
 
   @Post(':eventId/invite')
