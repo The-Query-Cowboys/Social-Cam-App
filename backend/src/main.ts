@@ -6,7 +6,6 @@ import {
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import multiPart from '@fastify/multipart';
-import fastyfyMultipart from '@fastify/multipart';
 
 
 async function bootstrap() {
@@ -26,7 +25,6 @@ async function bootstrap() {
   );
   
   await app.register(multiPart);
-  app.register(fastyfyMultipart);
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

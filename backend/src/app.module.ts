@@ -19,8 +19,9 @@ import { EventsModule } from './api/events/events.module';
     }),
     BullModule.forRoot({
       connection: {
-        host: 'localhost',
+        host: process.env.REDIS_HOST,
         port: 6379,
+        password: process.env.REDIS_PASSWORD,
       },
     }),
     EventsModule,

@@ -1,4 +1,4 @@
-import { appwriteSave, appwriteGetImageUrl, appwriteGetFile, appwriteDeleteFile } from 'appwrite/appwrite.api'
+import { appwriteSave, appwriteGetImageUrl, appwriteGetFile, appwriteDeleteFile } from '../../appwrite/appwrite.api'
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { User, Prisma } from '@prisma/client';
