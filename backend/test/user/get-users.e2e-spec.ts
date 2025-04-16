@@ -1,4 +1,4 @@
-import * as request from 'supertest';
+import request from 'supertest';
 import { INestApplication } from '@nestjs/common';
 import { setupTestApp } from '../utils/setup-test';
 
@@ -17,9 +17,7 @@ describe('GET /api/users', () => {
     const { body } = await request(app.getHttpServer())
       .get('/api/users')
       .expect(200);
-
-    const users = body.users;
-    users.forEach((user) => {
+    body.forEach((user) => {
       expect(typeof user.user_id).toBe('number');
       expect(typeof user.username).toBe('string');
       expect(typeof user.nickname).toBe('string');

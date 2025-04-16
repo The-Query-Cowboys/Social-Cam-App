@@ -6,6 +6,7 @@ import {
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { PrismaService } from '../../prisma.service';
+import { CreateEventDto, UpdateEventDto } from './event.dto';
 //import { AlbumService } from '../albums.service';
 
 @Injectable()
@@ -15,48 +16,46 @@ export class EventsService {
     private prisma: PrismaService,
   ) {}
 
-  async createEvent(eventData: {
-    event_owner_id: number;
-    event_title: string;
-    event_description: string;
-    storage_id: string;
-    album_id: number;
-    event_date: string | Date;
-    event_date_end: string | Date;
-    album_delay?: number;
-    event_location: string;
-    private: boolean;
-  }): Promise<any> {
-    const event_date =
-      typeof eventData.event_date === 'string'
-        ? new Date(eventData.event_date)
-        : eventData.event_date;
-
-    const event_date_end =
-      typeof eventData.event_date_end === 'string'
-        ? new Date(eventData.event_date_end)
-        : eventData.event_date_end;
-
-    if (event_date_end < event_date) {
-      throw new BadRequestException('End date cannot be before start date');
+  async fetchEvents() {
+    return this.prisma.event.findMany();
+  }
+  async createEvent(createEventDto: CreateEventDto): Promise<any> {
+    if (
+      createEventDto.event_date &&
+      createEventDto.event_date_end &&
+      new Date(createEventDto.event_date) >
+        new Date(createEventDto.event_date_end)
+    ) {
+      throw new BadRequestException('Event end date must be after start date');
     }
 
-    const newEvent = await this.prisma.event.create({
-      data: {
-        event_owner_id: eventData.event_owner_id,
-        event_title: eventData.event_title,
-        event_description: eventData.event_description,
-        storage_id: eventData.storage_id,
-        album_id: eventData.album_id,
-        event_date,
-        event_date_end,
-        album_delay: eventData.album_delay ?? 0,
-        event_location: eventData.event_location,
-        private: eventData.private,
-      },
-    });
-
-    return newEvent;
+    if (createEventDto.album_delay && createEventDto.album_delay < 0) {
+      throw new BadRequestException('Album delay cannot be negative');
+    }
+    try {
+      const newEvent = await this.prisma.event.create({
+        data: {
+          event_owner_id: createEventDto.event_owner_id,
+          event_title: createEventDto.event_title,
+          event_description: createEventDto.event_description,
+          storage_id: createEventDto.storage_id,
+          album_id: createEventDto.album_id,
+          event_date: createEventDto.event_date
+            ? new Date(createEventDto.event_date)
+            : new Date(),
+          event_date_end: createEventDto.event_date_end
+            ? new Date(createEventDto.event_date_end)
+            : new Date(),
+          album_delay: createEventDto.album_delay ?? 0,
+          event_location: createEventDto.event_location,
+          private: createEventDto.private,
+        },
+      });
+      return newEvent;
+    } catch (error) {
+      console.error('Could not create event', error);
+      throw error;
+    }
   }
 
   async updateEvent(
