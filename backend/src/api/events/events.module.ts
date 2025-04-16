@@ -1,25 +1,14 @@
 import { Module } from '@nestjs/common';
-import { BullModule } from '@nestjs/bullmq';
 import { EventsController } from './events.controller';
 import { EventsService } from './events.service';
-import { NotificationProcessor } from './notification.processor';
-import { NotificationQueueEvents } from './notification.queue-events';
 import { PrismaService } from '../../prisma.service';
-import { ExpoNotificationService } from '../notifications/expo-notification.service';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
   imports: [
-    BullModule.registerQueue({
-      name: 'notifications',
-    }),
+    NotificationsModule, // Import the shared NotificationsModule
   ],
   controllers: [EventsController],
-  providers: [
-    EventsService,
-    NotificationProcessor,
-    NotificationQueueEvents,
-    PrismaService,
-    ExpoNotificationService,
-  ],
+  providers: [EventsService, PrismaService],
 })
 export class EventsModule {}

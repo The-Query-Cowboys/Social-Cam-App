@@ -60,17 +60,7 @@ export class EventsService {
 
   async updateEvent(
     eventId: number,
-    updateData: {
-      event_title?: string;
-      event_description?: string;
-      storage_id?: string;
-      album_id?: number;
-      event_date?: string | Date;
-      event_date_end?: string | Date;
-      album_delay?: number;
-      event_location?: string;
-      private?: boolean;
-    },
+    updateEventDto: UpdateEventDto,
   ): Promise<any> {
     const existingEvent = await this.prisma.event.findUnique({
       where: { event_id: eventId },
@@ -79,36 +69,26 @@ export class EventsService {
     if (!existingEvent) {
       throw new NotFoundException(`Event with ID ${eventId} not found`);
     }
-    // Parse dates if they are strings
-    const data: any = { ...updateData };
-
-    if (typeof data.event_date === 'string') {
-      data.event_date = new Date(data.event_date);
-    }
-
-    if (typeof data.event_date_end === 'string') {
-      data.event_date_end = new Date(data.event_date_end);
-    }
 
     // Validate dates if both are provided
-    if (
-      data.event_date &&
-      data.event_date_end &&
-      data.event_date_end < data.event_date
-    ) {
+
+    const startDate = updateEventDto.event_date || existingEvent.event_date;
+    const endDate =
+      updateEventDto.event_date_end || existingEvent.event_date_end;
+    if (startDate > endDate) {
       throw new BadRequestException('End date cannot be before start date');
     }
 
     const updatedEvent = await this.prisma.event.update({
       where: { event_id: eventId },
-      data,
+      data: updateEventDto,
     });
 
-    if (data.event_date || data.event_date_end) {
+    if (updateEventDto.event_date || updateEventDto.event_date_end) {
       // Cancel any existing scheduled notifications
-      //await this.cancelEventNotifications(eventId);
+      await this.cancelEventNotifications(eventId);
       // Re-schedule notifications with new dates
-      //await this.scheduleEventNotifications(eventId);
+      await this.scheduleEventNotifications(eventId);
     }
 
     return updatedEvent;

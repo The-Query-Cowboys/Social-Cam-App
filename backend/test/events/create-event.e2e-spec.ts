@@ -23,9 +23,14 @@ import { PrismaService } from '../../src/prisma.service';
 describe('POST /api/events', () => {
   let app: INestApplication;
   let prisma: PrismaService;
+  let mockQueue: any;
+  let mockNotificationService: any;
 
   beforeAll(async () => {
-    app = await setupTestApp();
+    const setup = await setupTestApp();
+    app = setup.app;
+    mockQueue = setup.mockQueue;
+    mockNotificationService = setup.mockNotificationService;
     prisma = app.get<PrismaService>(PrismaService);
   });
 
