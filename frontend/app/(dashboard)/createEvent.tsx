@@ -1,6 +1,5 @@
 import { Text, View } from 'react-native'
 import { Link } from 'expo-router'
-
 import React from 'react'
 import {useTheme} from "@/context/ThemeContext";
 
@@ -18,4 +17,6 @@ const createEvent = () => {
     )
 }
 
+
 export default createEvent
+

@@ -19,7 +19,7 @@ generator client {
 // Once you've added tables run npx prisma migrate dev --name init
 
 model User {
-  user_id     Int         @id @default(autoincrement())
+  user_id     Int             @id @default(autoincrement())
   username    String
   nickname    String
   description String
@@ -27,6 +27,14 @@ model User {
   storage_id  String
   email       String
   UserEvent   UserEvent[]
+  pushTokens  UserPushToken[]
+}
+
+model UserPushToken {
+  token_id Int    @id @default(autoincrement())
+  user_id  Int
+  token    String
+  user     User   @relation(fields: [user_id], references: [user_id])
 }
 
 model UserEvent {
@@ -64,11 +72,11 @@ model Event {
 }
 
 model Comment {
-  comment_id Int    @id @default(autoincrement())
-  event_id   Int
-  comment    String
-  votes      Int    @default(0)
-  user_id   Int
+  comment_id   Int      @id @default(autoincrement())
+  event_id     Int
+  comment      String
+  votes        Int      @default(0)
+  user_id      Int
   comment_date DateTime @default(now())
 
   //Foreign keys
@@ -82,13 +90,13 @@ model Album {
 }
 
 model Picture {
-  album_id    Int
+  album_id    Int?
   picture_id  Int    @id @default(autoincrement())
   storage_id String @db.VarChar(100)
-  type_id     Int
+  type_id    Int
 
   //Foreign keys
-  album Album       @relation(fields: [album_id], references: [album_id])
+  album Album?       @relation(fields: [album_id], references: [album_id])
   type  PictureType @relation(fields: [type_id], references: [type_id])
 }
 

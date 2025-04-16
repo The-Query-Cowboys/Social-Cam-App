@@ -1,9 +1,9 @@
 import { Text, View, TextInput, Button } from 'react-native'
 import { Link } from 'expo-router'
-
 import { useState } from 'react'
 import React from 'react'
 import {useTheme} from "@/context/ThemeContext";
+
 
 
 const signUpPage = () => {
@@ -85,4 +85,3 @@ password (encrypted)
 email
 */
 
-export default signUpPage
