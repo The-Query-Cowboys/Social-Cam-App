@@ -27,4 +27,10 @@ describe('GET /api/albums/:event_id', () => {
       .expect(200);
     expect(body).toEqual(expected);
   });
+  it("404: responds with event not found error when event does not exist", async () => {
+    const {body} = await request(app.getHttpServer())
+        .get('api/albums/99999999')
+        .expect(404);
+        expect(body.message).toBe("Event with ID 99999999 not found");
+});
 });
