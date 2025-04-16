@@ -2,7 +2,6 @@ import { Controller, Get, Param, ParseIntPipe, Query, Body, Post, UseInterceptor
 import { UsersService } from './users.service';
 import { FileInterceptor, UploadedFile, MemoryStorageFile } from '@blazity/nest-file-fastify';
 
-
 @Controller('/api/users')
 export class UsersController {
   constructor(private readonly appService: UsersService) { }
@@ -20,7 +19,7 @@ export class UsersController {
   }
 
   //get all events for that user id
-  @Get(':user_id/events') 
+  @Get(':user_id/events')
   getUserEvents(@Param('user_id', ParseIntPipe) user_id: number, @Query('status') status) {
     if (status) {
       const statusQuery = status.split(",").map((x) => { return Number(x) })
@@ -38,13 +37,16 @@ export class UsersController {
     @UploadedFile() file: MemoryStorageFile,
     @Body() userData: { username: string; nickname: string; description: string; auth_id: string; email: string; }
   ) {
-    return this.appService.saveImage(file)
-      .then((newImageId) => {
-        if (newImageId.length > 0) {
-          userData["storage_id"] = newImageId
-          return this.appService.createUser(userData)
-        }
-      })
+    let profileImage = process.env.DEFAULT_PROFILE_IMAGE
+    if (file !== undefined) {
+      profileImage = await this.appService.saveImage(file)
+    }
+    const listOfUsers = await this.appService.getAllUsers()
+
+    userData["storage_id"] = profileImage
+
+    return this.appService.createUser(userData)
+
   }
 
   //patch a user.  Things that can change are nickname, description, auth_id, email and profile picture
@@ -65,7 +67,7 @@ export class UsersController {
       try {
         await this.appService.deleteFile(currentUser?.storage_id)
       }
-      catch {    
+      catch {
       }
     }
     else {

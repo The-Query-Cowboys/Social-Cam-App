@@ -11,6 +11,8 @@ import { PicturesController } from './api/pictures.controller';
 import { PrismaService } from './prisma.service';
 import { BullModule } from '@nestjs/bullmq';
 import { EventsModule } from './api/events/events.module';
+import { TokenService } from './api/token.service';
+import { TokenController } from './api/token.controller';
 
 @Module({
   imports: [
@@ -31,6 +33,7 @@ import { EventsModule } from './api/events/events.module';
     UsersController,
     AlbumsController,
     PicturesController,
+    TokenController,
   ],
   providers: [
     AppService,
@@ -38,6 +41,7 @@ import { EventsModule } from './api/events/events.module';
     AlbumsService,
     PicturesService,
     PrismaService,
+    TokenService,
   ],
 })
 export class AppModule {}
