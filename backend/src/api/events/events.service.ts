@@ -106,10 +106,9 @@ export class EventsService {
 
     if (data.event_date || data.event_date_end) {
       // Cancel any existing scheduled notifications
-      await this.cancelEventNotifications(eventId);
-
+      //await this.cancelEventNotifications(eventId);
       // Re-schedule notifications with new dates
-      await this.scheduleEventNotifications(eventId);
+      //await this.scheduleEventNotifications(eventId);
     }
 
     return updatedEvent;

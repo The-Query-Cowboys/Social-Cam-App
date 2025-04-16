@@ -1,17 +1,21 @@
 import request from 'supertest';
 import { INestApplication } from '@nestjs/common';
 import { setupTestApp } from '../utils/setup-test';
+import { PrismaService } from '../../src/prisma.service';
+import { cleanupAfterAll } from '../utils/end-test';
 
 describe('GET /api/users/:user_id', () => {
   let app: INestApplication;
+  let prisma: PrismaService;
 
   beforeAll(async () => {
     app = await setupTestApp();
+    prisma = app.get<PrismaService>(PrismaService);
   });
 
   afterAll(async () => {
-    await app.close();
-  });
+    await cleanupAfterAll(app, prisma);
+  }, 15000);
 
   it('200: responds with the user denoted by given user_id', async () => {
     const { body } = await request(app.getHttpServer())

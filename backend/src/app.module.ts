@@ -22,6 +22,30 @@ import { EventsModule } from './api/events/events.module';
         host: process.env.REDIS_HOST,
         port: 6379,
         password: process.env.REDIS_PASSWORD,
+        enableReadyCheck: true,
+        retryStrategy: (times) => {
+          // Exponential backoff with maximum of 10s delay
+          return Math.min(Math.pow(2, times) * 1000, 10000);
+        },
+        connectTimeout: 10000,
+        // Add TLS if needed (remove if not using TLS)
+        tls: process.env.REDIS_TLS === 'true' ? {} : undefined,
+        // Reconnect on error
+        reconnectOnError: (err) => {
+          const targetError =
+            err.message.includes('ECONNRESET') ||
+            err.message.includes('ETIMEDOUT');
+          return targetError ? true : false;
+        },
+      },
+      defaultJobOptions: {
+        attempts: 5,
+        backoff: {
+          type: 'exponential',
+          delay: 1000,
+        },
+        removeOnComplete: true,
+        removeOnFail: 1000,
       },
     }),
     EventsModule,
