@@ -1,4 +1,4 @@
-import * as request from 'supertest';
+import request from 'supertest';
 import { INestApplication } from '@nestjs/common';
 import { setupTestApp } from  '../utils/setup-test';
 
@@ -21,6 +21,6 @@ describe('GET /api/albums/:event_id', () => {
         const {body} = await request(app.getHttpServer())
             .get('/api/albums/2')
             .expect(200);
-            expect(body).toBe(expected);
+            expect(body).toEqual(expected);
     })
 })
