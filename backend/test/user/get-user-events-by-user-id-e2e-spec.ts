@@ -5,6 +5,7 @@ import { cleanupAfterAll } from '../utils/end-test';
 import { PrismaService } from '../../src/prisma.service';
 
 describe('GET /api/users', () => {
+
   let app: INestApplication;
   let prisma: PrismaService;
   let mockQueue: any;
@@ -41,5 +42,4 @@ describe('GET /api/users', () => {
       .expect(404);
     expect(body.message).toBe('User_id 9999 was not found');
   });
-
 });
