@@ -32,6 +32,10 @@ export class EventsService {
     if (createEventDto.album_delay && createEventDto.album_delay < 0) {
       throw new BadRequestException('Album delay cannot be negative');
     }
+
+    const album = await this.prisma.album.create({
+      data: { album_name: createEventDto.event_title },
+    });
     try {
       const newEvent = await this.prisma.event.create({
         data: {
@@ -39,7 +43,7 @@ export class EventsService {
           event_title: createEventDto.event_title,
           event_description: createEventDto.event_description,
           storage_id: createEventDto.storage_id,
-          album_id: createEventDto.album_id,
+          album_id: album.album_id,
           event_date: createEventDto.event_date
             ? new Date(createEventDto.event_date)
             : new Date(),
@@ -105,6 +109,14 @@ export class EventsService {
 
     if (!event) {
       throw new NotFoundException(`Event with ID ${eventId} not found`);
+    }
+
+    const user = await this.prisma.user.findUnique({
+      where: { user_id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
     }
     return this.prisma.userEvent.create({
       data: {

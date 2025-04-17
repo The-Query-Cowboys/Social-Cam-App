@@ -42,6 +42,19 @@ describe('POST /api/events/:eventId/invite', () => {
 
     expect(body.message[0]).toBe('userId should not be empty');
   });
+  it('404: fails when user does not exist', async () => {
+    const nonExistentUserId = 99999;
+    const payload = {
+      userId: nonExistentUserId,
+    };
+
+    const { body } = await request(app.getHttpServer())
+      .post(`/api/events/1/invite`)
+      .send(payload)
+      .expect(404);
+
+    console.log(body);
+  });
   it('404: fails when event does not exist', async () => {
     const nonExistentEventId = 99999;
     const payload = {
