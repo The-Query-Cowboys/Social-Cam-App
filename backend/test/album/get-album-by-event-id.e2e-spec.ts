@@ -29,8 +29,14 @@ describe('GET /api/albums/:event_id', () => {
   });
   it("404: responds with event not found error when event does not exist", async () => {
     const {body} = await request(app.getHttpServer())
-        .get('/api/albums/99999999')
-        .expect(404)
-        expect(body.message).toBe("Event with ID 99999999 not found");
+      .get('/api/albums/99999999')
+      .expect(404)
+      expect(body.message).toBe("Event with ID 99999999 not found");
 });
+  it("400: responds with 'Validation failed' when event_id is not a number", async () => {
+    const {body} = await request(app.getHttpServer())
+      .get('/api/albums/not-a-valid-id')
+      .expect(400)
+      expect(body.message).toContain('Validation failed');
+  });
 });

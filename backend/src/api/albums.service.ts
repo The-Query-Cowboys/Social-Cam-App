@@ -16,6 +16,10 @@ export class AlbumsService {
       throw new NotFoundException(`Event with ID ${eventId} not found`);
     }
 
+    if (!event.album_id) {
+      throw new NotFoundException(`Event with ID ${eventId} does not have an associated album`);
+    }
+
     const album = await this.prisma.album.findUnique({
       where: { album_id: event?.album_id },
     });
