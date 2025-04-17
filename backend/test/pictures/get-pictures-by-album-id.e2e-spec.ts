@@ -5,13 +5,18 @@ import { cleanupAfterAll } from '../utils/end-test';
 import { PrismaService } from '../../src/prisma.service';
 
 describe('GET /api/pictures/album/:album_id', () => {
-  let app: INestApplication;
-  let prisma: PrismaService;
-
-  beforeAll(async () => {
-    app = await setupTestApp();
-    prisma = app.get<PrismaService>(PrismaService);
-  });
+    let app: INestApplication;
+    let prisma: PrismaService;
+    let mockQueue: any;
+    let mockNotificationService: any;
+  
+    beforeAll(async () => {
+      const setup = await setupTestApp();
+      app = setup.app;
+      mockQueue = setup.mockQueue;
+      mockNotificationService = setup.mockNotificationService;
+      prisma = app.get<PrismaService>(PrismaService);
+    });
 
   afterAll(async () => {
     await cleanupAfterAll(app, prisma);
