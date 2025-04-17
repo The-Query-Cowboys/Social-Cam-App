@@ -6,7 +6,7 @@ import {
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { PrismaService } from '../../prisma.service';
-import { CreateEventDto, UpdateEventDto } from './event.dto';
+import { CreateEventDto, UpdateEventDto, InviteUserDto } from './event.dto';
 //import { AlbumService } from '../albums.service';
 
 @Injectable()
@@ -99,6 +99,13 @@ export class EventsService {
   }
 
   async inviteUserToEvent(userId: number, eventId: number): Promise<any> {
+    const event = await this.prisma.event.findUnique({
+      where: { event_id: eventId },
+    });
+
+    if (!event) {
+      throw new NotFoundException(`Event with ID ${eventId} not found`);
+    }
     return this.prisma.userEvent.create({
       data: {
         user_id: userId,

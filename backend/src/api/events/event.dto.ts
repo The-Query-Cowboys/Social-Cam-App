@@ -89,3 +89,9 @@ export class UpdateEventDto {
   @IsOptional()
   event_date_end?: string;
 }
+
+export class InviteUserDto {
+  @IsInt()
+  @IsNotEmpty()
+  userId: number;
+}
