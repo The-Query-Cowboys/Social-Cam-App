@@ -9,7 +9,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { EventsService } from './events.service';
-import { CreateEventDto, UpdateEventDto } from './event.dto';
+import { CreateEventDto, UpdateEventDto, InviteUserDto } from './event.dto';
 
 @Controller('/api/events')
 export class EventsController {
@@ -39,9 +39,12 @@ export class EventsController {
   @Post(':eventId/invite')
   async inviteToEvent(
     @Param('eventId') eventId: string,
-    @Body('userId') userId: number,
+    @Body() inviteUserDto: InviteUserDto,
   ) {
-    return this.eventsService.inviteUserToEvent(userId, parseInt(eventId, 10));
+    return this.eventsService.inviteUserToEvent(
+      inviteUserDto.userId,
+      parseInt(eventId, 10),
+    );
   }
 
   @Patch(':eventId/users/:userId/status')

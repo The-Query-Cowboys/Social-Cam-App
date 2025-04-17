@@ -24,7 +24,7 @@ describe('POST /api/events/:eventId/invite', () => {
 
   it('201: creates a UserEvent relation for given user and event', async () => {
     const userId = {
-      userId: 12,
+      userId: 3,
     };
     const { body } = await request(app.getHttpServer())
       .post('/api/events/1/invite')
@@ -32,6 +32,27 @@ describe('POST /api/events/:eventId/invite', () => {
       .expect(201);
     expect(body.userEvent_id).toBe(7);
     expect(body.event_id).toBe(1);
-    expect(body.user_id).toBe(12);
+    expect(body.user_id).toBe(3);
+  });
+  it('400: fails when userId is missing', async () => {
+    const { body } = await request(app.getHttpServer())
+      .post(`/api/events/1/invite`)
+      .send({})
+      .expect(400);
+
+    expect(body.message[0]).toBe('userId should not be empty');
+  });
+  it('404: fails when event does not exist', async () => {
+    const nonExistentEventId = 99999;
+    const payload = {
+      userId: 1,
+    };
+
+    const { body } = await request(app.getHttpServer())
+      .post(`/api/events/${nonExistentEventId}/invite`)
+      .send(payload)
+      .expect(404);
+
+    console.log(body);
   });
 });
