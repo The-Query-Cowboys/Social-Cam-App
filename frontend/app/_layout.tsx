@@ -15,7 +15,6 @@ const LayoutContent = () => {
     const {colorScheme} = useTheme();
     const isDarkMode = colorScheme === 'dark';
 
-
     return (
         <Stack screenOptions={{
             headerStyle: {backgroundColor: isDarkMode ? '#1a1a1a' : '#ddd'},
@@ -33,4 +32,3 @@ const LayoutContent = () => {
 }
 
 export default RootLayout
-

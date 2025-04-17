@@ -30,6 +30,7 @@ const dashboardLayout = () => {
       options={{ title: "Event details" }} 
     />
   </Tabs>
+  
   )
 }
 
