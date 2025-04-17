@@ -4,14 +4,19 @@ import { InputFile } from 'node-appwrite/file';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-//create new instances of client and storage
-const client = new Client();
-const storage = new Storage(client);
 
-export function initClient() {
+
+function initAppWriteClient() {
+
+  //create new instances of client and storage
+  const client = new Client();
+  const storage = new Storage(client);
+
   client
     .setEndpoint(process.env.APPWRITE_API) // Your API Endpoint
     .setProject(process.env.APPWRITE_PROJECT_ID); // Your project ID
+
+  return [client, storage]
 }
 
 //****************************************************
@@ -21,6 +26,10 @@ export function initClient() {
 
 //to save a file
 export function appwriteSave(file) {
+
+  const [client, storage] = initAppWriteClient()
+  
+
   const uniqueId = ID.unique();
 
   const savePromise = storage.createFile(
@@ -31,7 +40,7 @@ export function appwriteSave(file) {
 
   let newFile = '';
 
-  return savePromise.then(
+  return savePromise.then(    
     function (response) {
       const newFileId = response.$id;
       return newFileId;
@@ -45,6 +54,9 @@ export function appwriteSave(file) {
 //to get whole file back
 
 export function appwriteGetFile(storage_id) {
+
+  const [client, storage] = initAppWriteClient()
+
   return storage
     .getFile(process.env.APPWRITE_BUCKET_ID, storage_id)
     .then((file) => {
@@ -58,6 +70,9 @@ export function appwriteGetFile(storage_id) {
 //to view file url! this is probably what we want
 
 export function appwriteGetImageUrl(storage_id) {
+
+  const [client, storage] = initAppWriteClient()
+
   return storage
     .getFileView(process.env.APPWRITE_BUCKET_ID, storage_id)
     .then((response) => {
@@ -71,6 +86,9 @@ export function appwriteGetImageUrl(storage_id) {
 //to list files in a bucket
 
 export function appwriteListFiles() {
+
+  const [client, storage] = initAppWriteClient()
+
   return storage
     .listFiles(process.env.APPWRITE_BUCKET_ID)
     .then((files) => {
@@ -84,6 +102,9 @@ export function appwriteListFiles() {
 //to delete file
 
 export function appwriteDeleteFile(storage_id) {
+
+  const [client, storage] = initAppWriteClient()
+
   return storage
     .deleteFile(process.env.APPWRITE_BUCKET_ID, storage_id)
     .then((file) => {

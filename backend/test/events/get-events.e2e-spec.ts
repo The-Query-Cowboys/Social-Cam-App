@@ -55,5 +55,7 @@ describe('GET /api/events', () => {
       expect(typeof event.event_date_end).toBe('string');
       expect(typeof event.event_date).toBe('string');
     });
+
+    console.log("finished testing")
   });
 });
