@@ -4,21 +4,6 @@ import { InputFile } from 'node-appwrite/file';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-
-
-function initAppWriteClient() {
-
-  //create new instances of client and storage
-  const client = new Client();
-  const storage = new Storage(client);
-
-  client
-    .setEndpoint(process.env.APPWRITE_API) // Your API Endpoint
-    .setProject(process.env.APPWRITE_PROJECT_ID); // Your project ID
-
-  return [client, storage]
-}
-
 //****************************************************
 //now, here is how to do the various add,list,deletes, etc
 //this is asynchronous process! please bearthat in mind when developing
@@ -27,8 +12,13 @@ function initAppWriteClient() {
 //to save a file
 export function appwriteSave(file) {
 
-  const [client, storage] = initAppWriteClient()
-  
+  //create new instances of client and storage
+  const client = new Client();
+  const storage = new Storage(client);
+
+  client
+    .setEndpoint(process.env.APPWRITE_API) // Your API Endpoint
+    .setProject(process.env.APPWRITE_PROJECT_ID); // Your project ID
 
   const uniqueId = ID.unique();
 
@@ -40,7 +30,7 @@ export function appwriteSave(file) {
 
   let newFile = '';
 
-  return savePromise.then(    
+  return savePromise.then(
     function (response) {
       const newFileId = response.$id;
       return newFileId;
@@ -55,7 +45,13 @@ export function appwriteSave(file) {
 
 export function appwriteGetFile(storage_id) {
 
-  const [client, storage] = initAppWriteClient()
+  //create new instances of client and storage
+  const client = new Client();
+  const storage = new Storage(client);
+
+  client
+    .setEndpoint(process.env.APPWRITE_API) // Your API Endpoint
+    .setProject(process.env.APPWRITE_PROJECT_ID); // Your project ID
 
   return storage
     .getFile(process.env.APPWRITE_BUCKET_ID, storage_id)
@@ -69,25 +65,37 @@ export function appwriteGetFile(storage_id) {
 
 //to view file url! this is probably what we want
 
-export function appwriteGetImageUrl(storage_id) {
+export async function appwriteGetImageUrl(storage_id) {
 
-  const [client, storage] = initAppWriteClient()
+  //create new instances of client and storage
+  const client = new Client();
+  const storage = new Storage(client);
 
-  return storage
-    .getFileView(process.env.APPWRITE_BUCKET_ID, storage_id)
-    .then((response) => {
-      return response + '&mode=admin';
-    })
-    .catch((error) => {
-      return error;
-    });
+  client
+    .setEndpoint(process.env.APPWRITE_API) // Your API Endpoint
+    .setProject(process.env.APPWRITE_PROJECT_ID); // Your project ID
+
+  const filePreview = await storage.getFileView(process.env.APPWRITE_BUCKET_ID, storage_id)
+
+  if (filePreview !== undefined) {
+    return filePreview + '&mode=admin';
+  }
+  else {
+    return { message: "No image is found" }
+  }
 }
 
 //to list files in a bucket
 
 export function appwriteListFiles() {
 
-  const [client, storage] = initAppWriteClient()
+  //create new instances of client and storage
+  const client = new Client();
+  const storage = new Storage(client);
+
+  client
+    .setEndpoint(process.env.APPWRITE_API) // Your API Endpoint
+    .setProject(process.env.APPWRITE_PROJECT_ID); // Your project ID
 
   return storage
     .listFiles(process.env.APPWRITE_BUCKET_ID)
@@ -103,7 +111,13 @@ export function appwriteListFiles() {
 
 export function appwriteDeleteFile(storage_id) {
 
-  const [client, storage] = initAppWriteClient()
+  //create new instances of client and storage
+  const client = new Client();
+  const storage = new Storage(client);
+
+  client
+    .setEndpoint(process.env.APPWRITE_API) // Your API Endpoint
+    .setProject(process.env.APPWRITE_PROJECT_ID); // Your project ID
 
   return storage
     .deleteFile(process.env.APPWRITE_BUCKET_ID, storage_id)

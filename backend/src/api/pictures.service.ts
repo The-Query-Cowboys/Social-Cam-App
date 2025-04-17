@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Picture, Prisma } from '@prisma/client';
+import { appwriteGetImageUrl, appwriteGetFile } from '../../appwrite/appwrite.api';
 
 @Injectable()
 export class PicturesService {
@@ -12,7 +13,8 @@ export class PicturesService {
     if (!picture) {
       throw new NotFoundException('picture not found');
     }
-
+    const picture_url = await appwriteGetImageUrl(picture.storage_id);
+    picture["url"] = picture_url;
     return picture;
   }
 
