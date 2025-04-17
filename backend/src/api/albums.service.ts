@@ -67,11 +67,12 @@ export class AlbumsService {
       throw new NotFoundException(`Album with ID ${albumId} not found`);
     }
 
-    await this.prisma.picture.updateMany({
-      where: {album_id: albumId},
-      data: {album_id: null},
-    })
-
-    await this.prisma.album.delete({where: {album_id: albumId}});
+    await this.prisma.$transaction([
+      this.prisma.picture.updateMany({
+        where: {album_id: albumId},
+        data: {album_id: null},
+      }),
+      this.prisma.album.delete({where: {album_id: albumId}})
+    ])
   }
 }
