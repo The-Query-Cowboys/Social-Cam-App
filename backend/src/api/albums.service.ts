@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Album } from '@prisma/client';
 
@@ -12,9 +12,21 @@ export class AlbumsService {
       select: { album_id: true },
     });
 
+    if (!event) {
+      throw new NotFoundException(`Event with ID ${eventId} not found`);
+    }
+
+    if (!event.album_id) {
+      throw new NotFoundException(`Event with ID ${eventId} does not have an associated album`);
+    }
+
     const album = await this.prisma.album.findUnique({
       where: { album_id: event?.album_id },
     });
+
+    if (!album) {
+      throw new NotFoundException(`Album with ID ${event.album_id} not found`)
+    }
 
     return album;
   }
