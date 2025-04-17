@@ -17,6 +17,13 @@ export class PicturesService {
   }
 
   async getAllAlbumPictures(albumId: number) {
+    const album = await this.prisma.album.findUnique({
+      where: {album_id: albumId},
+    })
+
+    if (!album) {
+      throw new NotFoundException('Album not found');
+    }
     return this.prisma.picture.findMany({
       where: { album_id: albumId },
     });
