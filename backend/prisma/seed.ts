@@ -1,4 +1,6 @@
-import { prisma } from './prisma-client';
+import { PrismaService } from '../src/prisma.service';
+
+const prisma = new PrismaService();
 
 export async function seedTestDatabase() {
   const users = [

@@ -7,7 +7,6 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import multiPart from '@fastify/multipart';
 
-
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
@@ -23,8 +22,8 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
-  
+
   await app.register(multiPart);
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
 }
 bootstrap();
