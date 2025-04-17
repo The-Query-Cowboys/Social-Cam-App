@@ -40,6 +40,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "dotenv": "^16.5.0",
+    "node-appwrite": "^15.0.1",
     "expo-server-sdk": "^3.14.0",
     "node-appwrite": "^15.0.1",
     "reflect-metadata": "^0.2.2",

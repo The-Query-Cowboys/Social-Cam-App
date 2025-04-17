@@ -11,7 +11,8 @@ export class PicturesController {
     }
 
     @Get('album/:album_id')
-    getAlbumPictures(@Param('album_id', ParseIntPipe) album_id: number) {
-        return this.appService.getAllAlbumPictures(album_id);
+    async getAlbumPictures(@Param('album_id', ParseIntPipe) album_id: number) {
+        const pictures = await this.appService.getAllAlbumPictures(album_id);
+        return {pictures};
     }
 }
