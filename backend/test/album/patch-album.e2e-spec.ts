@@ -35,4 +35,12 @@ describe('PATCH /api/albums/:album_id', () => {
         expect(body.message).toBe("Pictures added to album");
         expect(body.count).toBe(1);
   })
+  it("400 responds with 'pictures must be an array' if pictures array is missing from array object", async () => {
+    const testPictures = {};
+    const {body} = await request(app.getHttpServer())
+      .patch("/api/albums/1?action=add")
+      .send(testPictures)
+      .expect(400)
+      expect(body.message).toContain("pictures must be an array");
+  })
 });
