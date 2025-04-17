@@ -9,11 +9,11 @@ const client = new Client();
 const storage = new Storage(client);
 
 export function initClient() {
+    client
     .setEndpoint(process.env.APPWRITE_API) // Your API Endpoint
     .setProject(process.env.APPWRITE_PROJECT_ID) // Your project ID
     ;
 }
-client
 
 //****************************************************
 //now, here is how to do the various add,list,deletes, etc
