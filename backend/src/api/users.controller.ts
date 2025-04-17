@@ -41,11 +41,7 @@ export class UsersController {
     if (file !== undefined) {
       profileImage = await this.appService.saveImage(file)
     }
-
-    console.log(profileImage, "<<< new storage_id")
-
     userData["storage_id"] = profileImage
-
     return this.appService.createUser(userData)
 
   }
