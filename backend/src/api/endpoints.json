@@ -40,6 +40,9 @@
             "count": 1
         }
     },
+    "DELETE /api/albums/:album_id": {
+        "description": "Deletes album and unlinks pictures from deleted album"
+    },
     "GET /api/pictures/:picture_id": {
         "description": "Serves an individual picture object by picture_id",
         "exampleResponse": {
