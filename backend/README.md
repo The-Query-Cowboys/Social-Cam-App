@@ -56,16 +56,13 @@ DIRECT_URL="postgresql://postgres.qldazwkczfyhhcxwwxly:BabaMghtdfs@aws-0-eu-west
 
 
 //appwrite connection details
-<<<<<<< HEAD
-APIEndpoint='https://cloud.appwrite.io/v1'
-projectId='67f8f680002b6a18bfc3'
-bucketId='67f8f69b003be8ed659d'
-
-=======
 APPWRITE_API='https://cloud.appwrite.io/v1'
 APPWRITE_PROJECT_ID='67f8f680002b6a18bfc3'
 APPWRITE_BUCKET_ID='67f8f69b003be8ed659d'
->>>>>>> main
+
+//Redis
+REDIS_HOST='fancy-lamb-16806.upstash.io'
+REDIS_PASSWORD='AUGmAAIjcDE3ZGNjZGY3ZTcxNWM0MWY0YTZjOTFjMzg2YWM0ODY5YnAxMA'
 ```
 
 For local testing db also create ``.env.test``:
