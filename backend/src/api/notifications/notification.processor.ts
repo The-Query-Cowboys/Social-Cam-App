@@ -2,7 +2,7 @@ import { Processor, InjectQueue, WorkerHost } from '@nestjs/bullmq';
 import { Injectable, Logger } from '@nestjs/common';
 import { Job, Queue } from 'bullmq';
 import { PrismaService } from '../../prisma.service';
-import { ExpoNotificationService } from '../notifications/expo-notification.service';
+import { ExpoNotificationService } from './expo-notification.service';
 
 @Injectable()
 @Processor('notifications')
@@ -19,19 +19,26 @@ export class NotificationProcessor extends WorkerHost {
 
   async process(job: Job): Promise<any> {
     this.logger.log(`Processing job ${job.id} of type ${job.name}`);
+    job.updateProgress(10); // Initial progress
 
     try {
+      let result;
       switch (job.name) {
         case 'eventStart':
-          return await this.handleEventStart(job);
+          result = await this.handleEventStart(job);
+          break;
         case 'photoReminder':
-          return await this.handlePhotoReminder(job);
+          result = await this.handlePhotoReminder(job);
+          break;
         case 'eventEnd':
-          return await this.handleEventEnd(job);
+          result = await this.handleEventEnd(job);
+          break;
         default:
           this.logger.warn(`Unknown job type: ${job.name}`);
           return { status: 'unknown_job_type' };
       }
+      job.updateProgress(100); // Final progress
+      return result;
     } catch (error) {
       this.logger.error(`Error processing job ${job.id}:`, error);
       throw error; // Re-throw to let BullMQ handle the failure
@@ -43,6 +50,7 @@ export class NotificationProcessor extends WorkerHost {
     this.logger.log(
       `Processing event start for "${eventTitle}" (ID: ${eventId})`,
     );
+    job.updateProgress(20);
 
     // Get event details
     const event = await this.prisma.event.findUnique({
@@ -56,34 +64,25 @@ export class NotificationProcessor extends WorkerHost {
 
     // Get all users attending this event
     const attendees = await this.prisma.userEvent.findMany({
-      where: { event_id: eventId, status_id: 2 },
-    });
-
-    this.logger.log(
-      `Found ${attendees.length} attendees for event "${eventTitle}"`,
-    );
-
-    // Get all user IDs to fetch their push tokens
-    const userIds = attendees.map((attendee) => attendee.user_id);
-
-    // Get push tokens for all users
-    const userPushTokens = await this.prisma.userPushToken.findMany({
-      where: {
-        user_id: { in: userIds },
+      where: { event_id: eventId, status_id: 2 }, // Confirmed attendees
+      include: {
+        user: {
+          include: {
+            pushTokens: true,
+          },
+        },
       },
     });
 
-    const userTokenMap = new Map();
-    userPushTokens.forEach((tokenEntry) => {
-      if (!userTokenMap.has(tokenEntry.user_id)) {
-        userTokenMap.set(tokenEntry.user_id, []);
-      }
-      userTokenMap.get(tokenEntry.user_id).push(tokenEntry.token);
-    });
+    job.updateProgress(60);
 
-    const validPushTokens = userPushTokens
-      .map((userPushTokens) => userPushTokens.token)
-      .filter((token): token is string => !!token && token.length > 0);
+    // Extract user tokens directly from the joined query
+    const validPushTokens = attendees
+      .flatMap((ue) => ue.user.pushTokens)
+      .filter((token) => token && token.token)
+      .map((token) => token.token);
+
+    job.updateProgress(70);
 
     // Send event start notification to all users at once
     if (validPushTokens.length > 0) {
@@ -95,47 +94,61 @@ export class NotificationProcessor extends WorkerHost {
       );
     }
 
+    job.updateProgress(80);
+
     // For each attendee, schedule random photo reminders
     for (const attendee of attendees) {
       await this.scheduleRandomPhotoReminders(attendee.user_id, event);
     }
 
-    return { status: 'success', attendeesNotified: attendees.length };
+    return {
+      status: 'success',
+      attendeesNotified: attendees.length,
+      tokensNotified: validPushTokens.length,
+    };
   }
 
-  //send reminder to user, enable use of the camera
   private async handlePhotoReminder(job: Job) {
     const { userId, eventId, eventTitle, reminderNumber, totalReminders } =
       job.data;
     this.logger.log(
       `Sending photo reminder ${reminderNumber}/${totalReminders} to user ${userId} for event "${eventTitle}"`,
     );
+    job.updateProgress(30);
 
-    // Get user's push token
-    const userToken = await this.prisma.userPushToken.findFirst({
+    // Get user's push tokens
+    const userTokens = await this.prisma.userPushToken.findMany({
       where: { user_id: userId },
     });
 
-    if (!userToken?.token) {
-      this.logger.warn(`No push token found for user ${userId}`);
+    const validTokens = userTokens
+      .filter((token) => token && token.token)
+      .map((token) => token.token);
+
+    job.updateProgress(60);
+
+    if (validTokens.length === 0) {
+      this.logger.warn(`No push tokens found for user ${userId}`);
       return { status: 'no_push_token' };
     }
 
-    // Send notification
+    // Send notification to all user's devices
     await this.expoNotificationService.sendNotification(
-      [userToken.token],
+      validTokens,
       `Photo Time! (${reminderNumber}/${totalReminders})`,
       `Time to take a photo for "${eventTitle}"!`,
       {
         eventId,
         type: 'photo_reminder',
         reminderNumber,
-        //will need to update the deeplink when the camers is implemented
         deepLink: `camera/${eventId}/${reminderNumber}`,
       },
     );
 
-    return { status: 'success' };
+    return {
+      status: 'success',
+      tokensNotified: validTokens.length,
+    };
   }
 
   private async handleEventEnd(job: Job) {
@@ -143,39 +156,57 @@ export class NotificationProcessor extends WorkerHost {
     this.logger.log(
       `Processing event end for "${eventTitle}" (ID: ${eventId})`,
     );
+    job.updateProgress(30);
 
-    // Get all attendees
-    const attendees = await this.prisma.userEvent.findMany({
+    // Get event details
+    const event = await this.prisma.event.findUnique({
       where: { event_id: eventId },
     });
 
-    const userIds = attendees.map((attendee) => attendee.user_id);
+    if (!event) {
+      this.logger.error(`Event ${eventId} not found`);
+      return { status: 'event_not_found' };
+    }
 
-    // Get push tokens for all users
-    const userPushTokens = await this.prisma.userPushToken.findMany({
-      where: {
-        user_id: {
-          in: userIds,
+    // Get all attendees with their push tokens
+    const attendees = await this.prisma.userEvent.findMany({
+      where: { event_id: eventId },
+      include: {
+        user: {
+          include: {
+            pushTokens: true,
+          },
         },
       },
     });
 
-    // Collect all valid push tokens
-    const validPushTokens = userPushTokens
-      .map((user) => user.token)
-      .filter((token): token is string => !!token && token.length > 0);
+    job.updateProgress(60);
+
+    // Extract user tokens directly from the joined query
+    const validPushTokens = attendees
+      .flatMap((ue) => ue.user.pushTokens)
+      .filter((token) => token && token.token)
+      .map((token) => token.token);
 
     // Send event end notification to all users at once
     if (validPushTokens.length > 0) {
       await this.expoNotificationService.sendNotification(
         validPushTokens,
         `Event Ended: ${eventTitle}`,
-        `The event "${eventTitle}" has ended.`,
-        { eventId, type: 'event_end' },
+        `The event "${eventTitle}" has ended. Check out all the photos!`,
+        {
+          eventId,
+          type: 'event_end',
+          deepLink: `album/${eventId}`,
+        },
       );
     }
 
-    return { status: 'success', attendeesNotified: attendees.length };
+    return {
+      status: 'success',
+      attendeesNotified: attendees.length,
+      tokensNotified: validPushTokens.length,
+    };
   }
 
   private async scheduleRandomPhotoReminders(

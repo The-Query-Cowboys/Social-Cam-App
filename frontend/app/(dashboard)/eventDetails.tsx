@@ -1,36 +1,21 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { Link } from 'expo-router'
 import React from 'react'
+import {useTheme} from "@/context/ThemeContext";
 
 const eventDetails = () => {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>eventDetails</Text>
+  const {colorScheme} = useTheme()
 
-      <Link href='/' style={styles.link}>Home</Link>
+  const applyTheme = `${colorScheme === 'dark' ? 'text-white bg-black' : 'text-black bg-white'}`
+
+
+  return (
+    <View className={`flex-1 items-center justify-center ${applyTheme}`}>
+      <Text className={`text-xl font-bold mt-2 ${applyTheme}`}>eventDetails</Text>
+
+      <Link href='/' className={`my-2 border-b ${applyTheme}`}>Home</Link>
     </View>
   )
 }
 
 export default eventDetails
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff'
-  },
-  image: {
-    marginVertical: 10,
-  },
-  text: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginTop: 10
-  },
-  link: {
-    marginVertical: 10,
-    borderBottomWidth: 1,
-  }
-})

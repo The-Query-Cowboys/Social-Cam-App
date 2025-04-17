@@ -1,3 +1,4 @@
+
 import { StyleSheet, Text, View, Button, Platform, TextInput, Image, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
 import { Link } from 'expo-router';
 import { useTheme } from "@/context/ThemeContext";
@@ -117,8 +118,5 @@ const createEvent = () => {
       <Link href='/publicEventPage' className='my-4'>Event Page</Link>
     </View>
   )
-}
-
+    
 export default createEvent
-
-const styles = StyleSheet.create({})

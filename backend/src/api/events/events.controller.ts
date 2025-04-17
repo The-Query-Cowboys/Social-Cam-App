@@ -9,36 +9,42 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { EventsService } from './events.service';
+import { CreateEventDto, UpdateEventDto, InviteUserDto } from './event.dto';
 
-@Controller('events')
+@Controller('/api/events')
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
+  @Get()
+  async fetchEvents() {
+    return this.eventsService.fetchEvents();
+  }
   @Post()
   async createEvent(
     @Body()
-    eventData: {
-      event_owner_id: number;
-      event_title: string;
-      event_description: string;
-      storage_id: string;
-      album_id: number;
-      event_date: string | Date;
-      event_date_end: string | Date;
-      album_delay?: number;
-      event_location: string;
-      private: boolean;
-    },
-  ) {
-    return this.eventsService.createEvent(eventData);
+    createEventDto: CreateEventDto,
+  ): Promise<Event> {
+    return this.eventsService.createEvent(createEventDto);
+  }
+
+  @Patch(':eventId')
+  async updateEvent(
+    @Param('eventId') eventId: string,
+    @Body()
+    updateEventDto: UpdateEventDto,
+  ): Promise<Event> {
+    return this.eventsService.updateEvent(parseInt(eventId), updateEventDto);
   }
 
   @Post(':eventId/invite')
   async inviteToEvent(
     @Param('eventId') eventId: string,
-    @Body('userId') userId: number,
+    @Body() inviteUserDto: InviteUserDto,
   ) {
-    return this.eventsService.inviteUserToEvent(userId, parseInt(eventId, 10));
+    return this.eventsService.inviteUserToEvent(
+      inviteUserDto.userId,
+      parseInt(eventId, 10),
+    );
   }
 
   @Patch(':eventId/users/:userId/status')

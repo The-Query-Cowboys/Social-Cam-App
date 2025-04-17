@@ -1,0 +1,71 @@
+{
+    "GET /api/albums/:event_id": {
+        "description": "serves the album for given event id",
+        "exampleResponse": {
+            "album_id": 1,
+	        "album_name": "Northcoders graduation"
+        }
+    },
+    "POST /api/albums": {
+        "description": "creates a new album in the album table",
+        "exampleRequest": {
+            "album_name":"Post album test"
+        },
+        "exampleResponse": {
+            "album_id": 3,
+	        "album_name": "Post album test"
+        }
+    },
+    "PATCH /api/albums/:album_id?action=add": {
+        "description": "Adds pictures from album.",
+        "exampleRequest": {
+            "pictures": [
+                {"picture_id": 1}
+            ]
+        },
+        "exampleResponse": {
+            "message": "Pictures added to album",
+            "count": 1
+        }
+    },
+    "PATCH /api/albums/:album_id?action=remove": {
+        "description": "Removes pictures from album.",
+        "exampleRequest": {
+            "pictures": [
+                {"picture_id": 1}
+            ]
+        },
+        "exampleResponse": {
+            "message": "Pictures removed from album",
+            "count": 1
+        }
+    },
+    "GET /api/pictures/:picture_id": {
+        "description": "Serves an individual picture object by picture_id",
+        "exampleResponse": {
+            "album_id": 1,
+            "picture_id": 1,
+            "storage_id": "67f9386500316bb3c9e7",
+            "type_id": 3
+        }
+    },
+    "GET /api/pictures/album/:album_id": {
+        "description": "Serves an array of all picture objects for a given album",
+        "exampleResponse": {
+            "pictures":[
+                {
+                    "album_id": 1,
+                    "picture_id": 2,
+                    "storage_id": "67f9382c0019dea7ac32",
+                    "type_id": 1
+                },
+                {
+                    "album_id": 1,
+                    "picture_id": 1,
+                    "storage_id": "67f9386500316bb3c9e7",
+                    "type_id": 3
+                }
+            ]
+        }
+    }
+}

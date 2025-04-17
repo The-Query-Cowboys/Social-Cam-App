@@ -2,7 +2,7 @@ import React, {createContext, useContext} from 'react';
 import {useColorScheme} from 'nativewind';
 
 type ThemeContextType = {
-    colorScheme: 'light' | 'dark' | undefined;
+    colorScheme: 'dark' | 'light' | undefined;
     toggleColorScheme: () => void;
 };
 
