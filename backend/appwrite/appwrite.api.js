@@ -1,17 +1,18 @@
 //imports
-import { Client, Storage, ID } from "appwrite";
-import { InputFile } from "node-appwrite/file"
-import * as dotenv from 'dotenv'
-dotenv.config()
+import { Client, Storage, ID } from 'appwrite';
+import { InputFile } from 'node-appwrite/file';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 //create new instances of client and storage
 const client = new Client();
 const storage = new Storage(client);
 
-client
+export function initClient() {
+  client
     .setEndpoint(process.env.APPWRITE_API) // Your API Endpoint
-    .setProject(process.env.APPWRITE_PROJECT_ID) // Your project ID
-    ;
+    .setProject(process.env.APPWRITE_PROJECT_ID); // Your project ID
+}
 
 //****************************************************
 //now, here is how to do the various add,list,deletes, etc
@@ -20,70 +21,75 @@ client
 
 //to save a file
 export function appwriteSave(file) {
+  const uniqueId = ID.unique();
 
-    const uniqueId = ID.unique()
+  const savePromise = storage.createFile(
+    process.env.APPWRITE_BUCKET_ID,
+    uniqueId, //this thing generates a unique id that it stores it with!
+    InputFile.fromBuffer(file.buffer, uniqueId), //this one is the input file
+  );
 
-    const savePromise = storage.createFile(
-        process.env.APPWRITE_BUCKET_ID,
-        uniqueId, //this thing generates a unique id that it stores it with!
-        InputFile.fromBuffer(file.buffer, uniqueId) //this one is the input file
-    )
+  let newFile = '';
 
-    let newFile = ""
-
-    return savePromise.then(function (response) {
-        const newFileId = response.$id
-        return newFileId
-
-    }, function (error) {
-        return error
-    })
+  return savePromise.then(
+    function (response) {
+      const newFileId = response.$id;
+      return newFileId;
+    },
+    function (error) {
+      return error;
+    },
+  );
 }
 
 //to get whole file back
 
 export function appwriteGetFile(storage_id) {
-    return storage.getFile(process.env.APPWRITE_BUCKET_ID, storage_id)
-        .then((file) => {
-            return file
-        })
-        .catch((error) => {
-            return error
-        })
+  return storage
+    .getFile(process.env.APPWRITE_BUCKET_ID, storage_id)
+    .then((file) => {
+      return file;
+    })
+    .catch((error) => {
+      return error;
+    });
 }
 
 //to view file url! this is probably what we want
 
 export function appwriteGetImageUrl(storage_id) {
-    return storage.getFileView(process.env.APPWRITE_BUCKET_ID, storage_id)
-        .then((response) => {
-            return response + "&mode=admin"
-        })
-        .catch((error) => {
-            return error
-        })
+  return storage
+    .getFileView(process.env.APPWRITE_BUCKET_ID, storage_id)
+    .then((response) => {
+      return response + '&mode=admin';
+    })
+    .catch((error) => {
+      return error;
+    });
 }
 
 //to list files in a bucket
 
 export function appwriteListFiles() {
-    return storage.listFiles(process.env.APPWRITE_BUCKET_ID)
-        .then((files) => {
-            return files
-        })
-        .catch((error) => {
-            return error
-        })
+  return storage
+    .listFiles(process.env.APPWRITE_BUCKET_ID)
+    .then((files) => {
+      return files;
+    })
+    .catch((error) => {
+      return error;
+    });
 }
 
 //to delete file
 
 export function appwriteDeleteFile(storage_id) {
-    return storage.deleteFile(process.env.APPWRITE_BUCKET_ID, storage_id)
-        .then((file) => {
-            return file
-        })
-        .catch((error) => {
-            return error
-        })
+  return storage
+    .deleteFile(process.env.APPWRITE_BUCKET_ID, storage_id)
+    .then((file) => {
+      return file;
+    })
+    .catch((error) => {
+      return error;
+    });
 }
