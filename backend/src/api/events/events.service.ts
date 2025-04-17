@@ -212,6 +212,45 @@ export class EventsService {
     );
   }
 
+  async deleteEvent(eventId: number): Promise<any> {
+    // First check if the event exists
+
+    if (isNaN(eventId) || !Number.isInteger(eventId) || eventId <= 0) {
+      throw new BadRequestException(
+        'Event ID must be a valid positive integer',
+      );
+    }
+    const existingEvent = await this.prisma.event.findUnique({
+      where: { event_id: eventId },
+    });
+    if (!existingEvent) {
+      throw new NotFoundException(`Event with ID ${eventId} not found`);
+    }
+
+    try {
+      await this.cancelEventNotifications(eventId);
+
+      await this.prisma.userEvent.deleteMany({
+        where: { event_id: eventId },
+      });
+
+      await this.prisma.comment.deleteMany({
+        where: { event_id: eventId },
+      });
+
+      const deletedEvent = await this.prisma.event.delete({
+        where: { event_id: eventId },
+      });
+
+      return {
+        message: 'Event deleted successfully',
+        event_id: deletedEvent.event_id,
+      };
+    } catch (error) {
+      throw new Error(`Failed to delete event: ${error.message}`);
+    }
+  }
+
   private async scheduleEventEndNotification(event: any): Promise<void> {
     const delayMs = Math.max(
       0,

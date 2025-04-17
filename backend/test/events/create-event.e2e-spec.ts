@@ -38,7 +38,7 @@ describe('POST /api/events', () => {
     await cleanupAfterAll(app, prisma);
   }, 15000);
 
-  it.only('201: successfully creates an event with valid data', async () => {
+  it('201: successfully creates an event with valid data', async () => {
     const newEvent = {
       event_owner_id: 11,
       event_title: 'Music Dance Experience',

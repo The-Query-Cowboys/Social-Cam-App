@@ -5,6 +5,7 @@ import {
   Param,
   Get,
   UseGuards,
+  Delete,
   Patch,
   BadRequestException,
 } from '@nestjs/common';
@@ -61,6 +62,11 @@ export class EventsController {
       parseInt(eventId, 10),
       statusId,
     );
+  }
+
+  @Delete(':eventId')
+  async deleteEvent(@Param('eventId') eventId: string) {
+    return this.eventsService.deleteEvent(parseInt(eventId, 10));
   }
 
   @Post(':eventId/schedule-notifications')
