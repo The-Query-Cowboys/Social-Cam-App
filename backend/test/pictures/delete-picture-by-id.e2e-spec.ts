@@ -44,4 +44,10 @@ describe('DELETE /api/pictures/:picture_id', () => {
     const deleted = await prisma.picture.findUnique({where: {picture_id: picture.picture_id}});
     expect(deleted).toBeNull();
   })
+  it("400: returns 'Validation failed' if picture_id is invalid", async () => {
+    const {body} = await request(app.getHttpServer())
+      .delete('/api/pictures/not-a-number')
+      .expect(400)
+      expect(body.message).toContain('Validation failed');
+  })
 });
