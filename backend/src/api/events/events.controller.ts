@@ -69,6 +69,17 @@ export class EventsController {
     return this.eventsService.deleteEvent(parseInt(eventId, 10));
   }
 
+  @Delete(':eventId/invite/:userId')
+  async deleteUserEvent(
+    @Param('eventId') eventId: string,
+    @Param('userId') userId: string,
+  ) {
+    return this.eventsService.deleteUserEvent(
+      parseInt(eventId, 10),
+      parseInt(userId, 10),
+    );
+  }
+
   @Post(':eventId/schedule-notifications')
   async scheduleEventNotifications(@Param('eventId') eventId: string) {
     await this.eventsService.scheduleEventNotifications(parseInt(eventId, 10));

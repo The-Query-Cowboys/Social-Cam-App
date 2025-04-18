@@ -37,16 +37,16 @@
     }
   },
   "DELETE /api/albums/:album_id": {
-        "description": "Deletes album and unlinks pictures from deleted album"
-    },
+    "description": "Deletes album and unlinks pictures from deleted album"
+  },
   "GET /api/pictures/:picture_id": {
     "description": "Serves an individual picture object by picture_id",
     "exampleResponse": {
       "album_id": 2,
-	    "picture_id": 3,
-	    "storage_id": "67f938240002514c4ded",
-	    "type_id": 1,
-	    "url": "https://cloud.appwrite.io/v1/storage/buckets/67f8f69b003be8ed659d/files/67f938240002514c4ded/view?project=67f8f680002b6a18bfc3&mode=admin"
+      "picture_id": 3,
+      "storage_id": "67f938240002514c4ded",
+      "type_id": 1,
+      "url": "https://cloud.appwrite.io/v1/storage/buckets/67f8f69b003be8ed659d/files/67f938240002514c4ded/view?project=67f8f680002b6a18bfc3&mode=admin"
     }
   },
   "GET /api/pictures/album/:album_id": {
@@ -138,6 +138,12 @@
     "exampleResponse": {
       "message": "Event deleted successfully",
       "event_id": 2
+    }
+  },
+  "DELETE /api/events/:eventId/invite/:userId": {
+    "description": "Removes a user from an event",
+    "exampleResponse": {
+      "message": "User removed from event successfully"
     }
   },
   "POST /api/events/:eventId/invite": {
