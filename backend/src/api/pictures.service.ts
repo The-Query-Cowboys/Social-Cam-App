@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Picture, Prisma } from '@prisma/client';
-import { appwriteGetImageUrl, appwriteGetFile } from '../../appwrite/appwrite.api';
+import { appwriteGetImageUrl, appwriteGetFile, appwriteDeleteFile } from '../../appwrite/appwrite.api';
 
 @Injectable()
 export class PicturesService {
@@ -29,5 +29,21 @@ export class PicturesService {
     return this.prisma.picture.findMany({
       where: { album_id: albumId },
     });
+  }
+
+  async deletePicture(pictureId: number): Promise<void> {
+    const picture = await this.prisma.picture.findUnique({where: {picture_id: pictureId}});
+
+    if (!picture) {
+      throw new NotFoundException(`Picture with ID ${pictureId} not found`);
+    }
+
+    try {
+      await appwriteDeleteFile(picture.storage_id);
+    } catch (error) {
+      console.log(`Appwrite file delete failed for storage_id ${picture.storage_id}:`, error.message);
+    }
+
+    await this.prisma.picture.delete({where: {picture_id: pictureId}});
   }
 }
