@@ -57,14 +57,16 @@ const PublicEventPage = () => {
         <View className={`flex-1 items-center justify-center ${applyTheme}`}>
             <Link href='/' className={`my-5 border-b font-bold ${applyTheme}`}>Home</Link>
             <Text className={`text-xl font-bold mb-5 ${applyTheme}`}>Events</Text>
-
-            <FlatList data={events}
-                      renderItem={
-                            ({item}) =>
-                          <Event event_title={item.event_title} event_location={item.event_location}
-                                 event_description={item.event_description} event_date={item.event_date} event_date_end={item.event_date_end}/>}
-            />
-
+            <SafeAreaView>
+                <SafeAreaProvider>
+                    <FlatList data={events}
+                              renderItem={
+                                    ({item}) =>
+                                  <Event event_title={item.event_title} event_location={item.event_location}
+                                         event_description={item.event_description} event_date={item.event_date} event_date_end={item.event_date_end}/>}
+                    />
+                </SafeAreaProvider>
+            </SafeAreaView>
         </View>
     )
 }
