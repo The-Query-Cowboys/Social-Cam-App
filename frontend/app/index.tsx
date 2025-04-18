@@ -21,7 +21,6 @@ const Home = () => {
                 <DarkModeToggle />
             </View>
             <Image source={icon} className="my-4" />
-            <Text className={`text-xl font-bold mt-5 ${applyTheme}`}>Home</Text>
             <Text className={`text-xl font-bold mt-5 ${applyTheme}`}>Hello world</Text>
             <Link href='/(dashboard)/publicEventPage' className={`my-5 border-b ${applyTheme}`}>Event Page</Link>
             <Link href='/(dashboard)/createEvent' className={`my-5 border-b ${applyTheme}`}>Create Event</Link>
