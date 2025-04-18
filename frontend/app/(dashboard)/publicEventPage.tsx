@@ -40,9 +40,9 @@ const PublicEventPage = () => {
                     {event_title}
                 </Text>
                 <Image source={icon} className={'m-5'}/>
-                <Text className={`${applyTheme}`}>
-                    Start: {event_date.slice(0,10)} at {event_date.slice(11, 19)};
-                    End: {event_date_end.slice(0,10)} at {event_date_end.slice(11, 19)};
+                <Text className={`text-center ${applyTheme} `}>
+                    Start: {event_date.slice(0,10)} at {event_date.slice(11, 16)}{'\n'}
+                    End: {event_date_end.slice(0,10)} at {event_date_end.slice(11, 16)}{'\n'}
                     Location: {event_location}
                 </Text>
                 <Text className={`m-5 ${applyTheme}`}>
