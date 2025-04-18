@@ -14,17 +14,58 @@ export class EventsService {
   constructor(
     @InjectQueue('notifications') private notificationsQueue: Queue,
     private prisma: PrismaService,
-  ) {}
+  ) { }
 
   async fetchEvents() {
     return this.prisma.event.findMany();
   }
+
+  async fetchEventById(eventId) {
+    const event = await this.prisma.event.findUnique({
+      where: { event_id: eventId },
+    });
+    if (!event) {
+      throw new NotFoundException(`Event_id ${eventId} was not found`);
+
+    }
+    return event;
+  }
+
+  async fetchUsersByEventId(eventId) {
+    const users = await this.prisma.user.findMany({
+        where: {
+            UserEvent: {
+                some: {
+                    event_id: eventId,
+                },
+            },
+        },
+    })
+
+    if (users.length === 0) {
+      throw new NotFoundException(`No users are linked to eventId: ${eventId}`);
+
+    }
+    return users;
+  }
+
+  async removeEventByEventId(eventId) {
+    try {
+      await this.prisma.event.delete({
+        where: { event_id: eventId },
+      })
+    }
+    catch {
+      throw new NotFoundException(`eventId: ${eventId} could not be deleted`);
+    }
+  }
+
   async createEvent(createEventDto: CreateEventDto): Promise<any> {
     if (
       createEventDto.event_date &&
       createEventDto.event_date_end &&
       new Date(createEventDto.event_date) >
-        new Date(createEventDto.event_date_end)
+      new Date(createEventDto.event_date_end)
     ) {
       throw new BadRequestException('Event end date must be after start date');
     }
