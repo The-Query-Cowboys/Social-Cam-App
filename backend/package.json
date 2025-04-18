@@ -17,7 +17,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:e2e": "jest --config ./test/jest-e2e.json --runInBand",
     "seed": "ts-node prisma/runSeed.ts",
     "setup-test-db": "psql -f ./prisma/setup-local-db.sql",
     "push:test": "dotenv -e .env.test -- prisma db push",
@@ -42,7 +42,6 @@
     "dotenv": "^16.5.0",
     "node-appwrite": "^15.0.1",
     "expo-server-sdk": "^3.14.0",
-    "node-appwrite": "^15.0.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },

@@ -36,13 +36,17 @@
       "count": 1
     }
   },
+  "DELETE /api/albums/:album_id": {
+        "description": "Deletes album and unlinks pictures from deleted album"
+    },
   "GET /api/pictures/:picture_id": {
     "description": "Serves an individual picture object by picture_id",
     "exampleResponse": {
-      "album_id": 1,
-      "picture_id": 1,
-      "storage_id": "67f9386500316bb3c9e7",
-      "type_id": 3
+      "album_id": 2,
+	    "picture_id": 3,
+	    "storage_id": "67f938240002514c4ded",
+	    "type_id": 1,
+	    "url": "https://cloud.appwrite.io/v1/storage/buckets/67f8f69b003be8ed659d/files/67f938240002514c4ded/view?project=67f8f680002b6a18bfc3&mode=admin"
     }
   },
   "GET /api/pictures/album/:album_id": {
