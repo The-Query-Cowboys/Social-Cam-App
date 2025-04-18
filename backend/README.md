@@ -56,16 +56,13 @@ DIRECT_URL="postgresql://postgres.qldazwkczfyhhcxwwxly:BabaMghtdfs@aws-0-eu-west
 
 
 //appwrite connection details
-<<<<<<< HEAD
-APIEndpoint='https://cloud.appwrite.io/v1'
-projectId='67f8f680002b6a18bfc3'
-bucketId='67f8f69b003be8ed659d'
-
-=======
 APPWRITE_API='https://cloud.appwrite.io/v1'
 APPWRITE_PROJECT_ID='67f8f680002b6a18bfc3'
 APPWRITE_BUCKET_ID='67f8f69b003be8ed659d'
->>>>>>> main
+
+//Redis
+REDIS_HOST='fancy-lamb-16806.upstash.io'
+REDIS_PASSWORD='AUGmAAIjcDE3ZGNjZGY3ZTcxNWM0MWY0YTZjOTFjMzg2YWM0ODY5YnAxMA'
 ```
 
 For local testing db also create ``.env.test``:
@@ -210,3 +207,11 @@ const deleteFileResult = await storage.deleteFile(
 console.log(deleteFileResult, "<<deleted file")
 
 ```
+
+680193830032129a85d8
+6801938f000f210b02e8
+680193b70001967d2da0
+680193c4002c110d542d
+680193ce00048f1b6de4
+680193db0003922831a7
+680193e80017967b90a8

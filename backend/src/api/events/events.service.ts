@@ -73,6 +73,10 @@ export class EventsService {
     if (createEventDto.album_delay && createEventDto.album_delay < 0) {
       throw new BadRequestException('Album delay cannot be negative');
     }
+
+    const album = await this.prisma.album.create({
+      data: { album_name: createEventDto.event_title },
+    });
     try {
       const newEvent = await this.prisma.event.create({
         data: {
@@ -80,7 +84,7 @@ export class EventsService {
           event_title: createEventDto.event_title,
           event_description: createEventDto.event_description,
           storage_id: createEventDto.storage_id,
-          album_id: createEventDto.album_id,
+          album_id: album.album_id,
           event_date: createEventDto.event_date
             ? new Date(createEventDto.event_date)
             : new Date(),
@@ -146,6 +150,14 @@ export class EventsService {
 
     if (!event) {
       throw new NotFoundException(`Event with ID ${eventId} not found`);
+    }
+
+    const user = await this.prisma.user.findUnique({
+      where: { user_id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
     }
     return this.prisma.userEvent.create({
       data: {
@@ -239,6 +251,80 @@ export class EventsService {
         removeOnComplete: true,
       },
     );
+  }
+
+  async deleteEvent(eventId: number): Promise<any> {
+    // First check if the event exists
+
+    if (isNaN(eventId) || !Number.isInteger(eventId) || eventId <= 0) {
+      throw new BadRequestException(
+        'Event ID must be a valid positive integer',
+      );
+    }
+    const existingEvent = await this.prisma.event.findUnique({
+      where: { event_id: eventId },
+    });
+    if (!existingEvent) {
+      throw new NotFoundException(`Event with ID ${eventId} not found`);
+    }
+
+    try {
+      await this.cancelEventNotifications(eventId);
+
+      await this.prisma.userEvent.deleteMany({
+        where: { event_id: eventId },
+      });
+
+      await this.prisma.comment.deleteMany({
+        where: { event_id: eventId },
+      });
+
+      const deletedEvent = await this.prisma.event.delete({
+        where: { event_id: eventId },
+      });
+
+      return {
+        message: 'Event deleted successfully',
+        event_id: deletedEvent.event_id,
+      };
+    } catch (error) {
+      throw new Error(`Failed to delete event: ${error.message}`);
+    }
+  }
+
+  async deleteUserEvent(eventId: number, userId: number) {
+    if (isNaN(eventId) || !Number.isInteger(eventId) || eventId <= 0) {
+      throw new BadRequestException(
+        'Event ID must be a valid positive integer',
+      );
+    }
+    if (isNaN(userId) || !Number.isInteger(userId) || userId <= 0) {
+      throw new BadRequestException('User ID must be a valid positive integer');
+    }
+    const existingUserEvent = await this.prisma.userEvent.findFirst({
+      where: {
+        event_id: eventId,
+        user_id: userId,
+      },
+    });
+
+    if (!existingUserEvent) {
+      throw new NotFoundException(
+        `User Event with user ID ${userId} and event ID ${eventId} was not found`,
+      );
+    }
+
+    try {
+      await this.prisma.userEvent.delete({
+        where: { userEvent_id: existingUserEvent.userEvent_id },
+      });
+
+      return {
+        message: 'User removed from event successfully',
+      };
+    } catch (error) {
+      throw new Error(`Failed to remove user from event: ${error.message}`);
+    }
   }
 
   private async scheduleEventEndNotification(event: any): Promise<void> {

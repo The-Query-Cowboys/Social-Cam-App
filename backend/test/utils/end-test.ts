@@ -46,8 +46,6 @@ export const cleanupAfterAll = async (
       // Error handling
     }
   }
-
-  // Attempt to close NestJS app with timeout
   try {
     // Create a promise that will resolve after 5 seconds
     const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 5000));
@@ -55,9 +53,7 @@ export const cleanupAfterAll = async (
     // Race between app close and timeout
     await Promise.race([
       app.close().catch((e) => console.error('Error closing app:', e)),
-      timeoutPromise.then(() =>
-        console.log('App close timed out, continuing with tests'),
-      ),
+      timeoutPromise,
     ]);
   } catch (error) {
     console.error('Unexpected error during cleanup:', error);

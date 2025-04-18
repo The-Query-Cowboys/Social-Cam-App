@@ -22,10 +22,6 @@ export class CreateEventDto {
   @IsNotEmpty()
   event_description: string;
 
-  @IsInt()
-  @IsNotEmpty()
-  album_id: number;
-
   @IsString()
   @IsNotEmpty()
   storage_id: string;

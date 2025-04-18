@@ -190,7 +190,6 @@ export async function seedTestDatabase() {
       storage_id: '680229ec0028a1e4f91a',
       type_id: 1,
     },
-    
   ];
   const albums = [
     {
@@ -318,7 +317,6 @@ export async function seedTestDatabase() {
       votes: 4,
     },
   ];
-  console.log('reseeding');
   await prisma.$transaction([
     //deletes everything under user
     prisma.$executeRawUnsafe(`TRUNCATE TABLE

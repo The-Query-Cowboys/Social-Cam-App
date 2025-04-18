@@ -1,7 +1,7 @@
 //imports
-import { Client, Storage, ID } from 'appwrite';
-import { InputFile } from 'node-appwrite/file';
-import * as dotenv from 'dotenv';
+import { Client, Storage, ID } from "appwrite";
+import { InputFile } from "node-appwrite/file";
+import * as dotenv from "dotenv";
 dotenv.config();
 
 //****************************************************
@@ -11,7 +11,6 @@ dotenv.config();
 
 //to save a file
 export function appwriteSave(file) {
-
   //create new instances of client and storage
   const client = new Client();
   const storage = new Storage(client);
@@ -25,10 +24,10 @@ export function appwriteSave(file) {
   const savePromise = storage.createFile(
     process.env.APPWRITE_BUCKET_ID,
     uniqueId, //this thing generates a unique id that it stores it with!
-    InputFile.fromBuffer(file.buffer, uniqueId), //this one is the input file
+    InputFile.fromBuffer(file.buffer, uniqueId) //this one is the input file
   );
 
-  let newFile = '';
+  let newFile = "";
 
   return savePromise.then(
     function (response) {
@@ -37,14 +36,13 @@ export function appwriteSave(file) {
     },
     function (error) {
       return error;
-    },
+    }
   );
 }
 
 //to get whole file back
 
 export function appwriteGetFile(storage_id) {
-
   //create new instances of client and storage
   const client = new Client();
   const storage = new Storage(client);
@@ -66,7 +64,6 @@ export function appwriteGetFile(storage_id) {
 //to view file url! this is probably what we want
 
 export async function appwriteGetImageUrl(storage_id) {
-
   //create new instances of client and storage
   const client = new Client();
   const storage = new Storage(client);
@@ -75,20 +72,21 @@ export async function appwriteGetImageUrl(storage_id) {
     .setEndpoint(process.env.APPWRITE_API) // Your API Endpoint
     .setProject(process.env.APPWRITE_PROJECT_ID); // Your project ID
 
-  const filePreview = await storage.getFileView(process.env.APPWRITE_BUCKET_ID, storage_id)
+  const filePreview = await storage.getFileView(
+    process.env.APPWRITE_BUCKET_ID,
+    storage_id
+  );
 
   if (filePreview !== undefined) {
-    return filePreview + '&mode=admin';
-  }
-  else {
-    return { message: "No image is found" }
+    return filePreview + "&mode=admin";
+  } else {
+    return { message: "No image is found" };
   }
 }
 
 //to list files in a bucket
 
 export function appwriteListFiles() {
-
   //create new instances of client and storage
   const client = new Client();
   const storage = new Storage(client);
@@ -110,7 +108,6 @@ export function appwriteListFiles() {
 //to delete file
 
 export function appwriteDeleteFile(storage_id) {
-
   //create new instances of client and storage
   const client = new Client();
   const storage = new Storage(client);

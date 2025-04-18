@@ -1,7 +1,6 @@
-import { Text, View, TextInput, Button, TouchableOpacity } from 'react-native';
+import { Text, View, TextInput, Button } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
-import React from 'react';
 import { useTheme } from "@/context/ThemeContext";
 import { useSignIn } from "@clerk/clerk-expo";
 

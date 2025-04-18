@@ -5,6 +5,7 @@ import {
   Param,
   Get,
   UseGuards,
+  Delete,
   Patch,
   BadRequestException,
   Delete,
@@ -61,6 +62,22 @@ export class EventsController {
       parseInt(userId, 10),
       parseInt(eventId, 10),
       statusId,
+    );
+  }
+
+  @Delete(':eventId')
+  async deleteEvent(@Param('eventId') eventId: string) {
+    return this.eventsService.deleteEvent(parseInt(eventId, 10));
+  }
+
+  @Delete(':eventId/invite/:userId')
+  async deleteUserEvent(
+    @Param('eventId') eventId: string,
+    @Param('userId') userId: string,
+  ) {
+    return this.eventsService.deleteUserEvent(
+      parseInt(eventId, 10),
+      parseInt(userId, 10),
     );
   }
 

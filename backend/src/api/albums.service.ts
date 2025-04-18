@@ -59,4 +59,20 @@ export class AlbumsService {
 
     throw new Error('Invalid action. Use ?action=add or ?action=remove');
   }
+
+  async deleteAlbum(albumId: number): Promise<void> {
+    const album = await this.prisma.album.findUnique({where: {album_id: albumId}})
+
+    if (!album) {
+      throw new NotFoundException(`Album with ID ${albumId} not found`);
+    }
+
+    await this.prisma.$transaction([
+      this.prisma.picture.updateMany({
+        where: {album_id: albumId},
+        data: {album_id: null},
+      }),
+      this.prisma.album.delete({where: {album_id: albumId}})
+    ])
+  }
 }
