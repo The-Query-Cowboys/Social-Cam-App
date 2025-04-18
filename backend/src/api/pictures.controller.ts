@@ -1,5 +1,6 @@
-import { Controller, Get, Param, ParseIntPipe, Delete, HttpCode } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Delete, HttpCode, Post, Body, BadRequestException } from '@nestjs/common';
 import { PicturesService } from './pictures.service';
+import { CreatePictureDto } from './create-picture.dto';
 
 @Controller('/api/pictures')
 export class PicturesController {
@@ -16,7 +17,10 @@ export class PicturesController {
         return {pictures};
     }
 
-    //Post
+    @Post()
+    async createPicture(@Body() body: CreatePictureDto) {
+        return this.appService.createPicture(body.storage_id, body.album_id);
+    }
 
     @Delete(':picture_id')
     @HttpCode(204)

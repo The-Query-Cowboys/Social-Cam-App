@@ -71,6 +71,15 @@
       ]
     }
   },
+  "POST /api/pictures": {
+    "description": "Adds the posted picture to the database and returns its individual entry",
+    "exampleResponse": {
+        "album_id": 1,
+        "picture_id": 20,
+        "storage_id": "68022fd20039b705899b",
+        "type_id": 1
+    }
+  },
   "DELETE /api/pictures/:picture_id": {
     "description": "Deletes picture entry on database and appwrite"
   },

@@ -31,6 +31,16 @@ export class PicturesService {
     });
   }
 
+  async createPicture(storage_id: string, album_id?: number) {
+    const newPicture = await this.prisma.picture.create({
+      data: {storage_id, 
+        album_id: album_id ?? null,
+        type_id: 1
+      }
+    })
+    return newPicture;
+  }
+
   async deletePicture(pictureId: number): Promise<void> {
     const picture = await this.prisma.picture.findUnique({where: {picture_id: pictureId}});
 
