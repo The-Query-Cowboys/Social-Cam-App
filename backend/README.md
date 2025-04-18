@@ -210,3 +210,11 @@ const deleteFileResult = await storage.deleteFile(
 console.log(deleteFileResult, "<<deleted file")
 
 ```
+
+680193830032129a85d8
+6801938f000f210b02e8
+680193b70001967d2da0
+680193c4002c110d542d
+680193ce00048f1b6de4
+680193db0003922831a7
+680193e80017967b90a8

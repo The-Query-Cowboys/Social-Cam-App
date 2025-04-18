@@ -83,6 +83,41 @@ export async function seedTestDatabase() {
       storage_id: '67f938240002514c4ded',
       type_id: 1,
     },
+    {
+      album_id: 2,
+      storage_id: '680193830032129a85d8',
+      type_id: 1,
+    },
+    {
+      album_id: 1,
+      storage_id: '6801938f000f210b02e8',
+      type_id: 1,
+    },
+    {
+      album_id: 2,
+      storage_id: '680193b70001967d2da0',
+      type_id: 1,
+    },
+    {
+      album_id: 1,
+      storage_id: '680193c4002c110d542d',
+      type_id: 1,
+    },
+    {
+      album_id: 2,
+      storage_id: '680193ce00048f1b6de4',
+      type_id: 1,
+    },
+    {
+      album_id: 2,
+      storage_id: '680193db0003922831a7',
+      type_id: 1,
+    },
+    {
+      album_id: 2,
+      storage_id: '680193e80017967b90a8',
+      type_id: 1,
+    },
   ];
   const albums = [
     {
