@@ -30,7 +30,7 @@ describe('POST /api/events/:eventId/invite', () => {
       .post('/api/events/1/invite')
       .send(userId)
       .expect(201);
-    expect(body.userEvent_id).toBe(7);
+    expect(body.userEvent_id).toBe(17);
     expect(body.event_id).toBe(1);
     expect(body.user_id).toBe(3);
   });

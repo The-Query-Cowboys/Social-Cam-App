@@ -61,7 +61,7 @@ describe('POST /api/events', () => {
     expect(body.event_owner_id).toBe(newEvent.event_owner_id);
     expect(body.event_title).toBe(newEvent.event_title);
     expect(body.event_description).toBe(newEvent.event_description);
-    expect(body.album_id).toBe(3);
+    expect(body.album_id).toBe(6);
     expect(body.storage_id).toBe(newEvent.storage_id);
     expect(body.event_location).toBe(newEvent.event_location);
     expect(body.album_delay).toBe(newEvent.album_delay);
