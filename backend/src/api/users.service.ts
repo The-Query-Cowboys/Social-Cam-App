@@ -14,6 +14,7 @@ import { User, Prisma } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
+
   constructor(private prisma: PrismaService) {}
 
   async getAllUsers(): Promise<User[]> {
