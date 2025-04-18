@@ -49,17 +49,6 @@ export class EventsService {
     return users;
   }
 
-  async removeEventByEventId(eventId) {
-    try {
-      await this.prisma.event.delete({
-        where: { event_id: eventId },
-      })
-    }
-    catch {
-      throw new NotFoundException(`eventId: ${eventId} could not be deleted`);
-    }
-  }
-
   async createEvent(createEventDto: CreateEventDto): Promise<any> {
     if (
       createEventDto.event_date &&

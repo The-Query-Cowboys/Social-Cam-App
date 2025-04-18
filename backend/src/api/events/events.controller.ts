@@ -8,7 +8,6 @@ import {
   Delete,
   Patch,
   BadRequestException,
-  Delete,
 } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto, UpdateEventDto, InviteUserDto } from './event.dto';
@@ -95,10 +94,5 @@ export class EventsController {
   @Get(':eventId/users')
   async fetchUsersByEventId(@Param('eventId') eventId: number ) {
     return this.eventsService.fetchUsersByEventId(eventId);
-  }
-
-  @Delete(':eventId')
-  async deleteEventByEventId(@Param('eventId') eventId: number ) {
-    return this.eventsService.removeEventByEventId(eventId);
   }
 }
