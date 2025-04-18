@@ -60,6 +60,7 @@ const PublicEventPage = () => {
             <SafeAreaView>
                 <SafeAreaProvider>
                     <FlatList data={events}
+                              contentContainerStyle={{paddingBottom: '10%'}}
                               renderItem={
                                     ({item}) =>
                                   <Event event_title={item.event_title} event_location={item.event_location}

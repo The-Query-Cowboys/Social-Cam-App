@@ -20,18 +20,18 @@ const Home = () => {
                 <Text className={`${applyTheme}`}>Theme: </Text>
                 <DarkModeToggle />
             </View>
-            <Image source={icon} className="my-4" />
-            <Text className={`text-xl font-bold mt-5 ${applyTheme}`}>Hello world</Text>
-            <Link href='/(dashboard)/publicEventPage' className={`my-5 border-b ${applyTheme}`}>Event Page</Link>
-            <Link href='/(dashboard)/createEvent' className={`my-5 border-b ${applyTheme}`}>Create Event</Link>
-            <Link href='/(auth)/logInPage' className={`my-5 border-b ${applyTheme}`}>Login</Link>
+            <Image source={icon} className="my-5" />
+            <Text className={`text-xl font-bold mt-8 ${applyTheme}`}>Hello world</Text>
+            <Link href='/(dashboard)/publicEventPage' className={`my-8 border-b ${applyTheme}`}>Event Page</Link>
+            <Link href='/(dashboard)/createEvent' className={`my-8 border-b ${applyTheme}`}>Create Event</Link>
+            <Link href='/(auth)/logInPage' className={`my-8 border-b ${applyTheme}`}>Login</Link>
             <SignedIn>
                 <SignOutButton />
             </SignedIn>
             <SignedOut>
-                <Text className={`my-5 ${applyTheme}`}>Signed out</Text>
+                <Text className={`my-8 ${applyTheme}`}>Signed out</Text>
             </SignedOut>
-            <Link href='/(dashboard)/camera' className={`my-5 border-b ${applyTheme}`}>Camera</Link>
+            <Link href='/(dashboard)/camera' className={`my-8 border-b ${applyTheme}`}>Camera</Link>
         </View>
     )
 }
