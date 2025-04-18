@@ -28,21 +28,21 @@ export const getUserEvents = async (userId: number, status?: number[]) => {
   return response.data;
 };
 
-export const createUser = async (userData: FormData) => {
-  const response = await api.post("users", userData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
+export const createUser = async (
+  username: string,
+  email: string,
+  authId: string
+) => {
+  const response = await api.post("users", {
+    username,
+    email,
+    auth_id: authId,
   });
   return response.data;
 };
 
 export const updateUser = async (userId: number, userData: FormData) => {
-  const response = await api.patch(`users/${userId}`, userData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  const response = await api.patch(`users/${userId}`, userData, {});
   return response.data;
 };
 
