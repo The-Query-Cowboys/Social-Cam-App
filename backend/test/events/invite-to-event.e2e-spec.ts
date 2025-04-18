@@ -53,7 +53,7 @@ describe('POST /api/events/:eventId/invite', () => {
       .send(payload)
       .expect(404);
 
-    console.log(body);
+    expect(body.message).toBe(`User with ID ${nonExistentUserId} not found`);
   });
   it('404: fails when event does not exist', async () => {
     const nonExistentEventId = 99999;
@@ -66,6 +66,6 @@ describe('POST /api/events/:eventId/invite', () => {
       .send(payload)
       .expect(404);
 
-    console.log(body);
+    expect(body.message).toBe(`Event with ID ${nonExistentEventId} not found`);
   });
 });

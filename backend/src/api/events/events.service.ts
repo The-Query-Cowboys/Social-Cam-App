@@ -252,6 +252,14 @@ export class EventsService {
   }
 
   async deleteUserEvent(eventId: number, userId: number) {
+    if (isNaN(eventId) || !Number.isInteger(eventId) || eventId <= 0) {
+      throw new BadRequestException(
+        'Event ID must be a valid positive integer',
+      );
+    }
+    if (isNaN(userId) || !Number.isInteger(userId) || userId <= 0) {
+      throw new BadRequestException('User ID must be a valid positive integer');
+    }
     const existingUserEvent = await this.prisma.userEvent.findFirst({
       where: {
         event_id: eventId,
