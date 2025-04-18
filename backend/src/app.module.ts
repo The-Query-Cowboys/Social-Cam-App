@@ -23,6 +23,7 @@ import { NotificationsModule } from './api/notifications/notifications.module';
       envFilePath: `.env.${process.env.NODE_ENV || 'dev'}`,
     }),
     RedisTestModule,
+    EventsModule,
   ],
   controllers: [
     AppController,
