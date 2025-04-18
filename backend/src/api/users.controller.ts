@@ -41,10 +41,7 @@ export class UsersController {
     if (file !== undefined) {
       profileImage = await this.appService.saveImage(file)
     }
-    const listOfUsers = await this.appService.getAllUsers()
-
     userData["storage_id"] = profileImage
-
     return this.appService.createUser(userData)
 
   }

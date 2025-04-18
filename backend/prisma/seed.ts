@@ -151,7 +151,6 @@ export async function seedTestDatabase() {
       votes: 4,
     },
   ];
-  console.log('reseeding');
   await prisma.$transaction([
     //deletes everything under user
     prisma.$executeRawUnsafe(`TRUNCATE TABLE

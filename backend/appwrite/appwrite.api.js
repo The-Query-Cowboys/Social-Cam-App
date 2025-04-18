@@ -4,16 +4,6 @@ import { InputFile } from 'node-appwrite/file';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-//create new instances of client and storage
-const client = new Client();
-const storage = new Storage(client);
-
-export function initClient() {
-  client
-    .setEndpoint(process.env.APPWRITE_API) // Your API Endpoint
-    .setProject(process.env.APPWRITE_PROJECT_ID); // Your project ID
-}
-
 //****************************************************
 //now, here is how to do the various add,list,deletes, etc
 //this is asynchronous process! please bearthat in mind when developing
@@ -21,6 +11,15 @@ export function initClient() {
 
 //to save a file
 export function appwriteSave(file) {
+
+  //create new instances of client and storage
+  const client = new Client();
+  const storage = new Storage(client);
+
+  client
+    .setEndpoint(process.env.APPWRITE_API) // Your API Endpoint
+    .setProject(process.env.APPWRITE_PROJECT_ID); // Your project ID
+
   const uniqueId = ID.unique();
 
   const savePromise = storage.createFile(
@@ -45,6 +44,15 @@ export function appwriteSave(file) {
 //to get whole file back
 
 export function appwriteGetFile(storage_id) {
+
+  //create new instances of client and storage
+  const client = new Client();
+  const storage = new Storage(client);
+
+  client
+    .setEndpoint(process.env.APPWRITE_API) // Your API Endpoint
+    .setProject(process.env.APPWRITE_PROJECT_ID); // Your project ID
+
   return storage
     .getFile(process.env.APPWRITE_BUCKET_ID, storage_id)
     .then((file) => {
@@ -57,20 +65,38 @@ export function appwriteGetFile(storage_id) {
 
 //to view file url! this is probably what we want
 
-export function appwriteGetImageUrl(storage_id) {
-  return storage
-    .getFileView(process.env.APPWRITE_BUCKET_ID, storage_id)
-    .then((response) => {
-      return response + '&mode=admin';
-    })
-    .catch((error) => {
-      return error;
-    });
+export async function appwriteGetImageUrl(storage_id) {
+
+  //create new instances of client and storage
+  const client = new Client();
+  const storage = new Storage(client);
+
+  client
+    .setEndpoint(process.env.APPWRITE_API) // Your API Endpoint
+    .setProject(process.env.APPWRITE_PROJECT_ID); // Your project ID
+
+  const filePreview = await storage.getFileView(process.env.APPWRITE_BUCKET_ID, storage_id)
+
+  if (filePreview !== undefined) {
+    return filePreview + '&mode=admin';
+  }
+  else {
+    return { message: "No image is found" }
+  }
 }
 
 //to list files in a bucket
 
 export function appwriteListFiles() {
+
+  //create new instances of client and storage
+  const client = new Client();
+  const storage = new Storage(client);
+
+  client
+    .setEndpoint(process.env.APPWRITE_API) // Your API Endpoint
+    .setProject(process.env.APPWRITE_PROJECT_ID); // Your project ID
+
   return storage
     .listFiles(process.env.APPWRITE_BUCKET_ID)
     .then((files) => {
@@ -84,6 +110,15 @@ export function appwriteListFiles() {
 //to delete file
 
 export function appwriteDeleteFile(storage_id) {
+
+  //create new instances of client and storage
+  const client = new Client();
+  const storage = new Storage(client);
+
+  client
+    .setEndpoint(process.env.APPWRITE_API) // Your API Endpoint
+    .setProject(process.env.APPWRITE_PROJECT_ID); // Your project ID
+
   return storage
     .deleteFile(process.env.APPWRITE_BUCKET_ID, storage_id)
     .then((file) => {

@@ -4,7 +4,8 @@ import { setupTestApp } from '../utils/setup-test';
 import { cleanupAfterAll } from '../utils/end-test';
 import { PrismaService } from '../../src/prisma.service';
 
-describe('POST /api/events', () => {
+describe('GET /api/users', () => {
+
   let app: INestApplication;
   let prisma: PrismaService;
   let mockQueue: any;

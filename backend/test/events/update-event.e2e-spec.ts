@@ -46,20 +46,9 @@ describe('Events Controller (e2e)', () => {
         album_name: 'Lumon Dance Experience',
       },
     });
-
-    // Create a UserStatus for testing
-    await prisma.userStatus.createMany({
-      data: [
-        { status: 'attending' },
-        { status: 'declined' },
-        { status: 'pending' },
-      ],
-      skipDuplicates: true,
-    });
   });
 
   beforeEach(async () => {
-    // Create a test album before creating the event
     const album = await prisma.album.findFirst({
       where: { album_name: 'Lumon Dance Experience' },
     });

@@ -1,74 +1,174 @@
 {
-    "GET /api/albums/:event_id": {
-        "description": "serves the album for given event id",
-        "exampleResponse": {
-            "album_id": 1,
-	        "album_name": "Northcoders graduation"
-        }
+  "GET /api/albums/:event_id": {
+    "description": "serves the album for given event id",
+    "exampleResponse": {
+      "album_id": 1,
+      "album_name": "Northcoders graduation"
+    }
+  },
+  "POST /api/albums": {
+    "description": "creates a new album in the album table",
+    "exampleRequest": {
+      "album_name": "Post album test"
     },
-    "POST /api/albums": {
-        "description": "creates a new album in the album table",
-        "exampleRequest": {
-            "album_name":"Post album test"
-        },
-        "exampleResponse": {
-            "album_id": 3,
-	        "album_name": "Post album test"
-        }
+    "exampleResponse": {
+      "album_id": 3,
+      "album_name": "Post album test"
+    }
+  },
+  "PATCH /api/albums/:album_id?action=add": {
+    "description": "Adds pictures from album.",
+    "exampleRequest": {
+      "pictures": [{ "picture_id": 1 }]
     },
-    "PATCH /api/albums/:album_id?action=add": {
-        "description": "Adds pictures from album.",
-        "exampleRequest": {
-            "pictures": [
-                {"picture_id": 1}
-            ]
-        },
-        "exampleResponse": {
-            "message": "Pictures added to album",
-            "count": 1
-        }
+    "exampleResponse": {
+      "message": "Pictures added to album",
+      "count": 1
+    }
+  },
+  "PATCH /api/albums/:album_id?action=remove": {
+    "description": "Removes pictures from album.",
+    "exampleRequest": {
+      "pictures": [{ "picture_id": 1 }]
     },
-    "PATCH /api/albums/:album_id?action=remove": {
-        "description": "Removes pictures from album.",
-        "exampleRequest": {
-            "pictures": [
-                {"picture_id": 1}
-            ]
-        },
-        "exampleResponse": {
-            "message": "Pictures removed from album",
-            "count": 1
-        }
-    },
-    "DELETE /api/albums/:album_id": {
+    "exampleResponse": {
+      "message": "Pictures removed from album",
+      "count": 1
+    }
+  },
+  "DELETE /api/albums/:album_id": {
         "description": "Deletes album and unlinks pictures from deleted album"
     },
-    "GET /api/pictures/:picture_id": {
-        "description": "Serves an individual picture object by picture_id",
-        "exampleResponse": {
-            "album_id": 1,
-            "picture_id": 1,
-            "storage_id": "67f9386500316bb3c9e7",
-            "type_id": 3
-        }
-    },
-    "GET /api/pictures/album/:album_id": {
-        "description": "Serves an array of all picture objects for a given album",
-        "exampleResponse": {
-            "pictures":[
-                {
-                    "album_id": 1,
-                    "picture_id": 2,
-                    "storage_id": "67f9382c0019dea7ac32",
-                    "type_id": 1
-                },
-                {
-                    "album_id": 1,
-                    "picture_id": 1,
-                    "storage_id": "67f9386500316bb3c9e7",
-                    "type_id": 3
-                }
-            ]
-        }
+  "GET /api/pictures/:picture_id": {
+    "description": "Serves an individual picture object by picture_id",
+    "exampleResponse": {
+      "album_id": 2,
+	    "picture_id": 3,
+	    "storage_id": "67f938240002514c4ded",
+	    "type_id": 1,
+	    "url": "https://cloud.appwrite.io/v1/storage/buckets/67f8f69b003be8ed659d/files/67f938240002514c4ded/view?project=67f8f680002b6a18bfc3&mode=admin"
     }
+  },
+  "GET /api/pictures/album/:album_id": {
+    "description": "Serves an array of all picture objects for a given album",
+    "exampleResponse": {
+      "pictures": [
+        {
+          "album_id": 1,
+          "picture_id": 2,
+          "storage_id": "67f9382c0019dea7ac32",
+          "type_id": 1
+        },
+        {
+          "album_id": 1,
+          "picture_id": 1,
+          "storage_id": "67f9386500316bb3c9e7",
+          "type_id": 3
+        }
+      ]
+    }
+  },
+  "GET /api/events": {
+    "description": "Fetches all events",
+    "exampleResponse": [
+      {
+        "event_id": 1,
+        "event_owner_id": 2,
+        "event_title": "Northcoders Graduation",
+        "event_description": "Test event",
+        "storage_id": "67f937f70039b87ada61",
+        "album_id": 1,
+        "event_date": "2025-04-25T14:00:00Z",
+        "event_date_end": "2025-04-25T17:00:00Z",
+        "event_location": "Manchester",
+        "album_delay": 0,
+        "private": true
+      }
+    ]
+  },
+  "POST /api/events": {
+    "description": "Creates a new event",
+    "exampleRequest": {
+      "event_owner_id": 1,
+      "event_title": "Music Dance Experience",
+      "event_description": "Quarterly mandatory wellness session for all Lumon employees",
+      "storage_id": "lumon-mde-123",
+      "event_location": "Lumon Industries Conference Room",
+      "album_delay": 60,
+      "private": true,
+      "event_date": "2025-05-15T14:00:00Z",
+      "event_date_end": "2025-05-15T15:00:00Z"
+    },
+    "exampleResponse": {
+      "event_id": 3,
+      "event_owner_id": 1,
+      "event_title": "Music Dance Experience",
+      "event_description": "Quarterly mandatory wellness session for all Lumon employees",
+      "album_id": 3,
+      "storage_id": "lumon-mde-123",
+      "event_location": "Lumon Industries Conference Room",
+      "album_delay": 60,
+      "private": true,
+      "event_date": "2025-05-15T14:00:00Z",
+      "event_date_end": "2025-05-15T15:00:00Z"
+    }
+  },
+  "PATCH /api/events/:eventId": {
+    "description": "Updates an existing event",
+    "exampleRequest": {
+      "event_title": "Updated Event Title",
+      "event_description": "Updated event description"
+    },
+    "exampleResponse": {
+      "event_id": 1,
+      "event_owner_id": 2,
+      "event_title": "Updated Event Title",
+      "event_description": "Updated event description",
+      "storage_id": "67f937f70039b87ada61",
+      "album_id": 1,
+      "event_date": "2025-04-25T14:00:00Z",
+      "event_date_end": "2025-04-25T17:00:00Z",
+      "event_location": "Manchester",
+      "album_delay": 0,
+      "private": true
+    }
+  },
+  "DELETE /api/events/:eventId": {
+    "description": "Deletes an event and its associated data",
+    "exampleResponse": {
+      "message": "Event deleted successfully",
+      "event_id": 2
+    }
+  },
+  "POST /api/events/:eventId/invite": {
+    "description": "Invites a user to an event",
+    "exampleRequest": {
+      "userId": 3
+    },
+    "exampleResponse": {
+      "userEvent_id": 7,
+      "event_id": 1,
+      "user_id": 3,
+      "status_id": 1
+    }
+  },
+  "PATCH /api/events/:eventId/users/:userId/status": {
+    "description": "Updates a user's event status",
+    "exampleRequest": {
+      "statusId": 2
+    },
+    "exampleResponse": {
+      "userEvent_id": 1,
+      "event_id": 1,
+      "user_id": 2,
+      "status_id": 2
+    }
+  },
+  "POST /api/events/:eventId/schedule-notifications": {
+    "description": "Schedules notifications for an event",
+    "exampleResponse": {
+      "success": true,
+      "message": "Event notifications scheduled"
+    }
+  }
 }
