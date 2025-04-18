@@ -26,6 +26,7 @@ const LayoutContent = () => {
             headerStyle: {backgroundColor: isDarkMode ? '#605d5d' : '#ddd'},
             headerTintColor: isDarkMode ? '#fff' : '#333',
         }}>
+            <Stack.Screen name='createEvent' options={{title: 'Create new event'}}/>
             <Stack.Screen name='index' options={{title: 'Home'}}/>
         </Stack>
     )
