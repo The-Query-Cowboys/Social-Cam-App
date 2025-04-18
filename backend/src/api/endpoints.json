@@ -1,5 +1,8 @@
 {
-  "GET /api/albums/:event_id": {
+    "GET /api": {
+        "description": "serves up a json representation of all the available endpoints of the api"
+    },
+    "GET /api/albums/:event_id": {
     "description": "serves the album for given event id",
     "exampleResponse": {
       "album_id": 1,
