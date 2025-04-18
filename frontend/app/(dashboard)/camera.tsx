@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Button, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import * as MediaLibrary from 'expo-media-library'
 
-const camera = () => {
+const Camera = () => {
     const [facing, setFacing] = useState<CameraType>('back');
     const [permission, requestPermission] = useCameraPermissions();
     const cameraRef = useRef(null)
@@ -38,6 +38,7 @@ const camera = () => {
         if (cameraRef.current) {
             const {status} = await MediaLibrary.requestPermissionsAsync();
             // uri is a string that points to the asset
+            // @ts-ignore
             const { uri } = await cameraRef.current.takePictureAsync()
             console.log('Hi')
             if (status === 'granted') {
@@ -100,4 +101,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default camera
+export default Camera

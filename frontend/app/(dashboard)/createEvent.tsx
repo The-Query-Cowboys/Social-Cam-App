@@ -1,7 +1,7 @@
-
 import { StyleSheet, Text, View, Button, Platform, TextInput, Image, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
 import { Link } from 'expo-router';
 import { useTheme } from "@/context/ThemeContext";
+// @ts-ignore
 import icon from '../../assets/favicon.png';
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { useState } from 'react';
@@ -106,17 +106,14 @@ const createEvent = () => {
         placeholder='image_url'
         placeholderTextColor="#666" />
 
-
-
       <TouchableOpacity className='w-4/5 p-2 bg-green-200 border border-gray-300 rounded items-center'>
         <Text className='text-black'>Create</Text>
       </TouchableOpacity>
-
-
 
       <Link href='/' className='my-4'>Home</Link>
       <Link href='/publicEventPage' className='my-4'>Event Page</Link>
     </View>
   )
+}
     
 export default createEvent
