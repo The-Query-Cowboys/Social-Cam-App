@@ -68,6 +68,9 @@
       ]
     }
   },
+  "DELETE /api/pictures/:picture_id": {
+    "description": "Deletes picture entry on database and appwrite"
+  },
   "GET /api/events": {
     "description": "Fetches all events",
     "exampleResponse": [
