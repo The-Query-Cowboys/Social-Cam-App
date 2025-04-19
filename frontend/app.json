@@ -1,12 +1,12 @@
 {
   "expo": {
     "scheme": "socialcamapp",
-    "name": "2_social_cam_app",
-    "slug": "2_social_cam_app",
+    "name": "posable",
+    "slug": "posable",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash-icon.png",
