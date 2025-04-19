@@ -1,34 +1,39 @@
-import '../global.css'
-import {Stack} from 'expo-router'
-import {ThemeProvider, useTheme} from '../context/ThemeContext'
-import {ClerkProvider} from '@clerk/clerk-expo'
-import {tokenCache} from "@clerk/clerk-expo/token-cache";
+import "../global.css";
+import { Stack } from "expo-router";
+import { ThemeProvider, useTheme } from "../context/ThemeContext";
+import { ClerkProvider } from "@clerk/clerk-expo";
+import { tokenCache } from "@clerk/clerk-expo/token-cache";
 
 const RootLayout = () => {
+  const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
-    const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
-
-    return (
-        <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
-            <ThemeProvider>
-                <LayoutContent/>
-            </ThemeProvider>
-        </ClerkProvider>
-    )
-}
+  return (
+    <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
+      <ThemeProvider>
+        <LayoutContent />
+      </ThemeProvider>
+    </ClerkProvider>
+  );
+};
 
 const LayoutContent = () => {
-    const {colorScheme} = useTheme();
-    const isDarkMode = colorScheme === 'dark';
+  const { isDark } = useTheme();
 
-    return (
-        <Stack screenOptions={{
-            headerStyle: {backgroundColor: isDarkMode ? '#605d5d' : '#ddd'},
-            headerTintColor: isDarkMode ? '#fff' : '#333',
-        }}>
-            <Stack.Screen name='index' options={{title: 'Home'}}/>
-        </Stack>
-    )
-}
+  return (
+    <Stack
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: isDark
+            ? "bg-background-dark"
+            : "bg-background-light",
+        },
+      }}
+    >
+      <Stack.Screen name="index" options={{ title: "POSABLE" }} />
+      <Stack.Screen name="(dashboard)" options={{ headerShown: false }} />
+      <Stack.Screen name="(design)" options={{ headerShown: false }} />
+    </Stack>
+  );
+};
 
-export default RootLayout
+export default RootLayout;
