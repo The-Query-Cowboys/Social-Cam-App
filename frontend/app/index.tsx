@@ -2,7 +2,7 @@ import { Text, View, Image } from "react-native";
 import { Link } from "expo-router";
 // @ts-ignore
 import icon from "../assets/favicon.png";
-import React from "react";
+import React, { useEffect } from "react";
 import { useTheme } from "@/context/ThemeContext";
 import DarkModeToggle from "@/app/components/DarkModeToggle";
 //
@@ -44,19 +44,19 @@ const Home = () => {
       >
         Create Event
       </Link>
-      <Link href="/(auth)/logInPage" className={`my-8 border-b ${applyTheme}`}>
-        Login
-      </Link>
       <SignedIn>
         <SignOutButton />
       </SignedIn>
       <SignedOut>
         <Text className={`my-8 ${applyTheme}`}>Signed out</Text>
+        <Link
+          href="/(auth)/logInPage"
+          className={`my-8 border-b ${applyTheme}`}
+        >
+          Login
+        </Link>
       </SignedOut>
-      <Link
-        href="/(dashboard)/camera"
-        className={`my-8 border-b ${applyTheme}`}
-      >
+      <Link href="/camera/1" className={`my-8 border-b ${applyTheme}`}>
         Camera
       </Link>
       <Link href="/(design)/themeShowcase">THEME EXAMPLE PAGE</Link>

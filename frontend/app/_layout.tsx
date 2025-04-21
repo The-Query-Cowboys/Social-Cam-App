@@ -51,6 +51,7 @@ const LayoutContent = () => {
       <Stack.Screen name="index" options={{ title: "POSABLE" }} />
       <Stack.Screen name="(dashboard)" options={{ headerShown: false }} />
       <Stack.Screen name="(design)" options={{ headerShown: false }} />
+      <Stack.Screen name="camera" options={{ headerShown: false }} />
     </Stack>
   );
 };

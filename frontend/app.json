@@ -43,8 +43,14 @@
           "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
           "isAccessMediaLocationEnabled": true
         }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow ${PRODUCT_NAME} to access your camera"
+        }
       ]
     ],
-    "owner": "oscarfinn"
+    "owner": "query_cowboys"
   }
 }
