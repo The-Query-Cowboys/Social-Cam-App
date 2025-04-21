@@ -2,13 +2,14 @@ import { Text, View, TextInput, Button } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import { useTheme } from "@/context/ThemeContext";
-import { useSignIn } from "@clerk/clerk-expo";
+import { useSignIn, useAuth } from "@clerk/clerk-expo";
 import { registerUserPushToken } from "../api/notificationService";
 import { getUserByAuthId } from "../api/api";
 
 const logInPage = () => {
   const { colorScheme } = useTheme();
   const { signIn, setActive, isLoaded } = useSignIn();
+  const { userId } = useAuth();
   const router = useRouter();
 
   const [username, setUsername] = useState("");
@@ -39,8 +40,12 @@ const logInPage = () => {
       if (signInAttempt.status === "complete") {
         await setActive({ session: signInAttempt.createdSessionId });
         console.log(signInAttempt, "here"); //
-        //const userData = getUserByAuthId();
-        //await registerUserPushToken(userId);
+        if (userId) {
+          const userData = getUserByAuthId(userId);
+          console.log(userData);
+          //await registerUserPushToken(userData.user_id);
+        }
+
         router.replace("/");
       } else {
         console.error(JSON.stringify(signInAttempt, null, 2), "here2"); //
