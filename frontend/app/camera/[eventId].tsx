@@ -121,6 +121,8 @@ const Camera = () => {
   async function uploadAndSavePhoto() {
     if (!capturedImage) return;
 
+    //upload to appwrite and post id to db
+
     const { status } = await MediaLibrary.requestPermissionsAsync();
     if (status === "granted") {
       await MediaLibrary.createAssetAsync(capturedImage);
@@ -129,7 +131,7 @@ const Camera = () => {
       Alert.alert("Error", "We need permission to save this photo!");
     }
 
-    //add upload logic here, Kawai can help
+    router.navigate("/");
   }
 
   async function discardPhoto() {
@@ -202,37 +204,5 @@ const Camera = () => {
     </SafeAreaView>
   );
 };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: "center",
-//   },
-//   message: {
-//     textAlign: "center",
-//     paddingBottom: 10,
-//   },
-//   camera: {
-//     alignSelf: "center",
-//     height: "85%",
-//     borderRadius: 16,
-//     aspectRatio: 1.3 / 2,
-//   },
-//   buttonContainer: {
-//     backgroundColor: "transparent",
-//     margin: 20,
-//   },
-//   button: {
-//     alignSelf: "center",
-//     alignItems: "center",
-//     backgroundColor: "yellow",
-//     opacity: 0.5,
-//   },
-//   text: {
-//     fontSize: 20,
-//     fontWeight: "bold",
-//     color: "black",
-//   },
-// });
 
 export default Camera;
