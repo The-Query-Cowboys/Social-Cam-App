@@ -33,6 +33,11 @@ export class UsersController {
     return this.appService.getUserById(user_id);
   }
 
+  @Get('/clerk/:authId')
+  getUserByAuthId(@Param('authId', ParseIntPipe) authId: number) {
+    return this.appService.getUserByAuthId(authId);
+  }
+
   //get all events for that user id
   @Get(':user_id/events')
   getUserEvents(

@@ -15,6 +15,8 @@ import { EventsModule } from './api/events/events.module';
 import { TokenService } from './api/token.service';
 import { TokenController } from './api/token.controller';
 import { NotificationsModule } from './api/notifications/notifications.module';
+import { PushTokenController } from './api/user-push-tokens/push-token.controller';
+import { PushTokenService } from './api/user-push-tokens/push-token.service';
 
 @Module({
   imports: [
@@ -31,6 +33,7 @@ import { NotificationsModule } from './api/notifications/notifications.module';
     AlbumsController,
     PicturesController,
     TokenController,
+    PushTokenController,
   ],
   providers: [
     AppService,
@@ -39,6 +42,7 @@ import { NotificationsModule } from './api/notifications/notifications.module';
     PicturesService,
     PrismaService,
     TokenService,
+    PushTokenService,
   ],
 })
 export class AppModule {}
