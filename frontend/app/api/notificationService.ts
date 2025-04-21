@@ -13,6 +13,7 @@ Notifications.setNotificationHandler({
 });
 
 export async function registerForPushNotificationsAsync() {
+  console.log("getting push token");
   if (Platform.OS === "android") {
     Notifications.setNotificationChannelAsync("default", {
       name: "default",
@@ -45,6 +46,7 @@ export async function registerForPushNotificationsAsync() {
           projectId,
         })
       ).data;
+      console.log(pushTokenString, "push token in notification service");
       return pushTokenString;
     } catch (e: unknown) {
       throw new Error(`${e}`);
@@ -55,8 +57,11 @@ export async function registerForPushNotificationsAsync() {
 }
 
 export async function registerUserPushToken(userId: number) {
+  console.log(userId, "<--- userId passed");
   try {
     const token = await registerForPushNotificationsAsync();
+    console.log(token);
+    console.log(typeof token);
     if (token) {
       await registerPushToken(userId, token);
       return token;

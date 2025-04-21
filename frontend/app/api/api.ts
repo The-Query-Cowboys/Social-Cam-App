@@ -141,9 +141,10 @@ export const getAlbumPictures = async (albumId: number) => {
 
 export const registerPushToken = async (userId: number, token: string) => {
   try {
-    const response = await axios.post(`/api/users/${userId}/push-tokens`, {
+    const response = await api.post(`users/${userId}/push-tokens`, {
       token,
     });
+    console.log(response);
     return response.data;
   } catch (error) {
     console.error("Error registering push token:", error);
@@ -153,7 +154,7 @@ export const registerPushToken = async (userId: number, token: string) => {
 
 export const getUserPushTokens = async (userId: number) => {
   try {
-    const response = await axios.get(`/api/users/${userId}/push-tokens`);
+    const response = await api.get(`users/${userId}/push-tokens`);
     return response.data;
   } catch (error) {
     console.error("Error fetching push tokens:", error);
@@ -163,7 +164,7 @@ export const getUserPushTokens = async (userId: number) => {
 
 export const deletePushToken = async (userId: number, token: string) => {
   try {
-    const response = await axios.delete(`/api/users/${userId}/push-tokens`, {
+    const response = await api.delete(`users/${userId}/push-tokens`, {
       data: { token },
     });
     return response.data;
@@ -172,5 +173,3 @@ export const deletePushToken = async (userId: number, token: string) => {
     throw error;
   }
 };
-
-export default api;

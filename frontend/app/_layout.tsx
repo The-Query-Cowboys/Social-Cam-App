@@ -28,7 +28,8 @@ const LayoutContent = () => {
       if (isSignedIn && userId) {
         try {
           const user = await getUserByAuthId(userId);
-          registerUserPushToken(user.userId).catch(console.error);
+
+          registerUserPushToken(user.user_id);
         } catch (err) {
           console.error(err);
         }
