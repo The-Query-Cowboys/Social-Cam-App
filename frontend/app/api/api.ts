@@ -19,6 +19,11 @@ export const getUserById = async (userId: number) => {
   return response.data;
 };
 
+export const getUserByAuthId = async (authId: number) => {
+  const response = await api.get(`users/clerk/${authId}`);
+  return response.data;
+};
+
 export const getUserEvents = async (userId: number, status?: number[]) => {
   let url = `users/${userId}/events`;
   if (status && status.length > 0) {
@@ -132,6 +137,40 @@ export const getPictureById = async (pictureId: number) => {
 export const getAlbumPictures = async (albumId: number) => {
   const response = await api.get(`pictures/album/${albumId}`);
   return response.data;
+};
+
+export const registerPushToken = async (userId: number, token: string) => {
+  try {
+    const response = await axios.post(`/api/users/${userId}/push-tokens`, {
+      token,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error registering push token:", error);
+    throw error;
+  }
+};
+
+export const getUserPushTokens = async (userId: number) => {
+  try {
+    const response = await axios.get(`/api/users/${userId}/push-tokens`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching push tokens:", error);
+    throw error;
+  }
+};
+
+export const deletePushToken = async (userId: number, token: string) => {
+  try {
+    const response = await axios.delete(`/api/users/${userId}/push-tokens`, {
+      data: { token },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting push token:", error);
+    throw error;
+  }
 };
 
 export default api;
