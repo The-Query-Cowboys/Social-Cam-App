@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTheme } from "@/context/ThemeContext";
 import { useSignUp } from "@clerk/clerk-expo";
 import { createUser } from "../api/api";
+import { registerUserPushToken } from "../api/notificationService";
 
 const signUpPage = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -57,7 +58,7 @@ const signUpPage = () => {
       });
       if (signUpAttempt.status === "complete" && signUpAttempt.createdUserId) {
         setAuthId(signUpAttempt.createdUserId);
-        await createUser(username, emailAddress, signUpAttempt.createdUserId);
+        createUser(username, emailAddress, signUpAttempt.createdUserId);
         await setActive({ session: signUpAttempt.createdSessionId });
         router.replace("/");
       } else {

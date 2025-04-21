@@ -34,7 +34,7 @@ export class UsersController {
   }
 
   @Get('/clerk/:authId')
-  getUserByAuthId(@Param('authId', ParseIntPipe) authId: number) {
+  getUserByAuthId(@Param('authId') authId: string) {
     return this.appService.getUserByAuthId(authId);
   }
 

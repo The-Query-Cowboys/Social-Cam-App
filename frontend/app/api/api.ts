@@ -19,7 +19,7 @@ export const getUserById = async (userId: number) => {
   return response.data;
 };
 
-export const getUserByAuthId = async (authId: number) => {
+export const getUserByAuthId = async (authId: string) => {
   const response = await api.get(`users/clerk/${authId}`);
   return response.data;
 };
