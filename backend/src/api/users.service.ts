@@ -14,7 +14,6 @@ import { User, Prisma } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
-
   constructor(private prisma: PrismaService) {}
 
   async getAllUsers(): Promise<User[]> {
@@ -27,6 +26,18 @@ export class UsersService {
     });
     if (!user) {
       throw new NotFoundException(`User_id ${userId} was not found`);
+    }
+    return user;
+  }
+
+  async getUserByAuthId(authId): Promise<User | null> {
+    const user = await this.prisma.user.findFirst({
+      where: { auth_id: authId },
+    });
+    if (!user) {
+      throw new NotFoundException(
+        `User with authentication id: ${authId} was not found`,
+      );
     }
     return user;
   }

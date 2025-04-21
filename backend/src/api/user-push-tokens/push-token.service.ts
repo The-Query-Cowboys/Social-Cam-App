@@ -20,8 +20,53 @@ export class PushTokenService {
       },
     });
 
-    if (exisitngToken) {
-      return exisitngToken;
+    if (existingToken) {
+      return existingToken;
     }
+
+    return this.prisma.userPushToken.create({
+      data: {
+        user_id: userId,
+        token: token,
+      },
+    });
+  }
+
+  async getUserPushTokens(userId: number) {
+    const user = await this.prisma.user.findUnique({
+      where: { user_id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
+    }
+
+    // Return all tokens for this user
+    return this.prisma.userPushToken.findMany({
+      where: {
+        user_id: userId,
+      },
+    });
+  }
+
+  async deletePushToken(userId: number, token: string) {
+    // When a user deletes app from device
+    const existingToken = await this.prisma.userPushToken.findFirst({
+      where: {
+        user_id: userId,
+        token: token,
+      },
+    });
+
+    if (!existingToken) {
+      throw new NotFoundException(`Push token not found for user ${userId}`);
+    }
+
+    // Delete the token
+    return this.prisma.userPushToken.delete({
+      where: {
+        token_id: existingToken.token_id,
+      },
+    });
   }
 }
