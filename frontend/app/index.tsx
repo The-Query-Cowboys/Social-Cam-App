@@ -31,7 +31,6 @@ const Home = () => {
     primaryButton: `py-3 px-8 rounded-lg w-full items-center ${bgPrimary}`,
     secondaryButton: `py-3 px-8 border rounded-lg w-full items-center mt-3 ${bgSecondary}`,
   };
-
   return (
     <SafeAreaView className={styles.container}>
       <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
