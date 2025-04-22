@@ -44,6 +44,7 @@
           "isAccessMediaLocationEnabled": true
         }
       ],
+      ["expo-image-picker"],
       [
         "expo-camera",
         {
