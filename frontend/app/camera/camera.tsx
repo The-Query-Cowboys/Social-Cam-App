@@ -1,6 +1,6 @@
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import { useState, useRef, useEffect } from 'react';
-import { Button, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
+import {Button, Text, TouchableOpacity, View, StyleSheet, Image} from 'react-native';
 import * as MediaLibrary from 'expo-media-library'
 
 const Camera = () => {
@@ -8,6 +8,8 @@ const Camera = () => {
     const [permission, requestPermission] = useCameraPermissions();
     const cameraRef = useRef(null)
     const [mediaPermission, requestMediaPermission] = MediaLibrary.usePermissions();
+    const [previewUri, setPreviewUri] = useState(null)
+    const [showPreview, setShowPreview] = useState(false)
 
     useEffect(() => {
         if (!mediaPermission) {
@@ -16,12 +18,10 @@ const Camera = () => {
     }, []);
 
     if (!permission) {
-        // Camera permissions are still loading.
         return <View />;
     }
 
     if (!permission.granted) {
-        // Camera permissions are not granted yet.
         return (
             <View >
                 <Text >We need your permission to show the camera</Text>
@@ -34,36 +34,66 @@ const Camera = () => {
         setFacing(current => (current === 'back' ? 'front' : 'back'));
     }
 
-    async function takePicture() {
+
+    async function picPreview() {
         if (cameraRef.current) {
-            const {status} = await MediaLibrary.requestPermissionsAsync();
-            // uri is a string that points to the asset
+            await MediaLibrary.requestPermissionsAsync()
             // @ts-ignore
             const { uri } = await cameraRef.current.takePictureAsync()
-            console.log('Hi')
-            if (status === 'granted') {
-                await MediaLibrary.createAssetAsync(uri)
-                console.log('saved to gallery')
-            } else {
-                alert('Need permission!')
-            }
+            setPreviewUri(uri)
+            setShowPreview(true)
+            console.log(previewUri)
         }
+    }
+
+    const savePhoto = async () => {
+        if (previewUri) {
+            await MediaLibrary.createAssetAsync(previewUri)
+            setShowPreview(false)
+            setPreviewUri(null)
+        }
+    }
+
+    const discardPhoto = () => {
+        setShowPreview(false)
+        setPreviewUri(null)
     }
 
     return (
         <View style={styles.container}>
-            <CameraView ref={cameraRef} style={styles.camera} facing={facing}>
-                <TouchableOpacity onPress={toggleCameraFacing} style={styles.button}>
-                    <Text style={{fontSize: 20}}>
-                        Flip Camera
+            {showPreview && previewUri ? (
+            <View>
+                <Image
+                    source={{ uri: previewUri }}
+                    style={{ width: 300, height: 400, marginBottom: 20 }}
+                />
+                <Text>Save image?</Text>
+                <TouchableOpacity onPress={savePhoto}>
+                    <Text className={`text-3xl`}>
+                        Yes
                     </Text>
                 </TouchableOpacity>
-            </CameraView>
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity style={{alignSelf: 'center'}} onPress={takePicture}>
-                    <Text style={styles.text}>Take Picture</Text>
+                <TouchableOpacity onPress={discardPhoto}>
+                    <Text className={`text-3xl`}>
+                        No
+                    </Text>
                 </TouchableOpacity>
+            </View>) : (
+            <View>
+                <CameraView ref={cameraRef} style={styles.camera} facing={facing}>
+                    <TouchableOpacity onPress={toggleCameraFacing} style={styles.button}>
+                        <Text style={{fontSize: 20}}>
+                            Flip Camera
+                        </Text>
+                    </TouchableOpacity>
+                </CameraView>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={{alignSelf: 'center'}} onPress={picPreview}>
+                        <Text style={styles.text}>Take Picture</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
+            )}
         </View>
     );
 }

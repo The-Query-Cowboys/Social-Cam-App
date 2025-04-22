@@ -38,7 +38,7 @@ const logInPage = () => {
             <Text className={`text-xl mb-5 ${applyViewTheme}`}>
                 Log in
             </Text>
-            <View>
+            <View className={`items-center`}>
                 <TextInput className={`text-l mb-5 ${applyTheme}`}
                            placeholder='Username'
                            onChangeText={(username) => setUsername(username)}

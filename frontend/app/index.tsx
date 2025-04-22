@@ -31,7 +31,7 @@ const Home = () => {
             <SignedOut>
                 <Text className={`my-8 ${applyTheme}`}>Signed out</Text>
             </SignedOut>
-            <Link href='/(dashboard)/camera' className={`my-8 border-b ${applyTheme}`}>Camera</Link>
+            <Link href='/camera/camera' className={`my-8 border-b ${applyTheme}`}>Camera</Link>
         </View>
     )
 }
