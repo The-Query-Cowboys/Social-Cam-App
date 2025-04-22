@@ -144,7 +144,6 @@ export const registerPushToken = async (userId: number, token: string) => {
     const response = await api.post(`users/${userId}/push-tokens`, {
       token,
     });
-    console.log(response);
     return response.data;
   } catch (error) {
     console.error("Error registering push token:", error);
