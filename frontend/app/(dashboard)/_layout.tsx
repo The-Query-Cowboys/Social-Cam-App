@@ -1,6 +1,7 @@
 import { Tabs } from "expo-router";
 import React from "react-native";
 import { useTheme } from "@/context/ThemeContext";
+import { UserProvider } from "@/context/UserContext";
 
 const dashboardLayout = () => {
   const { isDark } = useTheme();
@@ -10,24 +11,26 @@ const dashboardLayout = () => {
   }`;
 
   return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-        tabBarStyle: { backgroundColor: "dark", paddingTop: 10, height: 90 },
-        tabBarActiveTintColor: "rgba(0,21,255,0.55)",
-        tabBarInactiveTintColor: "#000",
-      }}
-    >
-      <Tabs.Screen name="createEvent" options={{ title: "Create event" }} />
+    <UserProvider>
+      <Tabs
+        screenOptions={{
+          headerShown: false,
+          tabBarStyle: { backgroundColor: "dark", paddingTop: 10, height: 90 },
+          tabBarActiveTintColor: "rgba(0,21,255,0.55)",
+          tabBarInactiveTintColor: "#000",
+        }}
+      >
+        <Tabs.Screen name="createEvent" options={{ title: "Create event" }} />
 
-      <Tabs.Screen
-        name="publicEventPage"
-        options={{ title: "Public events" }}
-      />
+        <Tabs.Screen
+          name="publicEventPage"
+          options={{ title: "Public events" }}
+        />
 
-      <Tabs.Screen name="eventDetails" options={{ title: "Event details" }} />
-      <Tabs.Screen name="camera" options={{ headerShown: true }} />
-    </Tabs>
+        <Tabs.Screen name="eventDetails" options={{ title: "Event details" }} />
+        <Tabs.Screen name="albumCard" options={{ href: null }} />
+      </Tabs>
+    </UserProvider>
   );
 };
 
