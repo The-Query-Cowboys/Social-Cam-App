@@ -35,7 +35,6 @@ interface Album {
 }
 const AlbumList = () => {
   const [albums, setAlbums] = useState<Album[]>([]);
-  console.log(albums, "<-- albums in albumlist");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

@@ -28,7 +28,6 @@ const AlbumCard: React.FC<AlbumCardProps> = ({ album }) => {
   const { isDark } = useTheme();
 
   console.log("rendering album card");
-  console.log(album, "<-- album in album card");
   // Define styles object with class names
   const styles = {
     card: `mb-4 rounded-xl overflow-hidden ${
