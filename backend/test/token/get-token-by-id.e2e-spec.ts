@@ -22,6 +22,7 @@ describe('POST /api/events', () => {
     const { body } = await request(app.getHttpServer())
       .get('/api/token/1')
       .expect(200);
+
     expect(body.token.length).toBeGreaterThan(0);
   });
 

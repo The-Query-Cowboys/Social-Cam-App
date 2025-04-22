@@ -1,35 +1,41 @@
-import '../global.css'
-import {Stack} from 'expo-router'
-import {ThemeProvider, useTheme} from '../context/ThemeContext'
-import {ClerkProvider} from '@clerk/clerk-expo'
-import {tokenCache} from "@clerk/clerk-expo/token-cache";
+import "../global.css";
+import { Stack } from "expo-router";
+import { ThemeProvider, useTheme } from "../context/ThemeContext";
+import { ClerkProvider, useAuth } from "@clerk/clerk-expo";
+import { tokenCache } from "@clerk/clerk-expo/token-cache";
+import { registerUserPushToken } from "./api/notificationService";
+import { getUserByAuthId, getUserById } from "./api/api";
+import { useEffect } from "react";
 
 const RootLayout = () => {
+  const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
-    const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
-
-    return (
-        <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
-            <ThemeProvider>
-                <LayoutContent/>
-            </ThemeProvider>
-        </ClerkProvider>
-    )
-}
+  return (
+    <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
+      <ThemeProvider>
+        <LayoutContent />
+      </ThemeProvider>
+    </ClerkProvider>
+  );
+};
 
 const LayoutContent = () => {
-    const {colorScheme} = useTheme();
-    const isDarkMode = colorScheme === 'dark';
+  const { isSignedIn, userId } = useAuth();
+  const { isDark } = useTheme();
 
-    return (
-        <Stack screenOptions={{
-            headerStyle: {backgroundColor: isDarkMode ? '#605d5d' : '#ddd'},
-            headerTintColor: isDarkMode ? '#fff' : '#333',
-        }}>
-            <Stack.Screen name='createEvent' options={{title: 'Create new event'}}/>
-            <Stack.Screen name='index' options={{title: 'Home'}}/>
-        </Stack>
-    )
-}
+  useEffect(() => {
+    async function registerPushToken() {
+      if (isSignedIn && userId) {
+        try {
+          const user = await getUserByAuthId(userId);
 
-export default RootLayout
+          registerUserPushToken(user.user_id);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+    registerPushToken();
+  }, [isSignedIn, userId]);
+
+export default RootLayout;

@@ -44,7 +44,6 @@ describe('POST /api/events', () => {
       event_title: 'Music Dance Experience',
       event_description:
         'Quarterly mandatory wellness session for all Lumon employees',
-      album_id: 1,
       storage_id: 'lumon-mde-123',
       event_location: 'Lumon Industries Conference Room',
       album_delay: 60,
@@ -57,13 +56,12 @@ describe('POST /api/events', () => {
       .post('/api/events')
       .send(newEvent)
       .expect(201);
-
     expect(body).toHaveProperty('event_id');
     expect(typeof body.event_id).toBe('number');
     expect(body.event_owner_id).toBe(newEvent.event_owner_id);
     expect(body.event_title).toBe(newEvent.event_title);
     expect(body.event_description).toBe(newEvent.event_description);
-    expect(body.album_id).toBe(newEvent.album_id);
+    expect(body.album_id).toBe(6);
     expect(body.storage_id).toBe(newEvent.storage_id);
     expect(body.event_location).toBe(newEvent.event_location);
     expect(body.album_delay).toBe(newEvent.album_delay);
@@ -97,7 +95,6 @@ describe('POST /api/events', () => {
       event_owner_id: 'not-a-number', // Should be a number
       title: 'Defiant Jazz',
       event_description: 'Alternative wellness session with Ms. Casey',
-      album_id: 1,
       storage_id: 'lumon-defiantjazz-789',
       location: 'Lumon Industries Wellness Center',
       album_delay: 'sixty', // Should be a number
@@ -119,7 +116,6 @@ describe('POST /api/events', () => {
       event_owner_id: 1,
       title: 'Birthday Party',
       event_description: 'Celebrating my 30th birthday',
-      album_id: 1,
       storage_id: 'storage123',
       location: 'Central Park',
       album_delay: 60,
@@ -141,7 +137,6 @@ describe('POST /api/events', () => {
       event_owner_id: 1,
       event_title: 'Birthday Party',
       event_description: 'Celebrating my 30th birthday',
-      album_id: 1,
       storage_id: 'storage123',
       event_location: 'Central Park',
       album_delay: 60,
@@ -163,7 +158,6 @@ describe('POST /api/events', () => {
       event_owner_id: 1,
       event_title: 'Birthday Party',
       event_description: 'Celebrating my 30th birthday',
-      album_id: 1,
       storage_id: 'storage123',
       event_location: 'Central Park',
       album_delay: -10, // Negative delay
@@ -185,7 +179,6 @@ describe('POST /api/events', () => {
       event_owner_id: 999, // Assuming this user doesn't exist or doesn't have permissions
       event_title: 'Birthday Party',
       event_description: 'Celebrating my 30th birthday',
-      album_id: 1,
       storage_id: 'storage123',
       event_location: 'Central Park',
       album_delay: 60,
@@ -204,7 +197,6 @@ describe('POST /api/events', () => {
       event_owner_id: 1,
       event_title: 'Waffle Party',
       event_description: 'Special reward for exemplary macrodata refinement',
-      album_id: 1,
       storage_id: 'lumon-waffleparty-456',
       event_location: 'Lumon Industries Perpetuity Wing',
       private: true,

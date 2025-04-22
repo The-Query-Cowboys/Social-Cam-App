@@ -30,7 +30,7 @@ describe('POST /api/events/:eventId/invite', () => {
       .post('/api/events/1/invite')
       .send(userId)
       .expect(201);
-    expect(body.userEvent_id).toBe(7);
+    expect(body.userEvent_id).toBe(17);
     expect(body.event_id).toBe(1);
     expect(body.user_id).toBe(3);
   });
@@ -41,6 +41,19 @@ describe('POST /api/events/:eventId/invite', () => {
       .expect(400);
 
     expect(body.message[0]).toBe('userId should not be empty');
+  });
+  it('404: fails when user does not exist', async () => {
+    const nonExistentUserId = 99999;
+    const payload = {
+      userId: nonExistentUserId,
+    };
+
+    const { body } = await request(app.getHttpServer())
+      .post(`/api/events/1/invite`)
+      .send(payload)
+      .expect(404);
+
+    expect(body.message).toBe(`User with ID ${nonExistentUserId} not found`);
   });
   it('404: fails when event does not exist', async () => {
     const nonExistentEventId = 99999;
@@ -53,6 +66,6 @@ describe('POST /api/events/:eventId/invite', () => {
       .send(payload)
       .expect(404);
 
-    console.log(body);
+    expect(body.message).toBe(`Event with ID ${nonExistentEventId} not found`);
   });
 });

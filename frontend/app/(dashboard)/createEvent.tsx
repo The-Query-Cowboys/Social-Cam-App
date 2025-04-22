@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, Button, Platform, TextInput, Image, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { useTheme } from "@/context/ThemeContext";
+// @ts-ignore
 import icon from '../../assets/favicon.png';
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { useState, useEffect } from 'react';
@@ -230,32 +231,7 @@ const createEvent = () => {
         />
       )}
 
-      {showEndDatePicker && (
-        <DateTimePicker
-          testID="endDatePicker"
-          value={endDate}
-          mode="date"
-          display="default"
-          onChange={handleEndDateTimeChange}
-        />
-      )}
 
-      {showEndTimePicker && (
-        <DateTimePicker
-          testID="endTimePicker"
-          value={endDate}
-          mode="time"
-          display="default"
-          onChange={handleEndDateTimeChange}
-        />
-      )}
-
-      <Text className={`${applyTheme} font-bold text-lg mb-1`}>Upload Event Image</Text>
-      <TouchableOpacity
-        className="bg-blue-500 px-4 py-2 rounded mb-1"
-        onPress={pickImage}
-      >
-        <Text className="text-white">Select Image</Text>
       </TouchableOpacity>
       {selectedImage && (
         <Image
@@ -264,34 +240,3 @@ const createEvent = () => {
         />
       )}
 
-      <View className="flex-row items-center mb-1">
-        <Text className={`${applyTheme} font-bold text-lg mr-2`}>Private Event:</Text>
-        <TouchableOpacity
-          className={`p-2 rounded ${formData.private ? 'bg-blue-500' : 'bg-gray-300'}`}
-          onPress={() => setFormData(prev => ({ ...prev, private: !prev.private }))}
-        >
-          <Text className="text-white">{formData.private ? 'Yes' : 'No'}</Text>
-        </TouchableOpacity>
-      </View>
-
-      {isError? 
-        <Text className="text-red-500 mb-2">Error creating event. Please try again.</Text>: <Text ></Text>
-      }
-      
-      <TouchableOpacity 
-        className='w-4/5 p-2 bg-green-200 border border-gray-300 rounded items-center'
-        onPress={handleSubmit}
-        disabled={isLoading}
-      >
-        <Text className='text-black'>{isLoading ? 'Creating...' : 'Create'}</Text>
-      </TouchableOpacity>
-
-      <View className={`flex-row mt-2 ${applyTheme}`}>
-        <Link href='/' className='my-1'>Home</Link>
-        <Link href='/publicEventPage' className='my-1'>Event Page</Link>
-      </View>
-    </View>
-  );
-};
-
-export default createEvent;
