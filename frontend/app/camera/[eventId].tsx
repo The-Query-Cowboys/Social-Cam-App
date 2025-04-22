@@ -15,16 +15,18 @@ import * as Haptics from "expo-haptics";
 import { useTheme } from "../../context/ThemeContext";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import * as FileSystem from "expo-file-system";
+import { uploadImageToAppwrite } from "@/appwrite/appwrite.api";
 
 const Camera = () => {
   const { eventId } = useLocalSearchParams<{ eventId?: string }>();
-  console.log(eventId);
   const [facing, setFacing] = useState<CameraType>("back");
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef(null);
   const [mediaPermission, requestMediaPermission] =
     MediaLibrary.usePermissions();
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
+  console.log(capturedImage, "<--- captured image");
   const [isUploading, setIsUploading] = useState(false);
   const router = useRouter();
 
@@ -67,6 +69,21 @@ const Camera = () => {
     }
   }, []);
 
+  // const uriToBuffer = async (uri: string) => {
+  //   try {
+  //     const fileInfo = await FileSystem.getInfoAsync(uri);
+  //     const base64 = await FileSystem.readAsStringAsync(uri, {
+  //       encoding: FileSystem.EncodingType.Base64,
+  //     });
+  //     const file = {
+  //       buffer: base64,
+  //     };
+  //     return file;
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+
   if (!permission) {
     // Camera permissions are still loading.
     return <View />;
@@ -108,6 +125,8 @@ const Camera = () => {
         // uri is a string that points to the asset
         // @ts-ignore
         const { uri } = await cameraRef.current.takePictureAsync();
+
+        console.log(uri, "<--- uri");
         //console.log("Hi");
         setCapturedImage(uri);
       } catch (error) {
@@ -121,6 +140,9 @@ const Camera = () => {
   async function uploadAndSavePhoto() {
     if (!capturedImage) return;
 
+    //upload to appwrite and post id to db
+    console.log(capturedImage, "<---- captured image");
+    uploadImageToAppwrite(capturedImage);
     const { status } = await MediaLibrary.requestPermissionsAsync();
     if (status === "granted") {
       await MediaLibrary.createAssetAsync(capturedImage);
@@ -128,8 +150,7 @@ const Camera = () => {
     } else {
       Alert.alert("Error", "We need permission to save this photo!");
     }
-
-    //add upload logic here, Kawai can help
+    router.navigate("/");
   }
 
   async function discardPhoto() {
@@ -202,37 +223,5 @@ const Camera = () => {
     </SafeAreaView>
   );
 };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: "center",
-//   },
-//   message: {
-//     textAlign: "center",
-//     paddingBottom: 10,
-//   },
-//   camera: {
-//     alignSelf: "center",
-//     height: "85%",
-//     borderRadius: 16,
-//     aspectRatio: 1.3 / 2,
-//   },
-//   buttonContainer: {
-//     backgroundColor: "transparent",
-//     margin: 20,
-//   },
-//   button: {
-//     alignSelf: "center",
-//     alignItems: "center",
-//     backgroundColor: "yellow",
-//     opacity: 0.5,
-//   },
-//   text: {
-//     fontSize: 20,
-//     fontWeight: "bold",
-//     color: "black",
-//   },
-// });
 
 export default Camera;

@@ -53,10 +53,9 @@ const createEvent = () => {
   const [endText, setEndText] = useState('No end date and time selected yet');
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-
-  const [isPosting, setIsPosting] = useState(false)
+    const [isPosting, setIsPosting] = useState(false)
+  
   const pickImage = async (mode: string) => {
-
     try {
       let result = {};
       if (mode === "gallery") {
@@ -68,7 +67,6 @@ const createEvent = () => {
           aspect: [1, 1],
           quality: 1,
         })
-
         if (!result.canceled) {
           setSelectedImage(result.assets[0].uri)
         }

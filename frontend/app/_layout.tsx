@@ -41,11 +41,7 @@ const LayoutContent = () => {
   return (
     <Stack
       screenOptions={{
-        headerStyle: {
-          backgroundColor: isDark
-            ? "bg-background-dark"
-            : "bg-background-light",
-        },
+        headerShown: false,
       }}
     >
       <Stack.Screen name="index" options={{ title: "POSABLE" }} />
