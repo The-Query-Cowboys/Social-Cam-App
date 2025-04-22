@@ -1,0 +1,57 @@
+{
+  "expo": {
+    "scheme": "socialcamapp",
+    "name": "posable",
+    "slug": "posable",
+    "version": "1.0.0",
+    "extra": {
+      "eas": {
+        "projectId": "55b73b1d-aad6-419a-b71c-aae940a30f9c"
+      }
+    },
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.ACCESS_MEDIA_LOCATION"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
+          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
+          "isAccessMediaLocationEnabled": true
+        }
+      ],
+      ["expo-image-picker"],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow ${PRODUCT_NAME} to access your camera"
+        }
+      ]
+    ],
+    "owner": "query_cowboys"
+  }
+}
