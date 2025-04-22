@@ -18,10 +18,6 @@ const Home = () => {
       : "text-primary-light bg-background-light"
   }`;
 
-  const styles = {
-    container: `flex-1 items-center ${applyTheme}`,
-  };
-
   return (
     <View className={`flex-1 items-center justify-center ${applyTheme}`}>
       <View className="absolute top-4 right-4 items-center">
