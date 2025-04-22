@@ -1,4 +1,4 @@
-import { Controller, Get, Param, ParseIntPipe, Post, Body, Patch, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Post, Body, Patch, Query, UsePipes, ValidationPipe, Delete, HttpCode } from '@nestjs/common';
 import { AlbumsService } from './albums.service';
 import { CreateAlbumDto } from './create-album.dto';
 import { modifyAlbumPicturesDto } from './modify-album-pictures.dto';
@@ -28,4 +28,11 @@ export class AlbumsController {
     ) {
         return this.appService.modifyAlbumPictures(album_id, action, body.pictures);
     }
+
+    @Delete(':album_id')
+    @HttpCode(204)
+    deleteAlbum(
+        @Param('album_id', ParseIntPipe) album_id: number) {
+            return this.appService.deleteAlbum(album_id);
+        }
 }

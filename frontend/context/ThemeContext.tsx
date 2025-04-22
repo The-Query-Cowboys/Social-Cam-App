@@ -1,29 +1,65 @@
-import React, {createContext, useContext} from 'react';
-import {useColorScheme} from 'nativewind';
+import React, { createContext, useContext, useEffect } from "react";
+import { useColorScheme } from "nativewind";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-type ThemeContextType = {
-    colorScheme: 'dark' | 'light' | undefined;
-    toggleColorScheme: () => void;
-};
+export type ColorScheme = "light" | "dark";
+
+interface ThemeContextType {
+  colorScheme: "dark" | "light" | undefined;
+  toggleColorScheme: () => void;
+  isDark: boolean;
+}
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-const ThemeProvider = ({children}: { children: React.ReactNode }) => {
-    const {colorScheme, toggleColorScheme} = useColorScheme();
+const COLOR_SCHEME_KEY = "expo-color-scheme";
 
-    return (
-        <ThemeContext.Provider value={{colorScheme, toggleColorScheme}}>
-            {children}
-        </ThemeContext.Provider>
-    );
-};
+export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
+  const { colorScheme, setColorScheme } = useColorScheme();
+  const isDark = colorScheme === "dark";
 
-const useTheme = () => {
-    const context = useContext(ThemeContext);
-    if (context === undefined) {
-        throw new Error('useTheme must be used within a ThemeProvider');
+  useEffect(() => {
+    const loadColorScheme = async (): Promise<void> => {
+      try {
+        const savedColorScheme = (await AsyncStorage.getItem(
+          COLOR_SCHEME_KEY
+        )) as ColorScheme | null;
+        if (savedColorScheme) {
+          setColorScheme(savedColorScheme);
+        }
+      } catch (err) {
+        console.error("Failed to load preferences:", err);
+      }
+    };
+    loadColorScheme();
+  }, []);
+
+  const toggleColorScheme = async (): Promise<void> => {
+    const next = isDark ? "light" : "dark";
+    try {
+      await AsyncStorage.setItem(COLOR_SCHEME_KEY, next);
+      setColorScheme(next);
+      const key = await AsyncStorage.getItem(COLOR_SCHEME_KEY);
+    } catch (error) {
+      console.error("Failed to save colour scheme:", error);
     }
-    return context;
+  };
+  const contextValue: ThemeContextType = {
+    colorScheme: colorScheme as ColorScheme,
+    toggleColorScheme,
+    isDark,
+  };
+  return (
+    <ThemeContext.Provider value={contextValue}>
+      {children}
+    </ThemeContext.Provider>
+  );
 };
 
-export {useTheme, ThemeProvider}
+export const useTheme = (): ThemeContextType => {
+  const context = useContext(ThemeContext);
+  if (context === undefined) {
+    throw new Error("useTheme must be used within a ThemeProvider");
+  }
+  return context;
+};

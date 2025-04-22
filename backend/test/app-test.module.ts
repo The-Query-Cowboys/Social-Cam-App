@@ -12,6 +12,8 @@ import { EventsModule } from '../src/api/events/events.module';
 import { AppController } from '../src/app.controller';
 import { AppService } from '../src/app.service';
 import { createBullMockProviders } from './utils/bull-mocks';
+import { TokenService } from '../src/api/token.service';
+import { TokenController } from '../src/api/token.controller';
 
 @Module({
   imports: [
@@ -26,6 +28,7 @@ import { createBullMockProviders } from './utils/bull-mocks';
     UsersController,
     AlbumsController,
     PicturesController,
+    TokenController,
   ],
   providers: [
     AppService,
@@ -33,6 +36,7 @@ import { createBullMockProviders } from './utils/bull-mocks';
     AlbumsService,
     PicturesService,
     PrismaService,
+    TokenService,
     ...createBullMockProviders(),
   ],
 })

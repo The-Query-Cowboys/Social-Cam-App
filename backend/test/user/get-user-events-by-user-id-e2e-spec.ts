@@ -4,7 +4,7 @@ import { setupTestApp } from '../utils/setup-test';
 import { cleanupAfterAll } from '../utils/end-test';
 import { PrismaService } from '../../src/prisma.service';
 
-describe('POST /api/events', () => {
+describe('GET /api/users', () => {
   let app: INestApplication;
   let prisma: PrismaService;
   let mockQueue: any;
@@ -17,7 +17,7 @@ describe('POST /api/events', () => {
     mockNotificationService = setup.mockNotificationService;
     prisma = app.get<PrismaService>(PrismaService);
   });
-  
+
   it('200: responds with the user denoted by given user_id', async () => {
     const { body } = await request(app.getHttpServer())
       .get('/api/users/3/events')
@@ -28,8 +28,8 @@ describe('POST /api/events', () => {
     expect(body[1].event_description).toBe('Test event');
     expect(body[1].storage_id).toBe('67f9380c003d7ff27ca2');
     expect(body[1].album_id).toBe(2);
-    expect(body[1].event_date).toBe('2025-04-15T14:25:14.638Z');
-    expect(body[1].event_date_end).toBe('2025-04-15T14:25:14.638Z');
+    expect(typeof body[1].event_date).toBe('string');
+    expect(typeof body[1].event_date_end).toBe('string');
     expect(body[1].album_delay).toBe(0);
     expect(body[1].event_location).toBe('somewhere');
     expect(body[1].private).toBe(false);

@@ -5,6 +5,7 @@ import {
   Param,
   Get,
   UseGuards,
+  Delete,
   Patch,
   BadRequestException,
 } from '@nestjs/common';
@@ -63,9 +64,35 @@ export class EventsController {
     );
   }
 
+  @Delete(':eventId')
+  async deleteEvent(@Param('eventId') eventId: string) {
+    return this.eventsService.deleteEvent(parseInt(eventId, 10));
+  }
+
+  @Delete(':eventId/invite/:userId')
+  async deleteUserEvent(
+    @Param('eventId') eventId: string,
+    @Param('userId') userId: string,
+  ) {
+    return this.eventsService.deleteUserEvent(
+      parseInt(eventId, 10),
+      parseInt(userId, 10),
+    );
+  }
+
   @Post(':eventId/schedule-notifications')
   async scheduleEventNotifications(@Param('eventId') eventId: string) {
     await this.eventsService.scheduleEventNotifications(parseInt(eventId, 10));
     return { success: true, message: 'Event notifications scheduled' };
+  }
+
+  @Get(':eventId')
+  async fetchEventById(@Param('eventId') eventId: number ) {
+    return this.eventsService.fetchEventById(eventId);
+  }
+
+  @Get(':eventId/users')
+  async fetchUsersByEventId(@Param('eventId') eventId: number ) {
+    return this.eventsService.fetchUsersByEventId(eventId);
   }
 }
