@@ -53,11 +53,9 @@ const createEvent = () => {
   const [endText, setEndText] = useState('No end date and time selected yet');
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
-
-  const [isPosting, setIsPosting] = useState(false)
+    const [isPosting, setIsPosting] = useState(false)
+  
   const pickImage = async (mode: string) => {
-
     try {
       let result = {};
       if (mode === "gallery") {
@@ -69,7 +67,6 @@ const createEvent = () => {
           aspect: [1, 1],
           quality: 1,
         })
-
         if (!result.canceled) {
           setSelectedImage(result.assets[0].uri)
         }
@@ -288,7 +285,7 @@ const createEvent = () => {
         <Text className='text-black'>{isPosting ? 'Creating...' : 'Create'}</Text>
       </TouchableOpacity>
 
-      <View className={`flex-row mt-2 ${applyTheme}`}>
+      <View className={`flex-row mt-2 mx-10 ${applyTheme}`}>
         <Link href='/' className='my-1 text-white'>Home</Link>
         <Link href='/publicEventPage' className='my-1 text-white'>Event Page</Link>
       </View>
