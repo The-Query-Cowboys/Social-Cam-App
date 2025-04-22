@@ -17,6 +17,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import * as FileSystem from "expo-file-system";
 import { uploadImageToAppwrite } from "@/appwrite/appwrite.api";
+import { createPicture, getAlbumByEventId } from "../api/api";
 
 const Camera = () => {
   const { eventId } = useLocalSearchParams<{ eventId?: string }>();
@@ -26,7 +27,6 @@ const Camera = () => {
   const [mediaPermission, requestMediaPermission] =
     MediaLibrary.usePermissions();
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
-  console.log(capturedImage, "<--- captured image");
   const [isUploading, setIsUploading] = useState(false);
   const router = useRouter();
 
@@ -125,9 +125,6 @@ const Camera = () => {
         // uri is a string that points to the asset
         // @ts-ignore
         const { uri } = await cameraRef.current.takePictureAsync();
-
-        console.log(uri, "<--- uri");
-        //console.log("Hi");
         setCapturedImage(uri);
       } catch (error) {
         Alert.alert("Error", "Failed to take picture");
@@ -138,11 +135,12 @@ const Camera = () => {
   }
 
   async function uploadAndSavePhoto() {
-    if (!capturedImage) return;
+    if (!capturedImage || !eventId) return;
 
     //upload to appwrite and post id to db
-    console.log(capturedImage, "<---- captured image");
-    uploadImageToAppwrite(capturedImage);
+    const result = await uploadImageToAppwrite(capturedImage);
+    const album = await getAlbumByEventId(eventId);
+    const pictureInAlbum = await createPicture(result.$id, album.album_id);
     const { status } = await MediaLibrary.requestPermissionsAsync();
     if (status === "granted") {
       await MediaLibrary.createAssetAsync(capturedImage);

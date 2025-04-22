@@ -98,7 +98,7 @@ export const scheduleEventNotifications = async (eventId: number) => {
 };
 
 // ALBUM API CALLS
-export const getAlbumByEventId = async (eventId: number) => {
+export const getAlbumByEventId = async (eventId: string) => {
   const response = await api.get(`albums/${eventId}`);
   return response.data;
 };
@@ -136,6 +136,14 @@ export const getPictureById = async (pictureId: number) => {
 
 export const getAlbumPictures = async (albumId: number) => {
   const response = await api.get(`pictures/album/${albumId}`);
+  return response.data;
+};
+
+export const createPicture = async (storageId: string, albumId?: number) => {
+  const response = await api.post("pictures", {
+    album_id: albumId,
+    storage_id: storageId,
+  });
   return response.data;
 };
 

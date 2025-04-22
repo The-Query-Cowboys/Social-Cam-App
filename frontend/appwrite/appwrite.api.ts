@@ -28,66 +28,12 @@ const createClient = (): { client: Client; storage: Storage } => {
  * @param file File object with buffer data
  * @returns Promise with file ID or error
  */
-// export function appwriteSave(file: FileUpload): Promise<string | Error> {
-//   const { storage } = createClient();
-//   const uniqueId = ID.unique();
-
-//   const savePromise = storage.createFile(
-//     process.env.APPWRITE_BUCKET_ID as string,
-//     uniqueId,
-//     InputFile.fromBuffer(file.buffer, uniqueId)
-//   );
-
-//   return savePromise.then(
-//     (response: Models.File) => {
-//       return response.$id;
-//     },
-//     (error: Error) => {
-//       return error;
-//     }
-//   );
-// }
-
-// export const uploadImageToAppwrite = async (uri: string) => {
-//   console.log("uploading image");
-//   const { storage } = createClient();
-//   try {
-//     // Get file info
-//     const fileInfo = await FileSystem.getInfoAsync(uri);
-
-//     console.log(fileInfo, "file info");
-//     // Convert image to blob
-//     const response = await fetch(uri);
-//     const blob = await response.blob();
-
-//     console.log(blob, "file blob");
-//     // Create a File object from the blob
-//     const file = new File([blob], `photo_${Date.now()}.jpg`, {
-//       type: "image/jpeg",
-//       lastModified: new Date().getTime(),
-//     });
-
-//     console.log(file, "<--- file to upload");
-
-//     // Upload to Appwrite
-//     const result = await storage.createFile(
-//       process.env.EXPO_PUBLIC_APPWRITE_BUCKET_ID,
-//       ID.unique(),
-//       file
-//     );
-//     console.log(result, "<----image uploaded to appwrite");
-//     return result;
-//   } catch (error) {
-//     console.error("Error uploading image:", error);
-//     throw error;
-//   }
-// };
 
 export const uploadImageToAppwrite = async (uri: string) => {
-  console.log("Starting upload with FormData");
+  //console.log("Starting upload with FormData");
   try {
     const fileInfo = await FileSystem.getInfoAsync(uri);
-    console.log(fileInfo, "file info");
+    //console.log(fileInfo, "file info");
 
     // Create a unique file ID
     const fileId = ID.unique();
@@ -103,7 +49,7 @@ export const uploadImageToAppwrite = async (uri: string) => {
       type: "image/jpeg",
     } as any);
 
-    console.log("FormData created, sending to Appwrite");
+    //console.log("FormData created, sending to Appwrite");
 
     // Direct fetch to Appwrite API
     const response = await fetch(
@@ -124,7 +70,9 @@ export const uploadImageToAppwrite = async (uri: string) => {
     }
 
     const result = await response.json();
-    console.log(result, "Upload result with actual content");
+
+    console.log(result, "<--- final appwrite upload");
+    //console.log(result, "Upload result with actual content");
     return result;
   } catch (error) {
     console.error("Error uploading image:", error);
