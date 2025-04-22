@@ -91,6 +91,11 @@ module.exports = {
           950: "#120F4D",
         },
       },
+      spacing: {
+        '80': '20rem',
+        '100': '25rem',
+        '120': '30rem'
+      }
     },
   },
   plugins: [],
