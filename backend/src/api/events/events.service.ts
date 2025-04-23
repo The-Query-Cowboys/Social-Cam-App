@@ -14,9 +14,16 @@ export class EventsService {
   constructor(
     @InjectQueue('notifications') private notificationsQueue: Queue,
     private prisma: PrismaService,
-  ) { }
+  ) {}
 
-  async fetchEvents() {
+  async fetchEvents(publicOnly: boolean = false) {
+    if (publicOnly) {
+      return this.prisma.event.findMany({
+        where: {
+          private: false,
+        },
+      });
+    }
     return this.prisma.event.findMany();
   }
 
@@ -26,25 +33,23 @@ export class EventsService {
     });
     if (!event) {
       throw new NotFoundException(`Event_id ${eventId} was not found`);
-
     }
     return event;
   }
 
   async fetchUsersByEventId(eventId) {
     const users = await this.prisma.user.findMany({
-        where: {
-            UserEvent: {
-                some: {
-                    event_id: eventId,
-                },
-            },
+      where: {
+        UserEvent: {
+          some: {
+            event_id: eventId,
+          },
         },
-    })
+      },
+    });
 
     if (users.length === 0) {
       throw new NotFoundException(`No users are linked to eventId: ${eventId}`);
-
     }
     return users;
   }
@@ -54,7 +59,7 @@ export class EventsService {
       createEventDto.event_date &&
       createEventDto.event_date_end &&
       new Date(createEventDto.event_date) >
-      new Date(createEventDto.event_date_end)
+        new Date(createEventDto.event_date_end)
     ) {
       throw new BadRequestException('Event end date must be after start date');
     }
@@ -62,6 +67,8 @@ export class EventsService {
     if (createEventDto.album_delay && createEventDto.album_delay < 0) {
       throw new BadRequestException('Album delay cannot be negative');
     }
+
+    //
 
     const album = await this.prisma.album.create({
       data: { album_name: createEventDto.event_title },
@@ -85,6 +92,14 @@ export class EventsService {
           private: createEventDto.private,
         },
       });
+      await this.prisma.userEvent.create({
+        data: {
+          event_id: newEvent.event_id,
+          user_id: createEventDto.event_owner_id,
+          status_id: 2,
+        },
+      });
+
       return newEvent;
     } catch (error) {
       console.error('Could not create event', error);

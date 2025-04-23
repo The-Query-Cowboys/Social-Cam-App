@@ -3,11 +3,11 @@ import { Link } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { useTheme } from "@/context/ThemeContext";
 import axios from 'axios'
-import { appwriteGetImageUrl } from "@/appwrite/appwrite.client";
+import {appwriteGetImageUrl} from "@/appwrite/appwrite.client";
+import {getEvents} from "@/app/api/api";
 
 
 const { width } = Dimensions.get('window');
-const IMAGE_HEIGHT = 250; // Fixed height for all images
 
 const PublicEventPage = () => {
     const [selectedEvent, setSelectedEvent] = useState<any | null>(null)
@@ -16,8 +16,8 @@ const PublicEventPage = () => {
     const applyTheme = `${colorScheme === 'dark' ? 'text-white bg-black' : 'text-black bg-white'}`
 
     useEffect(() => {
-        axios.get('https://social-cam-app-api.onrender.com/api/events')
-            .then(({ data }) => {
+        getEvents(true)
+            .then((data) => {
                 setEvents(data)
             })
     }, [])
@@ -47,7 +47,7 @@ const PublicEventPage = () => {
                         {event_title}
                     </Text>
                     {/* Fixed size image container */}
-                    <View style={{ height: IMAGE_HEIGHT, width: '100%' }}>
+                    <View style={{ height: 250, width: '100%' }}>
                         {imageURL &&
                             <Image
                                 source={{ uri: imageURL }}
@@ -94,8 +94,7 @@ const PublicEventPage = () => {
                                     event_date_end={item.event_date_end}
                                     storage_id={item.storage_id}
                                     event_description={item.event_description}
-                                />
-                        }
+                                />}
                     />
 
                     {selectedEvent && (
