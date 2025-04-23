@@ -116,7 +116,7 @@ export async function appwriteGetImageUrl(
     );
 
     if (filePreview !== undefined) {
-      return filePreview + "&mode=admin";
+      return filePreview;
     } else {
       return { message: "No image is found" };
     }

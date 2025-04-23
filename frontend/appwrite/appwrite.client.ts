@@ -13,7 +13,7 @@ export async function appwriteGetImageUrl(storage_id: string) {
             process.env.EXPO_PUBLIC_APPWRITE_BUCKET_ID!,
             storage_id
         );
-        return filePreview + "&mode=admin";
+        return filePreview;
     } catch (error) {
         return { message: `Error getting image: ${error}` };
     }
