@@ -13,7 +13,7 @@ import { Link } from "expo-router";
 import { useEffect, useState } from "react";
 import { useTheme } from "@/context/ThemeContext";
 import { appwriteGetImageUrl } from "@/appwrite/appwrite.client";
-import { getEvents, getUserEvents, getEventUsers } from "@/app/api/api";
+import { getEvents, getUserEvents, getEventUsers } from "../../app/api/api";
 import { useUser } from "../../context/UserContext";
 import EventInvite from "../components/EventInvite";
 import { SignedIn, SignedOut } from "@clerk/clerk-expo";
@@ -164,10 +164,12 @@ const PublicEventPage = () => {
     if (selectedEvent?.event_id) {
       const fetchEventUsers = async () => {
         try {
-          const users = await getEventUsers(selectedEvent.event_id);
-
-          setAttendingUsers(users?.filter((u) => u.status_id === 2) || []);
-          setInvitedUsers(users?.filter((u) => u.status_id === 1) || []);
+          const invitedUsers = await getEventUsers(selectedEvent.event_id, [1]);
+          const attendingUsers = await getEventUsers(selectedEvent.event_id, [
+            2,
+          ]);
+          setAttendingUsers(attendingUsers);
+          setInvitedUsers(invitedUsers);
         } catch (err) {
           console.error(err);
         }
@@ -246,6 +248,7 @@ const PublicEventPage = () => {
       minute: "2-digit",
     });
   };
+
   if (isLoading) {
     return (
       <View className={styles.loading.container}>
