@@ -43,8 +43,8 @@ const createEvent = () => {
     event_location: '',
     album_delay: 0,
     private: false,
-    event_date: new Date().toISOString(),
-    event_date_end: new Date().toISOString()
+    event_date: "",
+    event_date_end: ""
   });
 
   const { user } = useUser();
@@ -157,6 +157,11 @@ const createEvent = () => {
   const handleSubmit = async (selectedImage: string) => {
     if (!user?.user_id) {
       alert("Please log in to create an event");
+      return;
+    }
+
+    if (new Date(formData.event_date_end) <= new Date(formData.event_date)) {
+      alert("End date and time must be after the start date and time.");
       return;
     }
 
