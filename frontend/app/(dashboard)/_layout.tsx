@@ -22,12 +22,8 @@ const dashboardLayout = () => {
       >
         <Tabs.Screen name="createEvent" options={{ title: "Create event" }} />
 
-        <Tabs.Screen
-          name="publicEventPage"
-          options={{ title: "Public events" }}
-        />
+        <Tabs.Screen name="publicEventPage" options={{ title: "Public events" }}/>
 
-        <Tabs.Screen name="eventDetails" options={{ title: "Event details" }} />
         <Tabs.Screen name="albumCard" options={{ href: null }} />
       </Tabs>
     </UserProvider>

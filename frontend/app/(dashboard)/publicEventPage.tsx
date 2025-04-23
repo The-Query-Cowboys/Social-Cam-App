@@ -31,7 +31,7 @@ const PublicEventPage = () => {
   );
 
   console.log(selectedEvent);
-  const [events, setEvents] = useState(null);
+  const [events, setEvents] = useState([]);
   const [isPublic, setIsPublic] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -53,9 +53,6 @@ const PublicEventPage = () => {
         });
       } else if (user) {
           const userEvents = await getUserEvents(user.user_id, [1, 2]);
-          if (userEvents.length === 0) {
-            setIsPublic(true)
-          }
           setEvents(userEvents);
       }
     }
@@ -73,7 +70,7 @@ const PublicEventPage = () => {
   }
 
   const togglePublic = () => {
-    const bool = isPublic ? false : true;
+    const bool = !isPublic;
     setIsPublic(bool);
   };
 
@@ -155,23 +152,26 @@ const PublicEventPage = () => {
             Events
           </Text>
 
-          <FlatList
-            data={events}
-            horizontal={true}
-            decelerationRate="normal"
-            renderItem={({ item }) => (
-              <Event
-                event_title={item.event_title}
-                event_location={item.event_location}
-                event_date={item.event_date}
-                event_date_end={item.event_date_end}
-                storage_id={item.storage_id}
-                event_description={item.event_description}
-                event_owner_id={item.event_owner_id}
-                event_id={item.event_id}
-              />
-            )}
-          />
+          {events.length !== 0 ? <FlatList
+              data={events}
+              horizontal={true}
+              decelerationRate="normal"
+              renderItem={({item}) => (
+                  <Event
+                      event_title={item.event_title}
+                      event_location={item.event_location}
+                      event_date={item.event_date}
+                      event_date_end={item.event_date_end}
+                      storage_id={item.storage_id}
+                      event_description={item.event_description}
+                      event_owner_id={item.event_owner_id}
+                      event_id={item.event_id}
+                  />
+              )}
+          /> :
+            <Text className={`text-xl font-bold m-5 ${applyTheme}`}>
+              You don't have any scheduled events
+            </Text>}
 
           {selectedEvent && (
             <View
