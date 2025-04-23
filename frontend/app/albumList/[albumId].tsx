@@ -76,7 +76,7 @@ const album_id = () => {
         },
         image: {
             height: '40%',
-            width: '100%',
+            width: '85%',
         }
     })
 

@@ -20,6 +20,9 @@ const signUpPage = () => {
   const [code, setCode] = useState("");
   const { colorScheme } = useTheme();
 
+
+  const [isError, setIsError] = useState(false);
+
   const applyViewTheme = `${
     colorScheme === "dark" ? "text-white bg-black" : "text-black bg-white"
   }`;
@@ -45,8 +48,10 @@ const signUpPage = () => {
       });
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
       setPendingVerification(true);
+      setIsError(false)
     } catch (err) {
-      console.error(JSON.stringify(err, null, 2));
+      // console.error(JSON.stringify(err, null, 2));
+      setIsError(true)
     }
   };
 
@@ -61,11 +66,14 @@ const signUpPage = () => {
         createUser(username, emailAddress, signUpAttempt.createdUserId);
         await setActive({ session: signUpAttempt.createdSessionId });
         router.replace("/");
+        setIsError(false)
       } else {
-        console.error(JSON.stringify(signUpAttempt, null, 2));
+        // console.error(JSON.stringify(signUpAttempt, null, 2));
+        setIsError(true)
       }
     } catch (err) {
-      console.error(JSON.stringify(err, null, 2));
+      // console.error(JSON.stringify(err, null, 2));
+      setIsError(true)
     }
   };
 
@@ -152,6 +160,7 @@ const signUpPage = () => {
             Log In
           </Link>
         </Text>
+        {isError ? <Text className={`color-red-500`}>Error creating an account, please check your entries</Text> : null}
       </View>
     </View>
   );
