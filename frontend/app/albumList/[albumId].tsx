@@ -29,7 +29,6 @@ const album_id = () => {
             .then(({ pictures }) => {
                 setError("");
                 if (pictures.length > 0) {
-                    console.log(pictures, "<<<data")
                     setPictures(pictures)
                 }
                 return pictures
@@ -37,7 +36,6 @@ const album_id = () => {
             .then((pictures) => {
                 pictures.forEach(async (image: any) => {
                     const imageUrl = await appwriteGetImageUrl(image.storage_id)
-                    console.log(imageUrl, "<<<imageUrl")
                     image.url = imageUrl
                 })
 
@@ -81,8 +79,6 @@ const album_id = () => {
             width: '100%',
         }
     })
-
-    console.log(pictures, "<<pictures")
 
     return (
         <Swiper
