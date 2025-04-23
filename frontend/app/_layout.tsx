@@ -6,15 +6,18 @@ import { tokenCache } from "@clerk/clerk-expo/token-cache";
 import { registerUserPushToken } from "./api/notificationService";
 import { getUserByAuthId, getUserById } from "./api/api";
 import { useEffect } from "react";
+import { UserProvider } from "../context/UserContext";
 
 const RootLayout = () => {
   const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
   return (
     <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
-      <ThemeProvider>
-        <LayoutContent />
-      </ThemeProvider>
+      <UserProvider>
+        <ThemeProvider>
+          <LayoutContent />
+        </ThemeProvider>
+      </UserProvider>
     </ClerkProvider>
   );
 };
