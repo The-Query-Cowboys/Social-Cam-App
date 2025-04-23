@@ -1,11 +1,11 @@
-import { Text, SafeAreaView, View, Image, TouchableOpacity, FlatList } from 'react-native'
+import { Text, SafeAreaView, View, Image, TouchableOpacity, FlatList, StyleSheet } from 'react-native'
 import { Link, useLocalSearchParams } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import { useTheme } from "@/context/ThemeContext";
 import { getAlbumPictures } from '../api/api';
 import { appwriteGetImageUrl } from '@/appwrite/appwrite.api';
 import { SafeAreaProvider } from "react-native-safe-area-context";
-
+import Swiper from 'react-native-swiper'
 
 interface PictureProps {
     album_id: number;
@@ -27,16 +27,27 @@ const album_id = () => {
         setIsLoading(true);
         getAlbumPictures(Number(albumId))
             .then(({ pictures }) => {
-                setIsLoading(false);
                 setError("");
-                if (pictures) {
+                if (pictures.length > 0) {
+                    console.log(pictures, "<<<data")
                     setPictures(pictures)
                 }
+                return pictures
+            })
+            .then((pictures) => {
+                pictures.forEach(async (image: any) => {
+                    const imageUrl = await appwriteGetImageUrl(image.storage_id)
+                    console.log(imageUrl, "<<<imageUrl")
+                    image.url = imageUrl
+                })
+
+                setIsLoading(false);
             })
             .catch((err) => {
                 setError("Failed to load albums");
             })
     }, [])
+
 
     const applyTheme = `${colorScheme === 'dark' ? 'text-white bg-black' : 'text-black bg-white'}`
 
@@ -56,48 +67,83 @@ const album_id = () => {
         );
     }
 
-    const Picture = ({ storage_id }: PictureProps) => {
-        const [imageURL, setImageURL] = useState<string | undefined>(undefined)
-        useEffect(() => {
-            const serveImage = async () => {
-                const image_url = await appwriteGetImageUrl(storage_id)
-                if (typeof image_url === "string") {
-                    setImageURL(image_url)
-                }
-            }
-            serveImage()
-        }, [storage_id]);
-        return (
-            <View>
-                <TouchableOpacity className={`flex-1 items-center mb-10 ${applyTheme}`}>
-                    {imageURL &&
-                        <Image source={{ uri: imageURL }} className={`w-100 h-80`} />}
-                </TouchableOpacity>
-            </View>
-        )
-    }
+    const styles = StyleSheet.create({
+        wrapper: {
+            height: 300,
+        },
+        slide: {
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center'
+        },
+        image: {
+            height: '40%',
+            width: '100%',
+        }
+    })
+
+    console.log(pictures, "<<pictures")
 
     return (
-        <View className={`flex-1 items-center justify-center ${applyTheme}`}>
-            <Link href='/' className={`my-5 border-b font-bold ${applyTheme}`}>Home</Link>
-            <Text className={`text-xl font-bold mb-5 ${applyTheme}`}>Album List</Text>
-            <SafeAreaView>
-                <SafeAreaProvider>
-                    <FlatList data={pictures}
-                        contentContainerStyle={{ paddingBottom: '10%' }}
-                        renderItem={
-                            ({ item }) =>
-                                <Picture
-                                    album_id={item.album_id}
-                                    picture_id={item.picture_id}
-                                    storage_id={item.storage_id}
-                                    type_id={item.type_id}
-                                    url={item.url}
-                                />}
-                    />
-                </SafeAreaProvider>
-            </SafeAreaView>
-        </View>
+        <Swiper
+            style={styles.wrapper}
+            showsButtons={true}
+            loop={true}
+        >
+            {
+                pictures.map((picture) => (
+                    <View key={picture.picture_id} style={styles.slide}>
+                        <Image source={{ uri: picture.url }} style={styles.image}/>
+                    </View>
+                ))
+            }
+        </Swiper>
     )
+
+    //if prefer scroll down and up
+        // const Picture = ({ storage_id }: PictureProps) => {
+        //     const [imageURL, setImageURL] = useState<string | undefined>(undefined)
+        //     useEffect(() => {
+        //         const serveImage = async () => {
+        //             const image_url = await appwriteGetImageUrl(storage_id)
+        //             if (typeof image_url === "string") {
+        //                 setImageURL(image_url)
+        //             }
+        //         }
+        //         serveImage()
+        //     }, [storage_id]);
+        //     return (
+        //         <View>
+        //             <TouchableOpacity className={`flex-1 items-center mb-10 ${applyTheme}`}>
+        //                 {imageURL &&
+        //                     <Image source={{ uri: imageURL }} className={`w-100 h-80`} />}
+        //             </TouchableOpacity>
+        //         </View>
+        //     )
+        // }
+    
+        // return (
+        //     <View className={`flex-1 items-center justify-center ${applyTheme}`}>
+        //         <Link href='/' className={`my-5 border-b font-bold ${applyTheme}`}>Home</Link>
+        //         <Text className={`text-xl font-bold mb-5 ${applyTheme}`}>Album List</Text>
+        //         <SafeAreaView>
+        //             <SafeAreaProvider>
+        //                 <FlatList data={pictures}
+        //                     contentContainerStyle={{ paddingBottom: '10%' }}
+        //                     renderItem={
+        //                         ({ item }) =>
+        //                             <Picture
+        //                                 album_id={item.album_id}
+        //                                 picture_id={item.picture_id}
+        //                                 storage_id={item.storage_id}
+        //                                 type_id={item.type_id}
+        //                                 url={item.url}
+        //                             />}
+        //                 />
+        //             </SafeAreaProvider>
+        //         </SafeAreaView>
+        //     </View>
+        // )
 }
+
 export default album_id
