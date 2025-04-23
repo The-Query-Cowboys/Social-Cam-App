@@ -92,7 +92,6 @@ const PublicEventPage = () => {
     useEffect(() => {
       const serveImage = async () => {
         const image_url = await appwriteGetImageUrl(storage_id);
-        setImageURL(image_url);
         if (typeof image_url === "string") {
           setImageURL(image_url);
         }
