@@ -1,4 +1,3 @@
-
 import {
   FlatList,
   SafeAreaView,
@@ -16,13 +15,21 @@ import axios from "axios";
 import { appwriteGetImageUrl } from "@/appwrite/appwrite.client";
 import { getEvents, getUserEvents, getEventById } from "@/app/api/api";
 import { useUser } from "../../context/UserContext";
+import EventInvite from "../components/EventInvite";
 
 const { width } = Dimensions.get("window");
 
 const PublicEventPage = () => {
-
   const { user } = useUser();
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
+
+  console.log(
+    user?.user_id,
+    selectedEvent?.event_owner_id,
+    "<--- user id and event owner id"
+  );
+
+  console.log(selectedEvent);
   const [events, setEvents] = useState(null);
   const [isPublic, setIsPublic] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -68,6 +75,8 @@ const PublicEventPage = () => {
   };
 
   const Event = ({
+    event_id,
+    event_owner_id,
     event_title,
     event_date,
     event_date_end,
@@ -82,17 +91,24 @@ const PublicEventPage = () => {
         const image_url = await appwriteGetImageUrl(storage_id);
         setImageURL(image_url);
         if (typeof image_url === "string") {
-                    setImageURL(image_url)
-                }
+          setImageURL(image_url);
+        }
       };
       serveImage();
     }, [storage_id]);
-    
+
     return (
       <View style={{ width: width, marginHorizontal: 10 }}>
         <TouchableOpacity
           className={`flex-1 items-center my-10 ${applyTheme}`}
-          onPress={() => setSelectedEvent({ event_title, event_description })}
+          onPress={() =>
+            setSelectedEvent({
+              event_title,
+              event_description,
+              event_owner_id,
+              event_id,
+            })
+          }
         >
           <Text className={`text-xl ${applyTheme}`}>{event_title}</Text>
           {/* Fixed size image container */}
@@ -130,7 +146,6 @@ const PublicEventPage = () => {
           </Link>
         </View>
 
-
         <View className={`items-center justify-center ${applyTheme}`}>
           <Text className={`text-xl font-bold mb-5 mt-2 ${applyTheme}`}>
             Events
@@ -148,6 +163,8 @@ const PublicEventPage = () => {
                 event_date_end={item.event_date_end}
                 storage_id={item.storage_id}
                 event_description={item.event_description}
+                event_owner_id={item.event_owner_id}
+                event_id={item.event_id}
               />
             )}
           />
@@ -157,6 +174,13 @@ const PublicEventPage = () => {
               className={`mx-5 mb-10 ${applyTheme}`}
               style={{ width: "90%", paddingBottom: 20 }}
             >
+              <View className="action-bar">
+                {user.user_id === selectedEvent.event_owner_id ? (
+                  <EventInvite eventId={selectedEvent.event_id} />
+                ) : (
+                  <Text>NOT EVENT OWNER</Text>
+                )}
+              </View>
               <Text className={`text-xl font-bold ${applyTheme}`}>
                 {selectedEvent.event_title}
               </Text>
