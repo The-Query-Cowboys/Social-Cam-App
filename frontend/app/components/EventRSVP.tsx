@@ -18,6 +18,7 @@ import { useTheme } from "../../context/ThemeContext";
 const EventRSVP = ({ eventId }) => {
   const [status, setStatus] = useState(1); // Default to "invited" status
   const [isLoading, setIsLoading] = useState(false);
+  console.log(isLoading);
   const { user } = useUser();
   const { isDark } = useTheme();
 
@@ -25,7 +26,8 @@ const EventRSVP = ({ eventId }) => {
   useEffect(() => {
     async function getStatus() {
       try {
-        const currStatus = await getUserEventStatus(user.user_id, eventId);
+        console.log(user.user_id, eventId, "<-- user id and event id");
+        const currStatus = await getUserEventStatus(eventId, user.user_id);
         console.log(currStatus);
         setStatus(currStatus);
       } catch (error) {
@@ -61,6 +63,7 @@ const EventRSVP = ({ eventId }) => {
   };
 
   const handleUserEventRemoval = async () => {
+    console.log("called");
     Alert.alert(
       "Remove Event",
       "Are you sure you want to remove this event from your list?",
@@ -122,11 +125,7 @@ const EventRSVP = ({ eventId }) => {
             status === 1 ? bgInvited : bgAttending
           } ${isLoading ? "opacity-50" : ""}`}
         >
-          {status === 1 ? (
-            <Ionicons name="checkmark" size={24} color="white" />
-          ) : (
-            <Ionicons name="calendar" size={24} color="white" />
-          )}
+          <Ionicons name="checkmark" size={24} color="white" />
         </TouchableOpacity>
       </View>
     </SafeAreaView>

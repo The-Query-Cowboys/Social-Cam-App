@@ -16,7 +16,8 @@ import { appwriteGetImageUrl } from "@/appwrite/appwrite.client";
 import { getEvents, getUserEvents, getEventById } from "@/app/api/api";
 import { useUser } from "../../context/UserContext";
 import EventInvite from "../components/EventInvite";
-import {SignedIn, SignedOut} from "@clerk/clerk-expo";
+import { SignedIn, SignedOut } from "@clerk/clerk-expo";
+import EventRSVP from "../components/EventRSVP";
 
 const { width } = Dimensions.get("window");
 
@@ -52,8 +53,8 @@ const PublicEventPage = () => {
           setEvents(data);
         });
       } else if (user) {
-          const userEvents = await getUserEvents(user.user_id, [1, 2]);
-          setEvents(userEvents);
+        const userEvents = await getUserEvents(user.user_id, [1, 2]);
+        setEvents(userEvents);
       }
     }
     try {
@@ -137,7 +138,9 @@ const PublicEventPage = () => {
     <SafeAreaView className={`flex-1 ${applyTheme}`}>
       <TouchableOpacity onPress={togglePublic} className={`${applyTheme}`}>
         <SignedIn>
-          <Text>{isPublic ? "Go To Invited Events" : "Go To Public Events" }</Text>
+          <Text>
+            {isPublic ? "Go To Invited Events" : "Go To Public Events"}
+          </Text>
         </SignedIn>
       </TouchableOpacity>
       <ScrollView className={`flex-1 ${applyTheme}`}>
@@ -152,26 +155,29 @@ const PublicEventPage = () => {
             Events
           </Text>
 
-          {events.length !== 0 ? <FlatList
+          {events.length !== 0 ? (
+            <FlatList
               data={events}
               horizontal={true}
               decelerationRate="normal"
-              renderItem={({item}) => (
-                  <Event
-                      event_title={item.event_title}
-                      event_location={item.event_location}
-                      event_date={item.event_date}
-                      event_date_end={item.event_date_end}
-                      storage_id={item.storage_id}
-                      event_description={item.event_description}
-                      event_owner_id={item.event_owner_id}
-                      event_id={item.event_id}
-                  />
+              renderItem={({ item }) => (
+                <Event
+                  event_title={item.event_title}
+                  event_location={item.event_location}
+                  event_date={item.event_date}
+                  event_date_end={item.event_date_end}
+                  storage_id={item.storage_id}
+                  event_description={item.event_description}
+                  event_owner_id={item.event_owner_id}
+                  event_id={item.event_id}
+                />
               )}
-          /> :
+            />
+          ) : (
             <Text className={`text-xl font-bold m-5 ${applyTheme}`}>
               You don't have any scheduled events
-            </Text>}
+            </Text>
+          )}
 
           {selectedEvent && (
             <View
@@ -182,9 +188,9 @@ const PublicEventPage = () => {
                 {user?.user_id === selectedEvent.event_owner_id ? (
                   <EventInvite eventId={selectedEvent.event_id} />
                 ) : (
-                    <SignedIn>
-                      <Text>NOT EVENT OWNER</Text>
-                    </SignedIn>
+                  <SignedIn>
+                    <EventRSVP eventId={selectedEvent.event_id} />
+                  </SignedIn>
                 )}
               </View>
               <Text className={`text-xl font-bold ${applyTheme}`}>
