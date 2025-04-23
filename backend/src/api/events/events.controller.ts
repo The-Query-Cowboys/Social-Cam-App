@@ -8,6 +8,7 @@ import {
   Delete,
   Patch,
   BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto, UpdateEventDto, InviteUserDto } from './event.dto';
@@ -17,8 +18,9 @@ export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
   @Get()
-  async fetchEvents() {
-    return this.eventsService.fetchEvents();
+  async fetchEvents(@Query('publicOnly') publicOnly?: string) {
+    const showPublicOnly = publicOnly === 'true';
+    return this.eventsService.fetchEvents(showPublicOnly);
   }
   @Post()
   async createEvent(
@@ -87,12 +89,12 @@ export class EventsController {
   }
 
   @Get(':eventId')
-  async fetchEventById(@Param('eventId') eventId: number ) {
+  async fetchEventById(@Param('eventId') eventId: number) {
     return this.eventsService.fetchEventById(eventId);
   }
 
   @Get(':eventId/users')
-  async fetchUsersByEventId(@Param('eventId') eventId: number ) {
+  async fetchUsersByEventId(@Param('eventId') eventId: number) {
     return this.eventsService.fetchUsersByEventId(eventId);
   }
 }

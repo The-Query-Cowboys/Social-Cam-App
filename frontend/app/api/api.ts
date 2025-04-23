@@ -58,8 +58,10 @@ export const getToken = async (userId: number) => {
 };
 
 // EVENT API CALLS
-export const getEvents = async () => {
-  const response = await api.get("events");
+export const getEvents = async (publicOnly: boolean = false) => {
+  const response = await api.get("events", {
+    params: publicOnly ? { publicOnly: "true" } : {},
+  });
   return response.data;
 };
 
