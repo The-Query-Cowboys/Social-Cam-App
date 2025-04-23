@@ -15,14 +15,21 @@ const dashboardLayout = () => {
       <Tabs
         screenOptions={{
           headerShown: false,
-          tabBarStyle: { backgroundColor: "dark", paddingTop: 10, height: 90 },
-          tabBarActiveTintColor: "rgba(0,21,255,0.55)",
-          tabBarInactiveTintColor: "#000",
+          tabBarStyle: {
+            backgroundColor: "#101820",
+            paddingTop: 10,
+            height: 90,
+          },
+          tabBarActiveTintColor: "#aadb1e",
+          tabBarInactiveTintColor: "#f65275",
         }}
       >
         <Tabs.Screen name="createEvent" options={{ title: "Create event" }} />
 
-        <Tabs.Screen name="publicEventPage" options={{ title: "Public events" }}/>
+        <Tabs.Screen
+          name="publicEventPage"
+          options={{ title: "Upcoming Events" }}
+        />
 
         <Tabs.Screen name="albumCard" options={{ href: null }} />
       </Tabs>

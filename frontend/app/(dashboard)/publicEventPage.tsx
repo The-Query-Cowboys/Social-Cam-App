@@ -7,203 +7,465 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import { Link } from "expo-router";
 import { useEffect, useState } from "react";
 import { useTheme } from "@/context/ThemeContext";
-import axios from "axios";
 import { appwriteGetImageUrl } from "@/appwrite/appwrite.client";
-import { getEvents, getUserEvents, getEventById } from "@/app/api/api";
+import { getEvents, getUserEvents, getEventUsers } from "@/app/api/api";
 import { useUser } from "../../context/UserContext";
 import EventInvite from "../components/EventInvite";
 import { SignedIn, SignedOut } from "@clerk/clerk-expo";
 import EventRSVP from "../components/EventRSVP";
+import { Ionicons } from "@expo/vector-icons";
 
 const { width } = Dimensions.get("window");
 
 const PublicEventPage = () => {
   const { user } = useUser();
-  const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
-
-  console.log(
-    user?.user_id,
-    selectedEvent?.event_owner_id,
-    "<--- user id and event owner id"
-  );
-
-  console.log(selectedEvent);
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [events, setEvents] = useState([]);
   const [isPublic, setIsPublic] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [attendingUsers, setAttendingUsers] = useState([]);
+  const [invitedUsers, setInvitedUsers] = useState([]);
   const [error, setError] = useState(null);
-
   const { isDark } = useTheme();
-  const applyTheme = `${
-    isDark
-      ? "text-text-dark bg-background-dark"
-      : "text-text-light bg-background-light"
-  }`;
+
+  // Grouped styles object
+  const styles = {
+    // Page level styles
+    page: {
+      container: `flex-1 ${
+        isDark ? "bg-background-dark" : "bg-background-light"
+      }`,
+      text: `${isDark ? "text-text-dark" : "text-text-light"}`,
+    },
+
+    // Header section
+    header: {
+      container: "p-4 flex-row justify-between items-center border-b",
+      border: isDark ? "border-primary-dark" : "border-gray-300",
+      title: `text-xl font-bold ${
+        isDark ? "text-foreground-dark" : "text-primary-light"
+      }`,
+      homeLink: `py-2 font-bold ${
+        isDark ? "text-foreground-dark" : "text-primary-light"
+      }`,
+      tabContainer: "flex-row rounded-lg overflow-hidden",
+      tab: `py-2 px-4`,
+      activeTab: isDark ? "bg-primary-dark" : "bg-primary-light",
+      inactiveTab: isDark ? "bg-gray-700" : "bg-gray-200",
+      activeTabText: isDark
+        ? "text-background-dark font-bold"
+        : "text-foreground-light font-bold",
+      inactiveTabText: isDark ? "text-gray-300" : "text-gray-600",
+    },
+
+    // Event list section
+    eventList: {
+      container: "mt-4 mb-2",
+      title: `text-xl font-bold mb-5 text-center ${
+        isDark ? "text-foreground-dark" : "text-primary-light"
+      }`,
+      emptyMessage: `text-lg font-medium text-center my-5 ${
+        isDark ? "text-text-dark" : "text-text-light"
+      }`,
+      separator: `border-b-2 w-full my-4 ${
+        isDark ? "border-pinkRed-700" : "border-pinkRed-500"
+      }`,
+    },
+
+    // Event card in list
+    eventCard: {
+      container: "items-center justify-start mx-2 my-2",
+      touchable: "rounded-lg overflow-hidden shadow-md",
+      background: isDark ? "bg-surface-dark" : "bg-surface-light",
+      imageContainer: "w-64 h-64 justify-center items-center overflow-hidden",
+      image: "w-full h-full",
+      title: `text-center font-bold py-3 px-4 ${
+        isDark ? "text-foreground-dark" : "text-primary-light"
+      }`,
+      selected: isDark
+        ? "border-2 border-pinkRed-600"
+        : "border-2 border-pinkRed-500",
+    },
+
+    // Event details
+    eventDetails: {
+      container: `px-8 py-4 rounded-lg mx-2 mb-8 ${
+        isDark ? "bg-surface-dark" : "bg-surface-light"
+      }`,
+      header: "flex-row justify-between items-center mb-4",
+      title: `text-xl font-bold mb-2 ${
+        isDark ? "text-foreground-dark" : "text-primary-light"
+      }`,
+      section: "mb-4",
+      sectionTitle: `text-lg font-bold mb-1 ${
+        isDark ? "text-foreground-dark" : "text-primary-light"
+      }`,
+      description: `text-base mb-4 ${
+        isDark ? "text-text-dark" : "text-text-light"
+      }`,
+      infoRow: "flex-row items-center mb-2",
+      statsRow: "flex-row justify-between items-center mb-4",
+      attendanceStats: "flex-row items-center",
+      statCount: `font-bold text-base ${
+        isDark ? "text-foreground-dark" : "text-primary-light"
+      }`,
+      statLabel: `text-sm ${isDark ? "text-text-dark" : "text-text-light"}`,
+      infoIcon: {
+        size: 20,
+        color: isDark ? "#f65275" : "#1f2937",
+        marginRight: 8,
+      },
+      statIcon: {
+        size: 22,
+        color: isDark ? "#f65275" : "#1f2937",
+        marginRight: 6,
+      },
+      infoText: `${isDark ? "text-text-dark" : "text-text-light"}`,
+      divider: "h-px w-full my-3 bg-gray-300",
+      actionBar: "w-full mb-4 mt-2",
+    },
+
+    // Loading state
+    loading: {
+      container: "flex-1 justify-center items-center",
+      color: isDark ? "#f65275" : "#1f2937",
+    },
+  };
 
   useEffect(() => {
     setIsLoading(true);
     async function fetchEvents() {
-      if (isPublic) {
-        console.log("loading public");
-        getEvents(isPublic).then((data) => {
+      try {
+        if (isPublic) {
+          const data = await getEvents();
           setEvents(data);
-        });
-      } else if (user) {
-        const userEvents = await getUserEvents(user.user_id, [1, 2]);
-        setEvents(userEvents);
+        } else if (user) {
+          const userEvents = await getUserEvents(user.user_id, [1, 2]);
+          setEvents(userEvents);
+        }
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load events");
+      } finally {
+        setIsLoading(false);
       }
     }
-    try {
-      fetchEvents();
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
+
+    fetchEvents();
   }, [isPublic, user]);
 
-  if (isLoading) {
-    return <Text>Loading...</Text>;
-  }
+  // Fetch event users when selectedEvent changes
+  useEffect(() => {
+    if (selectedEvent?.event_id) {
+      const fetchEventUsers = async () => {
+        try {
+          const users = await getEventUsers(selectedEvent.event_id);
+
+          setAttendingUsers(users?.filter((u) => u.status_id === 2) || []);
+          setInvitedUsers(users?.filter((u) => u.status_id === 1) || []);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+
+      fetchEventUsers();
+    }
+  }, [selectedEvent]);
 
   const togglePublic = () => {
-    const bool = !isPublic;
-    setIsPublic(bool);
+    setIsPublic(!isPublic);
+    setSelectedEvent(null); // Clear selection when toggling
   };
 
-  const Event = ({
-    event_id,
-    event_owner_id,
-    event_title,
-    event_date,
-    event_date_end,
-    event_location,
-    storage_id,
-    event_description,
-  }: any) => {
-    const [imageURL, setImageURL] = useState<string | null>(null);
+  const EventCard = ({ item, isSelected }) => {
+    const [imageURL, setImageURL] = useState(null);
 
     useEffect(() => {
       const serveImage = async () => {
-        const image_url = await appwriteGetImageUrl(storage_id);
-        if (typeof image_url === "string") {
-          setImageURL(image_url);
+        try {
+          const image_url = await appwriteGetImageUrl(item.storage_id);
+          if (typeof image_url === "string") {
+            setImageURL(image_url);
+          }
+        } catch (error) {
+          console.error("Error loading image:", error);
         }
       };
       serveImage();
-    }, [storage_id]);
+    }, [item.storage_id]);
 
     return (
-      <View style={{ width: width, marginHorizontal: 10 }}>
+      <View className={styles.eventCard.container}>
         <TouchableOpacity
-          className={`flex-1 items-center my-10 ${applyTheme}`}
-          onPress={() =>
-            setSelectedEvent({
-              event_title,
-              event_description,
-              event_owner_id,
-              event_id,
-            })
-          }
+          className={`${styles.eventCard.touchable} ${
+            styles.eventCard.background
+          } ${isSelected ? styles.eventCard.selected : ""}`}
+          onPress={() => setSelectedEvent(item)}
         >
-          <Text className={`text-xl ${applyTheme}`}>{event_title}</Text>
-          {/* Fixed size image container */}
-          <View style={{ height: 250, width: "100%" }}>
-            {imageURL && (
+          {/* Title first, above the image */}
+          <Text className={styles.eventCard.title} numberOfLines={2}>
+            {item.event_title}
+          </Text>
+
+          {/* Image container */}
+          <View className={styles.eventCard.imageContainer}>
+            {imageURL ? (
               <Image
                 source={{ uri: imageURL }}
-                style={{ width: "100%", height: "100%" }}
-                resizeMode="contain"
+                className="w-full h-full"
+                resizeMode="cover"
               />
+            ) : (
+              <View className="items-center justify-center">
+                <Ionicons
+                  name="image-outline"
+                  size={32}
+                  color={isDark ? "#666" : "#ccc"}
+                />
+              </View>
             )}
           </View>
-          <Text className={`text-center ${applyTheme} `}>
-            Start: {event_date.slice(0, 10)} at {event_date.slice(11, 16)}
-            {"\n"}
-            End: {event_date_end.slice(0, 10)} at {event_date_end.slice(11, 16)}
-            {"\n"}
-            Location: {event_location}
-          </Text>
-          <Text className={`${applyTheme}`}>Click to learn more</Text>
         </TouchableOpacity>
       </View>
     );
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleString("en-GB", {
+      weekday: "short",
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+  if (isLoading) {
+    return (
+      <View className={styles.loading.container}>
+        <ActivityIndicator size="large" color={styles.loading.color} />
+      </View>
+    );
+  }
+
   return (
-    <SafeAreaView className={`flex-1 ${applyTheme}`}>
-      <TouchableOpacity onPress={togglePublic} className={`${applyTheme}`}>
+    <SafeAreaView className={styles.page.container}>
+      {/* Header Section */}
+      <View className={`${styles.header.container} ${styles.header.border}`}>
+        <Link href="/" className={styles.header.homeLink}>
+          <Ionicons
+            name="home-outline"
+            size={24}
+            color={isDark ? "#f65275" : "#1f2937"}
+          />
+        </Link>
+
+        <Text className={styles.header.title}>Events</Text>
+
         <SignedIn>
-          <Text>
-            {isPublic ? "Go To Invited Events" : "Go To Public Events"}
-          </Text>
-        </SignedIn>
-      </TouchableOpacity>
-      <ScrollView className={`flex-1 ${applyTheme}`}>
-        <View className="p-4 border-b border-gray-300">
-          <Link href="/" className={`py-2 px-4 font-bold ${applyTheme}`}>
-            Home
-          </Link>
-        </View>
-
-        <View className={`items-center justify-center ${applyTheme}`}>
-          <Text className={`text-xl font-bold mb-5 mt-2 ${applyTheme}`}>
-            Events
-          </Text>
-
-          {events.length !== 0 ? (
-            <FlatList
-              data={events}
-              horizontal={true}
-              decelerationRate="normal"
-              renderItem={({ item }) => (
-                <Event
-                  event_title={item.event_title}
-                  event_location={item.event_location}
-                  event_date={item.event_date}
-                  event_date_end={item.event_date_end}
-                  storage_id={item.storage_id}
-                  event_description={item.event_description}
-                  event_owner_id={item.event_owner_id}
-                  event_id={item.event_id}
-                />
-              )}
-            />
-          ) : (
-            <Text className={`text-xl font-bold m-5 ${applyTheme}`}>
-              You don't have any scheduled events
-            </Text>
-          )}
-
-          {selectedEvent && (
-            <View
-              className={`mx-5 mb-10 ${applyTheme}`}
-              style={{ width: "90%", paddingBottom: 20 }}
+          <View className={styles.header.tabContainer}>
+            <TouchableOpacity
+              onPress={() => setIsPublic(true)}
+              className={`${styles.header.tab} ${
+                isPublic ? styles.header.activeTab : styles.header.inactiveTab
+              }`}
             >
-              <View className="action-bar">
-                {user?.user_id === selectedEvent.event_owner_id ? (
-                  <EventInvite eventId={selectedEvent.event_id} />
-                ) : (
-                  <SignedIn>
-                    <EventRSVP eventId={selectedEvent.event_id} />
-                  </SignedIn>
-                )}
-              </View>
-              <Text className={`text-xl font-bold ${applyTheme}`}>
+              <Text
+                className={
+                  isPublic
+                    ? styles.header.activeTabText
+                    : styles.header.inactiveTabText
+                }
+              >
+                Public
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => setIsPublic(false)}
+              className={`${styles.header.tab} ${
+                !isPublic ? styles.header.activeTab : styles.header.inactiveTab
+              }`}
+            >
+              <Text
+                className={
+                  !isPublic
+                    ? styles.header.activeTabText
+                    : styles.header.inactiveTabText
+                }
+              >
+                My Events
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </SignedIn>
+        <SignedOut>
+          <View style={{ width: 80 }} />
+        </SignedOut>
+      </View>
+
+      {/* Fixed Event List Section */}
+      <View className={styles.eventList.container}>
+        {events.length > 0 ? (
+          <FlatList
+            data={events}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item }) => (
+              <EventCard
+                item={item}
+                isSelected={selectedEvent?.event_id === item.event_id}
+              />
+            )}
+            keyExtractor={(item) => item.event_id.toString()}
+            contentContainerStyle={{ paddingHorizontal: 10 }}
+          />
+        ) : (
+          <Text className={styles.eventList.emptyMessage}>
+            {isPublic
+              ? "No public events available"
+              : "You don't have any scheduled events"}
+          </Text>
+        )}
+      </View>
+
+      {/* Pink Red Separator */}
+      <View className={styles.eventList.separator} />
+
+      {/* Scrollable Event Details Section */}
+      <ScrollView className={`flex-1 ${styles.page.container}`}>
+        {selectedEvent ? (
+          <View className={styles.eventDetails.container}>
+            {/* Action Bar */}
+            <View className={styles.eventDetails.actionBar}>
+              {user?.user_id === selectedEvent.event_owner_id ? (
+                <EventInvite eventId={selectedEvent.event_id} />
+              ) : (
+                <SignedIn>
+                  <EventRSVP eventId={selectedEvent.event_id} />
+                </SignedIn>
+              )}
+            </View>
+
+            {/* Event Title and Stats */}
+            <View>
+              <Text className={styles.eventDetails.title}>
                 {selectedEvent.event_title}
               </Text>
-              <ScrollView>
-                <Text className={`text-lg ${applyTheme}`}>
-                  Description: {selectedEvent.event_description}
-                </Text>
-              </ScrollView>
+
+              {/* Attendance stats */}
+              <View className={styles.eventDetails.statsRow}>
+                <View className={styles.eventDetails.attendanceStats}>
+                  <Ionicons
+                    name="mail"
+                    size={styles.eventDetails.statIcon.size}
+                    color={styles.eventDetails.statIcon.color}
+                    style={{
+                      marginRight: styles.eventDetails.statIcon.marginRight,
+                    }}
+                  />
+                  <View>
+                    <Text className={styles.eventDetails.statCount}>
+                      {invitedUsers?.length || 0}
+                    </Text>
+                    {/*<Text className={styles.eventDetails.statLabel}>
+                          Invited
+                        </Text>*/}
+                  </View>
+                </View>
+                <View className={styles.eventDetails.attendanceStats}>
+                  <Ionicons
+                    name="people"
+                    size={styles.eventDetails.statIcon.size}
+                    color={styles.eventDetails.statIcon.color}
+                    style={{
+                      marginRight: styles.eventDetails.statIcon.marginRight,
+                    }}
+                  />
+                  <View>
+                    <Text className={styles.eventDetails.statCount}>
+                      {attendingUsers?.length || 0}
+                    </Text>
+                    {/* <Text className={styles.eventDetails.statLabel}>
+                      Attending
+                    </Text>*/}
+                  </View>
+                </View>
+              </View>
             </View>
-          )}
-        </View>
+
+            {/* Event Description */}
+            <View className={styles.eventDetails.section}>
+              <Text className={styles.eventDetails.sectionTitle}>
+                Description
+              </Text>
+              <Text className={styles.eventDetails.description}>
+                {selectedEvent.event_description || "No description available"}
+              </Text>
+            </View>
+
+            {/* Event Details */}
+            <View className={styles.eventDetails.section}>
+              <Text className={styles.eventDetails.sectionTitle}>Details</Text>
+
+              <View className={styles.eventDetails.infoRow}>
+                <Ionicons
+                  name="calendar-outline"
+                  size={styles.eventDetails.infoIcon.size}
+                  color={styles.eventDetails.infoIcon.color}
+                  style={{
+                    marginRight: styles.eventDetails.infoIcon.marginRight,
+                  }}
+                />
+                <Text className={styles.eventDetails.infoText}>
+                  From: {formatDate(selectedEvent.event_date)}
+                </Text>
+              </View>
+
+              <View className={styles.eventDetails.infoRow}>
+                <Ionicons
+                  name="time-outline"
+                  size={styles.eventDetails.infoIcon.size}
+                  color={styles.eventDetails.infoIcon.color}
+                  style={{
+                    marginRight: styles.eventDetails.infoIcon.marginRight,
+                  }}
+                />
+                <Text className={styles.eventDetails.infoText}>
+                  To: {formatDate(selectedEvent.event_date_end)}
+                </Text>
+              </View>
+
+              <View className={styles.eventDetails.infoRow}>
+                <Ionicons
+                  name="location-outline"
+                  size={styles.eventDetails.infoIcon.size}
+                  color={styles.eventDetails.infoIcon.color}
+                  style={{
+                    marginRight: styles.eventDetails.infoIcon.marginRight,
+                  }}
+                />
+                <Text className={styles.eventDetails.infoText}>
+                  {selectedEvent.event_location || "No location specified"}
+                </Text>
+              </View>
+            </View>
+
+            <View className={styles.eventDetails.divider} />
+          </View>
+        ) : (
+          <View className="p-10 items-center">
+            <Text className={`text-center ${styles.page.text}`}>
+              Select an event to view details
+            </Text>
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

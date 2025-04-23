@@ -38,6 +38,15 @@ export const getUserEvents = async (userId: number, status?: number[]) => {
   return response.data;
 };
 
+export const getEventUsers = async (eventId: number, status?: number[]) => {
+  let url = `events/${eventId}/users`;
+  if (status && status.length > 0) {
+    url += `?status=${status.join(",")}`;
+  }
+  const response = await api.get(url);
+  return response.data;
+};
+
 export const createUser = async (
   username: string,
   email: string,
@@ -199,10 +208,6 @@ export const deleteUserEvent = async (eventId: number, userId: number) => {
 };
 
 export const getUserEventStatus = async (eventId: number, userId: number) => {
-  console.log("getting event status");
-  console.log(
-    `https://social-cam-app-api.onrender.com/api/users/${userId}/events/${eventId}/status`
-  );
   const response = await api.get(`users/${userId}/events/${eventId}/status`);
   return response.data;
 };
