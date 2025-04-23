@@ -16,6 +16,7 @@ import { appwriteGetImageUrl } from "@/appwrite/appwrite.client";
 import { getEvents, getUserEvents, getEventById } from "@/app/api/api";
 import { useUser } from "../../context/UserContext";
 import EventInvite from "../components/EventInvite";
+import {SignedIn, SignedOut} from "@clerk/clerk-expo";
 
 const { width } = Dimensions.get("window");
 
@@ -31,7 +32,7 @@ const PublicEventPage = () => {
 
   console.log(selectedEvent);
   const [events, setEvents] = useState(null);
-  const [isPublic, setIsPublic] = useState(false);
+  const [isPublic, setIsPublic] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -50,10 +51,12 @@ const PublicEventPage = () => {
         getEvents(isPublic).then((data) => {
           setEvents(data);
         });
-      } else {
-        const userEvents = await getUserEvents(user.user_id, [1, 2]);
-
-        setEvents(userEvents);
+      } else if (user) {
+          const userEvents = await getUserEvents(user.user_id, [1, 2]);
+          if (userEvents.length === 0) {
+            setIsPublic(true)
+          }
+          setEvents(userEvents);
       }
     }
     try {
@@ -137,7 +140,9 @@ const PublicEventPage = () => {
   return (
     <SafeAreaView className={`flex-1 ${applyTheme}`}>
       <TouchableOpacity onPress={togglePublic} className={`${applyTheme}`}>
-        <Text>{isPublic ? "Public Events" : "Invited Events"}</Text>
+        <SignedIn>
+          <Text>{isPublic ? "Go To Invited Events" : "Go To Public Events" }</Text>
+        </SignedIn>
       </TouchableOpacity>
       <ScrollView className={`flex-1 ${applyTheme}`}>
         <View className="p-4 border-b border-gray-300">
@@ -175,10 +180,12 @@ const PublicEventPage = () => {
               style={{ width: "90%", paddingBottom: 20 }}
             >
               <View className="action-bar">
-                {user.user_id === selectedEvent.event_owner_id ? (
+                {user?.user_id === selectedEvent.event_owner_id ? (
                   <EventInvite eventId={selectedEvent.event_id} />
                 ) : (
-                  <Text>NOT EVENT OWNER</Text>
+                    <SignedIn>
+                      <Text>NOT EVENT OWNER</Text>
+                    </SignedIn>
                 )}
               </View>
               <Text className={`text-xl font-bold ${applyTheme}`}>
