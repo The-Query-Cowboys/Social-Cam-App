@@ -42,6 +42,18 @@ export class UsersService {
     return user;
   }
 
+  async getUserByUsername(username): Promise<User | null> {
+    const user = await this.prisma.user.findFirst({
+      where: { username: username },
+    });
+    if (!user) {
+      throw new NotFoundException(
+        `User with username: ${username} was not found`,
+      );
+    }
+    return user;
+  }
+
   async getUserEvents(userId: number, statusQuery?: number[]) {
     const userExists = await this.prisma.user.findUnique({
       where: { user_id: userId },

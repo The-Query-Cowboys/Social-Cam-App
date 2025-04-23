@@ -24,6 +24,11 @@ export const getUserByAuthId = async (authId: string) => {
   return response.data;
 };
 
+export const getUserByUsername = async (username: string) => {
+  const response = await api.get(`users/username/${username}`);
+  return response.data;
+};
+
 export const getUserEvents = async (userId: number, status?: number[]) => {
   let url = `users/${userId}/events`;
   if (status && status.length > 0) {
@@ -62,6 +67,11 @@ export const getEvents = async (publicOnly: boolean = false) => {
   const response = await api.get("events", {
     params: publicOnly ? { publicOnly: "true" } : {},
   });
+  return response.data;
+};
+
+export const getEventById = async (eventId: number) => {
+  const response = await api.get(`events/${eventId}`);
   return response.data;
 };
 

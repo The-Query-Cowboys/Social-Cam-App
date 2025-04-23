@@ -38,6 +38,11 @@ export class UsersController {
     return this.appService.getUserByAuthId(authId);
   }
 
+  @Get('/username/:username')
+  getUserByUsername(@Param('username') username: string) {
+    return this.appService.getUserByUsername(username);
+  }
+
   //get all events for that user id
   @Get(':user_id/events')
   getUserEvents(
