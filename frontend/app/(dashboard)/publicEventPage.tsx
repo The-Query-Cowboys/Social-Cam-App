@@ -7,7 +7,6 @@ import {appwriteGetImageUrl} from "@/appwrite/appwrite.client";
 
 
 const { width } = Dimensions.get('window');
-const IMAGE_HEIGHT = 250; // Fixed height for all images
 
 const PublicEventPage = () => {
     const [selectedEvent, setSelectedEvent] = useState<any | null>(null)
@@ -44,7 +43,7 @@ const PublicEventPage = () => {
                         {event_title}
                     </Text>
                     {/* Fixed size image container */}
-                    <View style={{ height: IMAGE_HEIGHT, width: '100%' }}>
+                    <View style={{ height: 250, width: '100%' }}>
                         {imageURL &&
                             <Image
                                 source={{uri: imageURL}}
@@ -91,8 +90,7 @@ const PublicEventPage = () => {
                                     event_date_end={item.event_date_end}
                                     storage_id={item.storage_id}
                                     event_description={item.event_description}
-                                />
-                        }
+                                />}
                     />
 
                     {selectedEvent && (
