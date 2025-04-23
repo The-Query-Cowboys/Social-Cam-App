@@ -192,3 +192,13 @@ export const deletePushToken = async (userId: number, token: string) => {
     throw error;
   }
 };
+
+export const deleteUserEvent = async (eventId: number, userId: number) => {
+  const response = await api.delete(`events/${eventId}/invite/${userId}`);
+  return response.data;
+};
+
+export const getUserEventStatus = async (eventId: number, userId: number) => {
+  const response = await api.get(`users/${userId}/events/${eventId}/status`);
+  return response.data;
+};

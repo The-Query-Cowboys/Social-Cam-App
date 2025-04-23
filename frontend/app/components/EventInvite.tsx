@@ -13,60 +13,94 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Modal,
 } from "react-native";
 
 import { useUser } from "../../context/UserContext";
 import { getUserByUsername, inviteToEvent } from "../api/api";
 import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "../../context/ThemeContext";
 
 const EventInvite = ({ eventId }) => {
   const [username, setUsername] = useState("");
   const [showInvite, setShowInvite] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const { isDark } = useTheme();
 
   const inputRef = useRef(null);
   console.log(inputRef);
 
-  const toggleInviteDialogue = () => {
-    setShowInvite(showInvite ? false : true);
+  const bgColor = isDark ? "bg-primary-dark" : "bg-primary-light";
+  const borderColor = isDark
+    ? "border-secondary-dark"
+    : "border-secondary-light";
+
+  const styles = {
+    inviteButton: "flex-row items-center py-2 px-4 rounded-full",
+    inviteCol: isDark ? "bg-background-dark" : "bg-background-light",
+    modalContainer: `m-5 p-5 rounded-lg ${bgColor} border ${borderColor} w-4/5`,
   };
 
   useEffect(() => {
-    console.log(inputRef);
-    if (inputRef.current) {
+    if (showInvite && inputRef.current) {
       inputRef.current.focus();
     }
-  }, [inputRef]);
+  }, [showInvite]);
 
   const handleInvite = async () => {
-    const user = await getUserByUsername(username);
-    await inviteToEvent(eventId, user.user_id);
-    setUsername("");
+    {
+      setIsLoading(true);
+      const user = await getUserByUsername(username);
+      await inviteToEvent(eventId, user.user_id);
+      setUsername("");
+      setShowInvite(false);
+    }
   };
-
-  if (showInvite) {
-    return (
-      <KeyboardAvoidingView>
-        <TouchableOpacity onPress={handleInvite}>
-          <Text>Send Invite</Text>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
-    );
-  }
 
   return (
     <SafeAreaView>
-      <TextInput
-        ref={inputRef}
-        className="w-full border-2 border-black rounded p-4 rounded my-2"
-        placeholder="Username"
-        placeholderTextColor="#666"
-        value={username}
-        onChangeText={(username) => setUsername(username)}
-      />
       <Text>Invite a User</Text>
-      <TouchableOpacity onPress={toggleInviteDialogue}>
-        <Ionicons name="person-add" size={24} />
+      <TouchableOpacity
+        onPress={() => setShowInvite(true)}
+        className={`${styles.inviteButton} ${styles.inviteCol}`}
+      >
+        <Ionicons name="person-add" size={24} color="white" />
       </TouchableOpacity>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showInvite}
+        onRequestClose={() => setShowInvite(false)}
+      >
+        <KeyboardAvoidingView className="flex-1 justify-center items-center">
+          <View className={styles.modalContainer}>
+            <View>
+              <Text>Invite User</Text>
+              <TouchableOpacity onPress={() => setShowInvite(false)}>
+                <Ionicons name="close" size={24} color="white" />
+              </TouchableOpacity>
+            </View>
+
+            <TextInput
+              ref={inputRef}
+              placeholder="Enter username"
+              placeholderTextColor={isDark ? "#999" : "#666"}
+              value={username}
+              onChangeText={(username) => setUsername(username)}
+              autoCapitalize="none"
+            />
+
+            <View className="flex-row justify-end">
+              <TouchableOpacity onPress={handleInvite} disabled={isLoading}>
+                <Text>{isLoading ? "Inviting..." : "Send Invite"}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
     </SafeAreaView>
   );
 };
