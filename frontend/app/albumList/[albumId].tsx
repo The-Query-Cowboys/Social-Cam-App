@@ -5,6 +5,8 @@ import { useTheme } from "@/context/ThemeContext";
 import { getAlbumPictures } from '../api/api';
 import { appwriteGetImageUrl } from '@/appwrite/appwrite.api';
 import { SafeAreaProvider } from "react-native-safe-area-context";
+
+
 interface PictureProps {
     album_id: number;
     picture_id: number;
@@ -12,12 +14,15 @@ interface PictureProps {
     type_id: number;
     url: string;
 }
+
 const album_id = () => {
+
     const { colorScheme } = useTheme()
     const { albumId } = useLocalSearchParams()
     const [pictures, setPictures] = useState<PictureProps[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
     useEffect(() => {
         setIsLoading(true);
         getAlbumPictures(Number(albumId))
@@ -32,7 +37,9 @@ const album_id = () => {
                 setError("Failed to load albums");
             })
     }, [])
+
     const applyTheme = `${colorScheme === 'dark' ? 'text-white bg-black' : 'text-black bg-white'}`
+
     if (isLoading) {
         return (
             <SafeAreaView className={`flex-1 items-center justify-center ${applyTheme}`}>
@@ -40,6 +47,7 @@ const album_id = () => {
             </SafeAreaView>
         );
     }
+
     if (error) {
         return (
             <SafeAreaView className={`flex-1 items-center justify-center ${applyTheme}`}>
@@ -47,6 +55,7 @@ const album_id = () => {
             </SafeAreaView>
         );
     }
+
     const Picture = ({ storage_id }: PictureProps) => {
         const [imageURL, setImageURL] = useState<string | undefined>(undefined)
         useEffect(() => {
@@ -67,6 +76,7 @@ const album_id = () => {
             </View>
         )
     }
+
     return (
         <View className={`flex-1 items-center justify-center ${applyTheme}`}>
             <Link href='/' className={`my-5 border-b font-bold ${applyTheme}`}>Home</Link>

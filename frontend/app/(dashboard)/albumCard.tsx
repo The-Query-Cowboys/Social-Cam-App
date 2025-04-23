@@ -2,6 +2,8 @@ import React from "react";
 import { View, Text, Image, TouchableOpacity, Platform } from "react-native";
 import { Link } from "expo-router";
 import { useTheme } from "@/context/ThemeContext";
+import { appwriteGetImageUrl } from '@/appwrite/appwrite.api';
+import { useState, useEffect } from "react";
 
 interface Album {
   album_id: number;
@@ -27,16 +29,13 @@ interface AlbumCardProps {
 const AlbumCard: React.FC<AlbumCardProps> = ({ album }) => {
   const { isDark } = useTheme();
 
-  console.log("rendering album card");
   // Define styles object with class names
   const styles = {
-    card: `mb-4 rounded-xl overflow-hidden ${
-      isDark ? "bg-gray-800" : "bg-white"
-    } ${
-      Platform.OS === "ios"
+    card: `mb-4 rounded-xl overflow-hidden ${isDark ? "bg-gray-800" : "bg-white"
+      } ${Platform.OS === "ios"
         ? "shadow-md shadow-black/10"
         : "shadow-md shadow-black/10 android:elevation-3"
-    }`,
+      }`,
     container: "flex-row",
     image: "w-24 h-24 rounded-l-xl",
     contentContainer: "p-3 flex-1 justify-between",
@@ -46,17 +45,32 @@ const AlbumCard: React.FC<AlbumCardProps> = ({ album }) => {
     photoCount: `text-sm ${isDark ? "text-gray-300" : "text-gray-500"}`,
   };
 
+  const [imageURL, setImageURL] = useState<string | undefined>(undefined)
+
+  useEffect(() => {
+    const serveImage = async () => {
+      if (album.storage_id !== undefined) {
+        const image_url = await appwriteGetImageUrl(album.storage_id)
+        if (typeof image_url === "string") {
+          setImageURL(image_url)
+        }
+      }
+    }
+
+    serveImage()
+  }, []);
+
   // need to implement appwrite
-  const imageSource = album.storage_id
-    ? require("@/assets/icon.png")
-    : require("@/assets/icon.png");
+  const imageSource = imageURL !== undefined
+    ? imageURL
+    : "@/assets/icon.png";
 
   return (
     <Link href={`/albumList/${album.album_id}`} asChild>
       <TouchableOpacity activeOpacity={0.7} className={styles.card}>
         <View className={styles.container}>
           <Image
-            source={imageSource}
+            source={{ uri: imageSource }}
             className={styles.image}
             resizeMode="cover"
           />
