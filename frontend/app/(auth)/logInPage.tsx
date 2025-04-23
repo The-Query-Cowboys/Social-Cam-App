@@ -12,10 +12,13 @@ const logInPage = () => {
   const { userId } = useAuth();
   const router = useRouter();
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [usernameSession, setUsername] = useState("");
+  const [passwordSession, setPassword] = useState("");
 
   const [isLoginError, setIsLoginError] = useState(false);
+
+  let username = "Guest"
+  let password = "randomGuest6666.."
 
 
   const applyViewTheme = `${colorScheme === "dark" ? "text-white bg-black" : "text-black bg-white"
@@ -30,20 +33,21 @@ const logInPage = () => {
     : "text-black bg-white border-black"
     }`;
 
-
   const onSignInPress = async () => {
     if (!isLoaded) return;
+
     try {
-      const signInAttempt = await signIn.create({
+      let signInAttempt;
+
+      signInAttempt = await signIn.create({
         identifier: username,
         password,
       });
+
       if (signInAttempt.status === "complete") {
         await setActive({ session: signInAttempt.createdSessionId });
-        console.log(signInAttempt, "here"); //
         if (userId) {
           const userData = getUserByAuthId(userId);
-          console.log(userData);
           setIsLoginError(false)
           //await registerUserPushToken(userData.user_id);
         }
@@ -67,20 +71,26 @@ const logInPage = () => {
           <TextInput
             className={inputStyle}
             placeholder="Username"
-            onChangeText={(username) => setUsername(username)}
-            value={username}
+            onChangeText={(usernameSession) => setUsername(usernameSession)}
+            value={usernameSession}
           />
           <TextInput
             className={inputStyle}
             secureTextEntry={true}
             placeholder="Password"
-            onChangeText={(password) => setPassword(password)}
-            value={password}
+            onChangeText={(passwordSession) => setPassword(passwordSession)}
+            value={passwordSession}
           />
-          <Button title="Login" onPress={onSignInPress} />
+          <Button title="Login" onPress={() => { 
+            username = usernameSession
+            password = passwordSession
+            onSignInPress() 
+            }} />
+          <Text></Text>
+          <Button title="Login as guest" onPress={onSignInPress} />
 
           <Text className={`${applyViewTheme}`}>
-            Don't have an account?    
+            Don't have an account?
             <Link
               href="/signUpPage"
               className={`color-blue-500 font-bold underline m-1 ${applyViewTheme}`}
