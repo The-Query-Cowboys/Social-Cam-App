@@ -4,6 +4,7 @@ import {useEffect, useState} from 'react'
 import {useTheme} from "@/context/ThemeContext";
 import axios from 'axios'
 import {appwriteGetImageUrl} from "@/appwrite/appwrite.client";
+import {getEvents} from "@/app/api/api";
 
 
 const { width } = Dimensions.get('window');
@@ -15,8 +16,8 @@ const PublicEventPage = () => {
     const applyTheme = `${colorScheme === 'dark' ? 'text-white bg-black' : 'text-black bg-white'}`
 
     useEffect(() => {
-        axios.get('https://social-cam-app-api.onrender.com/api/events')
-            .then(({data}) => {
+        getEvents(true)
+            .then((data) => {
                 setEvents(data)
             })
     }, [])
