@@ -59,6 +59,14 @@ export class UsersController {
     }
   }
 
+  @Get(':userId/events/:eventId/status')
+  getUserEventStatus(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('eventId', ParseIntPipe) eventId: number,
+  ) {
+    return this.appService.getUserEventStatus(userId, eventId);
+  }
+
   //save a new user
   @Post()
   async createUser(@Body() createUserDto: CreateUserDto) {
