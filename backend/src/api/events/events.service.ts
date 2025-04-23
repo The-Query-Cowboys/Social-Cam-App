@@ -37,23 +37,6 @@ export class EventsService {
     return event;
   }
 
-  async fetchUsersByEventId(eventId) {
-    const users = await this.prisma.user.findMany({
-      where: {
-        UserEvent: {
-          some: {
-            event_id: eventId,
-          },
-        },
-      },
-    });
-
-    if (users.length === 0) {
-      throw new NotFoundException(`No users are linked to eventId: ${eventId}`);
-    }
-    return users;
-  }
-
   async createEvent(createEventDto: CreateEventDto): Promise<any> {
     if (
       createEventDto.event_date &&
@@ -328,6 +311,38 @@ export class EventsService {
       };
     } catch (error) {
       throw new Error(`Failed to remove user from event: ${error.message}`);
+    }
+  }
+
+  async fetchEventUsers(eventId: number, statusQuery?: number[]) {
+    const eventExists = await this.prisma.event.findUnique({
+      where: { event_id: eventId },
+    });
+
+    if (!eventExists) {
+      throw new NotFoundException(`Event_id ${eventId} was not found`);
+    }
+
+    try {
+      const whereClause: any = {
+        event_id: eventId,
+      };
+
+      if (statusQuery && statusQuery.length > 0) {
+        whereClause.status_id = { in: statusQuery };
+      }
+
+      return await this.prisma.userEvent.findMany({
+        where: whereClause,
+        include: {
+          user: true,
+          status: true,
+        },
+      });
+    } catch (error) {
+      throw new Error(
+        `Failed to fetch users associated with event: ${error.message}`,
+      );
     }
   }
 

@@ -22,6 +22,7 @@ export class EventsController {
     const showPublicOnly = publicOnly === 'true';
     return this.eventsService.fetchEvents(showPublicOnly);
   }
+
   @Post()
   async createEvent(
     @Body()
@@ -88,13 +89,23 @@ export class EventsController {
     return { success: true, message: 'Event notifications scheduled' };
   }
 
+  @Get(':eventId/users')
+  async fetchEventUsers(
+    @Param('eventId') eventId: number,
+    @Query('status') status,
+  ) {
+    if (status) {
+      const statusQuery = status.split(',').map((x) => {
+        return Number(x);
+      });
+      return this.eventsService.fetchEventUsers(eventId, statusQuery);
+    } else {
+      return this.eventsService.fetchEventUsers(eventId);
+    }
+  }
+
   @Get(':eventId')
   async fetchEventById(@Param('eventId') eventId: number) {
     return this.eventsService.fetchEventById(eventId);
-  }
-
-  @Get(':eventId/users')
-  async fetchUsersByEventId(@Param('eventId') eventId: number) {
-    return this.eventsService.fetchUsersByEventId(eventId);
   }
 }

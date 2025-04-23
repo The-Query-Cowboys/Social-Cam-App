@@ -18,7 +18,7 @@ import { useTheme } from "../../context/ThemeContext";
 const EventRSVP = ({ eventId }) => {
   const [status, setStatus] = useState(1); // Default to "invited" status
   const [isLoading, setIsLoading] = useState(false);
-  console.log(isLoading);
+  const [showMessage, setShowMessage] = useState(false);
   const { user } = useUser();
   const { isDark } = useTheme();
 
@@ -40,20 +40,31 @@ const EventRSVP = ({ eventId }) => {
     }
   }, [user, eventId]);
 
+  // Hide success message after 3 seconds
+  useEffect(() => {
+    let timer;
+    if (showMessage) {
+      timer = setTimeout(() => {
+        setShowMessage(false);
+      }, 3000);
+    }
+    return () => clearTimeout(timer);
+  }, [showMessage]);
+
   const handleUserStatusChange = async () => {
     // Toggle between invited (1) and attending (2)
     const newStatus = status === 1 ? 2 : 1;
-
     console.log("changing user event status");
-
     setIsLoading(true);
+
     try {
       await updateUserEventStatus(eventId, user.user_id, newStatus);
       setStatus(newStatus);
 
-      //   if (onStatusChange) {
-      //     onStatusChange(newStatus);
-      //   }
+      // Show success message when attending
+      if (newStatus === 2) {
+        setShowMessage(true);
+      }
     } catch (error) {
       Alert.alert("Error", "Failed to update attendance status");
       console.error(error);
@@ -79,11 +90,6 @@ const EventRSVP = ({ eventId }) => {
             setIsLoading(true);
             try {
               await deleteUserEvent(eventId, user.user_id);
-              //   if (onStatusChange) {
-              //     onStatusChange(null);
-              //   }
-
-              // You might want to navigate away or refresh the parent component
             } catch (error) {
               Alert.alert("Error", "Failed to remove event");
               console.error(error);
@@ -96,13 +102,39 @@ const EventRSVP = ({ eventId }) => {
     );
   };
 
+  // Define styles based on theme
   const textColor = isDark ? "text-white" : "text-gray-800";
   const bgAttending = isDark ? "bg-neonGreen-700" : "bg-neonGreen-500";
   const bgInvited = isDark ? "bg-deepBlue-700" : "bg-deepBlue-500";
   const bgDelete = isDark ? "bg-pinkRed-700" : "bg-pinkRed-500";
 
+  const messageStyles = {
+    container: `absolute top-2 left-0 right-0 p-3 rounded-lg mx-4 z-10 
+                ${isDark ? "bg-neonGreen-700" : "bg-neonGreen-500"} 
+                ${showMessage ? "opacity-100" : "opacity-0"}`,
+    text: "text-white text-center font-bold",
+    icon: { marginRight: 6 },
+  };
+
   return (
     <SafeAreaView>
+      {/* Success message */}
+      {showMessage && (
+        <View className={messageStyles.container}>
+          <View className="flex-row items-center justify-center">
+            <Ionicons
+              name="checkmark-circle"
+              size={20}
+              color="white"
+              style={messageStyles.icon}
+            />
+            <Text className={messageStyles.text}>
+              You're now attending this event!
+            </Text>
+          </View>
+        </View>
+      )}
+
       <View className="flex-row items-center justify-between p-4">
         <TouchableOpacity
           onPress={handleUserEventRemoval}
@@ -114,9 +146,9 @@ const EventRSVP = ({ eventId }) => {
           <Ionicons name="close" size={24} color="white" />
         </TouchableOpacity>
 
-        <Text className={`${textColor} mx-2 flex-1 text-center`}>
+        {/*<Text className={`${textColor} mx-2 flex-1 text-center`}>
           {status === 1 ? "You're invited" : "You're attending"}
-        </Text>
+        </Text>*/}
 
         <TouchableOpacity
           onPress={handleUserStatusChange}
@@ -125,7 +157,11 @@ const EventRSVP = ({ eventId }) => {
             status === 1 ? bgInvited : bgAttending
           } ${isLoading ? "opacity-50" : ""}`}
         >
-          <Ionicons name="checkmark" size={24} color="white" />
+          <Ionicons
+            name={status === 1 ? "checkmark" : "close-circle-outline"}
+            size={24}
+            color="white"
+          />
         </TouchableOpacity>
       </View>
     </SafeAreaView>
