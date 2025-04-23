@@ -52,7 +52,7 @@ const AlbumCard: React.FC<AlbumCardProps> = ({ album }) => {
     : require("@/assets/icon.png");
 
   return (
-    <Link href={`/album/${album.album_id}`} asChild>
+    <Link href={`/albumList/${album.album_id}`} asChild>
       <TouchableOpacity activeOpacity={0.7} className={styles.card}>
         <View className={styles.container}>
           <Image
