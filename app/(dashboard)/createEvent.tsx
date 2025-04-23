@@ -7,8 +7,12 @@ import { useState, useEffect } from 'react';
 import * as MediaLibrary from 'expo-media-library';
 import * as ImagePicker from 'expo-image-picker';
 
+import { useUser } from '../../context/UserContext';
+
 import { createEvent as postEventApi } from '../api/api'
 import useApiRequest from '../../reuseable/apiRequest';
+
+import { uploadImageToAppwrite } from '../../appwrite/appwrite.api';
 
 import axios from 'axios';
 
@@ -31,7 +35,7 @@ const createEvent = () => {
   const applyTheme = `${colorScheme === 'dark' ? 'text-white bg-black' : 'text-black bg-white'}`;
 
   const [formData, setFormData] = useState<EventData>({
-    event_owner_id: 1,
+    event_owner_id: 0,
     event_title: '',
     event_description: '',
     album_id: 1,
@@ -43,6 +47,17 @@ const createEvent = () => {
     event_date_end: new Date().toISOString()
   });
 
+  const { user } = useUser();
+  
+  useEffect(() => {
+    if (user?.user_id) {
+      setFormData((prev: EventData) => ({
+        ...prev,
+        event_owner_id: user.user_id
+      }));
+    }
+  }, [user]);
+
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [showStartDatePicker, setShowStartDatePicker] = useState(false);
@@ -53,10 +68,9 @@ const createEvent = () => {
   const [endText, setEndText] = useState('No end date and time selected yet');
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-
   const [isPosting, setIsPosting] = useState(false)
-  const pickImage = async (mode: string) => {
 
+  const pickImage = async (mode: string) => {
     try {
       let result = {};
       if (mode === "gallery") {
@@ -68,7 +82,6 @@ const createEvent = () => {
           aspect: [1, 1],
           quality: 1,
         })
-
         if (!result.canceled) {
           setSelectedImage(result.assets[0].uri)
         }
@@ -82,6 +95,7 @@ const createEvent = () => {
   const createEventApi = async (eventData: EventData) => {
     return axios.post('/api/events', eventData);
   };
+  
 
   const handleInputChange = (field: keyof EventData, value: string) => {
     setFormData(prev => ({
@@ -128,26 +142,50 @@ const createEvent = () => {
     setShowEndTimePicker(false);
   };
 
-  const handleSubmit = () => {
-    if (!formData.event_title || !formData.event_location || !formData.event_date || !formData.event_description || !formData.event_date_end) {
+  const uploadUri = async() => {
+    if (!selectedImage) { 
+      alert("Theres a problem, no selectedImage is passed")
+      return 
+     }
+     if (selectedImage){
+      const result = await uploadImageToAppwrite(selectedImage)
+      console.log(result.$id,"<<<< result.$id")
+      return result.$id
+     }
+  }
+
+  const handleSubmit = async (selectedImage: string) => {
+    if (!user?.user_id) {
+      alert("Please log in to create an event");
+      return;
+    }
+
+    if (formData.event_title && formData.event_location && formData.event_date && formData.event_description && formData.event_date_end && selectedImage) {
       //add context for getting owner_id , storage_id , album_delay etc....
+      const storage_Id = await uploadUri()
       const eventData = {
-        event_owner_id: 1,
+        event_owner_id: user.user_id, 
         event_title: formData.event_title,
         event_description: formData.event_description,
-        event_storage_id: 1,
+        storage_id: storage_Id,
         event_location: formData.event_location,
-        event_album_delay: 0,
-        private: true,
+        album_delay: 0,
+        private: formData.private,
         event_date: formData.event_date,
         event_date_end: formData.event_date_end
       }
-
+      const postedEvent = postEventApi(eventData)
+      console.log(postedEvent, "<<< postedevent") 
+      alert(`Event ${eventData.event_title} is created !`)     
+    }else{
+      alert("fill in all the forms!")
+      return 
     }
   };
 
   return (
     <View className={`flex-1 justify-center items-center ${applyTheme}`}>
+
       <Text className={`${applyTheme} font-bold text-lg mb-1`}>Event title</Text>
       <TextInput
         className='w-full border-2 border-black rounded p-4 rounded my-2'
@@ -179,7 +217,7 @@ const createEvent = () => {
 
       <View className={`mb-4 justify-center items-center ${applyTheme}`}>
         <Text className={`${applyTheme} font-bold text-lg mb-2`}>Event Date and Time</Text>
-        
+
         <View className={`mb-4 justify-center items-center ${applyTheme}`}>
           <Text className={`${applyTheme} font-bold text-md mb-1`}>Start Date & Time</Text>
           <View className="flex-row space-x-2 mb-2">
@@ -282,7 +320,7 @@ const createEvent = () => {
       <TouchableOpacity
         className=' w-4/5 p-2 bg-green-200 border border-gray-300 rounded items-center'
         onPress={handleSubmit}
-        disabled={isPosting}
+        // disabled={isPosting}
       >
         <Text className='text-black'>{isPosting ? 'Creating...' : 'Create'}</Text>
       </TouchableOpacity>
