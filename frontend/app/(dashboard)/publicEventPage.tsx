@@ -46,7 +46,7 @@ const PublicEventPage = () => {
     // Header section
     header: {
       container: "p-4 flex-row justify-between items-center border-b",
-      border: isDark ? "border-primary-dark" : "border-gray-300",
+      border: isDark ? "border-primary-dark" : "border-primary-light",
       title: `text-xl font-bold ${
         isDark ? "text-foreground-dark" : "text-primary-light"
       }`,
@@ -288,8 +288,6 @@ const PublicEventPage = () => {
           />
         </Link>
 
-        <Text className={styles.header.title}>Events</Text>
-
         <SignedIn>
           <View className={styles.header.tabContainer}>
             <TouchableOpacity
@@ -330,6 +328,7 @@ const PublicEventPage = () => {
         <SignedOut>
           <View style={{ width: 80 }} />
         </SignedOut>
+        <Text className={styles.header.title}>Events</Text>
       </View>
 
       {/* Fixed Event List Section */}

@@ -35,15 +35,15 @@ const Home = () => {
 
   const styles = {
     container: `flex-1 items-center ${bg}`,
-    header: `flex-row justify-between items-center px-5 py-4`,
-    title: `text-2xl justify-between items-center px-5 py-4 ${title}`,
+    header: `flex flex-row justify-between items-center px-5 py-4 w-full`,
+    title: `text-4xl px-5 py-4 font-extrabold ${title}`,
     content: "flex-1 items-center justify-center w-full px-6",
     welcomeText: `text-lg font-medium mb-4 ${text}`,
     navButtonContainer: "w-full flex items-center gap-6 space-y-4",
     navButton: `py-3 px-8 border rounded-lg w-4/5 max-w-md mx-auto flex items-center justify-center text-center  font-bold ${
       isDark
         ? "bg-primary-dark text-text-dark"
-        : "bg-secondary-light text-text-light"
+        : "bg-primary-light text-text-light"
     }`,
     primaryButton: `py-3 px-8 rounded-lg w-full items-center ${bgPrimary}`,
     secondaryButton: `py-3 px-8 border rounded-lg w-full items-center mt-3 ${bgSecondary}`,
