@@ -45,8 +45,8 @@ const Home = () => {
         ? "bg-primary-dark text-text-dark"
         : "bg-secondary-light text-text-light"
     }`,
-    primaryButton: `py-3 px-8 rounded-lg w-full items-center ${bgPrimary}`,
-    secondaryButton: `py-3 px-8 border rounded-lg w-full items-center mt-3 ${bgSecondary}`,
+    primaryButton: `py-3 px-8 rounded-lg  items-center w-[85%] ${bgPrimary}`,
+    secondaryButton: `py-3 px-8 border rounded-lg items-center w-[85%] mt-3 ${bgSecondary}`,
   };
 
   useEffect(() => {
