@@ -88,8 +88,8 @@ const logInPage = () => {
             }} />
           <Text></Text>
           <Button title="Login as guest" onPress={onSignInPress} />
-
-          <Text className={`${applyViewTheme}`}>
+          <Text></Text>
+          <Text className={applyViewTheme}>
             Don't have an account?
             <Link
               href="/signUpPage"
