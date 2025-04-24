@@ -37,11 +37,13 @@ const Home = () => {
     container: `flex-1 items-center ${bg}`,
     header: `flex-row justify-between items-center px-5 py-4`,
     title: `text-2xl justify-between items-center px-5 py-4 ${title}`,
-    content: "flex-1 items-center justify-center px-6",
+    content: "flex-1 items-center justify-center w-full px-6",
     welcomeText: `text-lg font-medium mb-4 ${text}`,
-    navButtonContainer: "w-full items-center gap-4",
-    navButton: `py-3 px-8 border rounded-lg w-full items-center ${
-      isDark ? "border-gray-600" : "border-gray-300"
+    navButtonContainer: "w-full flex items-center gap-6 space-y-4",
+    navButton: `py-3 px-8 border rounded-lg w-4/5 max-w-md mx-auto flex items-center justify-center text-center  font-bold ${
+      isDark
+        ? "bg-primary-dark text-text-dark"
+        : "bg-secondary-light text-text-light"
     }`,
     primaryButton: `py-3 px-8 rounded-lg w-full items-center ${bgPrimary}`,
     secondaryButton: `py-3 px-8 border rounded-lg w-full items-center mt-3 ${bgSecondary}`,
@@ -78,7 +80,6 @@ const Home = () => {
   }, [user]);
   return (
     <SafeAreaView className={styles.container}>
-      {/* once signed in should show upcoming userEvents or links to recent albums homepage feed.*/}
       <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
       <View className={styles.header}>
@@ -89,49 +90,44 @@ const Home = () => {
         <View className={styles.content}>
           <Image source={icon} className="my-5" />
           <Text className={styles.welcomeText}>Welcome to POSABLE</Text>
-        </View>
-        {hasOngoingEvents && (
-          <Link href="/(dashboard)/ongoingEvents" asChild>
-            <TouchableOpacity
-              className={`flex-row items-center p-3 rounded-lg mb-3 ${
-                isDark ? "bg-neonGreen-700" : "bg-neonGreen-500"
-              }`}
+          {hasOngoingEvents && (
+            <Link href="/(dashboard)/ongoingEvents" asChild>
+              <TouchableOpacity
+                className={`flex-row items-center p-3 rounded-lg mb-3  w-4/5 max-w-md mx-auto text-right ${
+                  isDark ? "bg-neonGreen-700" : "bg-neonGreen-500"
+                }`}
+              >
+                <Ionicons
+                  name="radio"
+                  size={22}
+                  color="white"
+                  style={{ marginRight: 8 }}
+                />
+                <Text className="text-white font-bold">
+                  You have events happening now!
+                </Text>
+              </TouchableOpacity>
+            </Link>
+          )}
+          <View className={styles.navButtonContainer}>
+            <Link
+              href="/(dashboard)/publicEventPage"
+              className={styles.navButton}
             >
-              <Ionicons
-                name="radio"
-                size={22}
-                color="white"
-                style={{ marginRight: 8 }}
-              />
-              <Text className="text-white font-bold">
-                You have events happening now!
-              </Text>
-            </TouchableOpacity>
+              <Text>Event Page</Text>
+            </Link>
+          </View>
+          <View className={styles.navButtonContainer}>
+            <Link href="/(dashboard)/albumList" className={styles.navButton}>
+              <Text className={text}>Albums Page</Text>
+            </Link>
+          </View>
+          <Link href="/(dashboard)/createEvent" className={styles.navButton}>
+            <Text className={text}>Create Event</Text>
           </Link>
-        )}
-        <View className={styles.navButtonContainer}>
-          <Link
-            href="/(dashboard)/publicEventPage"
-            className={styles.navButton}
-          >
-            <Text>Event Page</Text>
-          </Link>
+
+          <SignOutButton />
         </View>
-        <View className={styles.navButtonContainer}>
-          <Link href="/(dashboard)/albumList" className={styles.navButton}>
-            <Text>Albums Page</Text>
-          </Link>
-        </View>
-        <Link href="/(dashboard)/createEvent" className={styles.navButton}>
-          Create Event
-        </Link>
-        <Link href="/camera/1" className={styles.navButton}>
-          Camera
-        </Link>
-        <Link href="/(design)/themeShowcase" className={styles.navButton}>
-          THEME EXAMPLE PAGE
-        </Link>
-        <SignOutButton />
       </SignedIn>
       <SignedOut>
         <Text className={`my-8 ${text}`}>Please sign in to use POSABLE</Text>
