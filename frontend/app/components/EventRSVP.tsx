@@ -29,9 +29,11 @@ const EventRSVP = ({ eventId }) => {
     async function getStatus() {
       try {
         const currStatus = await getUserEventStatus(eventId, user.user_id);
-        setStatus(currStatus);
+        if (currStatus) {
+          setStatus(currStatus);
+        }
       } catch (error) {
-        console.error("Failed to get event status:", error);
+        setStatus(null);
       }
     }
 
@@ -155,11 +157,11 @@ const EventRSVP = ({ eventId }) => {
           </View>
         )}
 
-        <View className="p-4">
+        <View>
           <TouchableOpacity
             onPress={handleJoinEvent}
             disabled={isLoading}
-            className={`py-3 px-6 rounded-lg ${bgJoin} ${
+            className={`py-2 px-4 rounded-lg ${bgJoin} ${
               isLoading ? "opacity-50" : ""
             }`}
           >
@@ -189,7 +191,7 @@ const EventRSVP = ({ eventId }) => {
         </View>
       )}
 
-      <View className="flex-row items-center justify-between p-4">
+      <View className="flex-row items-center justify-between">
         <TouchableOpacity
           onPress={handleUserEventRemoval}
           disabled={isLoading}

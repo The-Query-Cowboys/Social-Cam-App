@@ -164,7 +164,10 @@ const PublicEventPage = () => {
     if (selectedEvent?.event_id) {
       const fetchEventUsers = async () => {
         try {
-          const invitedUsers = await getEventUsers(selectedEvent.event_id, [1]);
+          const invitedUsers = await getEventUsers(
+            selectedEvent.event_id,
+            [1, 2]
+          );
           const attendingUsers = await getEventUsers(selectedEvent.event_id, [
             2,
           ]);
@@ -188,10 +191,11 @@ const PublicEventPage = () => {
     const [imageURL, setImageURL] = useState(null);
 
     useEffect(() => {
+      let isMounted = true;
       const serveImage = async () => {
         try {
           const image_url = await appwriteGetImageUrl(item.storage_id);
-          if (typeof image_url === "string") {
+          if (typeof image_url === "string" && isMounted) {
             setImageURL(image_url);
           }
         } catch (error) {
@@ -199,6 +203,10 @@ const PublicEventPage = () => {
         }
       };
       serveImage();
+
+      return () => {
+        isMounted = false;
+      };
     }, [item.storage_id]);
 
     return (
@@ -209,18 +217,17 @@ const PublicEventPage = () => {
           } ${isSelected ? styles.eventCard.selected : ""}`}
           onPress={() => setSelectedEvent(item)}
         >
-          {/* Title first, above the image */}
           <Text className={styles.eventCard.title} numberOfLines={2}>
             {item.event_title}
           </Text>
 
-          {/* Image container */}
           <View className={styles.eventCard.imageContainer}>
             {imageURL ? (
               <Image
                 source={{ uri: imageURL }}
                 className="w-full h-full"
                 resizeMode="cover"
+                key={item.storage_id}
               />
             ) : (
               <View className="items-center justify-center">
@@ -274,7 +281,7 @@ const PublicEventPage = () => {
         <SignedIn>
           <View className={styles.header.tabContainer}>
             <TouchableOpacity
-              onPress={() => setIsPublic(true)}
+              onPress={togglePublic}
               className={`${styles.header.tab} ${
                 isPublic ? styles.header.activeTab : styles.header.inactiveTab
               }`}
@@ -291,7 +298,7 @@ const PublicEventPage = () => {
             </TouchableOpacity>
 
             <TouchableOpacity
-              onPress={() => setIsPublic(false)}
+              onPress={togglePublic}
               className={`${styles.header.tab} ${
                 !isPublic ? styles.header.activeTab : styles.header.inactiveTab
               }`}
