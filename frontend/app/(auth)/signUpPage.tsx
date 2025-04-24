@@ -1,10 +1,11 @@
-import { Text, View, TextInput, Button, TouchableOpacity } from "react-native";
+import { Text, View, TextInput, Button, TouchableOpacity, SafeAreaView } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import { useTheme } from "@/context/ThemeContext";
 import { useSignUp } from "@clerk/clerk-expo";
 import { createUser } from "../api/api";
 import { registerUserPushToken } from "../api/notificationService";
+import {Ionicons} from "@expo/vector-icons";
 
 const signUpPage = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -20,23 +21,36 @@ const signUpPage = () => {
   const [code, setCode] = useState("");
   const { colorScheme } = useTheme();
 
+  const { isDark } = useTheme();
 
   const [isError, setIsError] = useState(false);
 
-  const applyViewTheme = `${
-    colorScheme === "dark" ? "text-white bg-black" : "text-black bg-white"
-  }`;
-  const applyTheme = `${
-    colorScheme === "dark"
-      ? "text-white bg-black w-full p-3 border border-white rounded-lg"
-      : "text-black bg-white w-full p-3 border border-black rounded-lg"
-  }`;
+  const applyViewTheme = `${colorScheme === "dark" ? "text-white bg-black" : "text-black bg-white"
+    }`;
+  const applyTheme = `${colorScheme === "dark"
+    ? "text-white bg-black w-full p-3 border border-white rounded-lg"
+    : "text-black bg-white w-full p-3 border border-black rounded-lg"
+    }`;
 
-  const inputStyle = `w-full p-3 mb-5 rounded-lg border ${
-    colorScheme === "dark"
-      ? "text-white bg-black border-white"
-      : "text-black bg-white border-black"
-  }`;
+  const inputStyle = `w-full p-3 mb-5 rounded-lg border ${colorScheme === "dark"
+    ? "text-white bg-black border-white"
+    : "text-black bg-white border-black"
+    }`;
+
+  const styles = {
+    container: `flex-1 text-xl ${isDark ? "text-white" : "text-black"}`,
+    header: `"p-4 mb-10 flex-row justify-between items-center border-b" ${isDark ? "text-white" : "text-black"}`,
+    loadingContainer: "flex-1 justify-center items-center",
+    errorText: `text-center p-4 ${isDark ? "text-white" : "text-black"}`,
+    page: `flex-1 ${isDark ? "bg-background-dark" : "bg-background-light"
+      }`,
+    homeLink: `font-bold ${isDark ? "text-foreground-dark" : "text-primary-light"
+      }`,
+    title: `text-xl font-bold ${isDark ? "text-foreground-dark" : "text-primary-light"
+      }`,
+    separator: `border-b-2 my-4 ${isDark ? "border-pinkRed-700" : "border-pinkRed-500"
+      }`
+  };
 
   const onSignUpPress = async () => {
     if (!isLoaded) return;
@@ -102,67 +116,75 @@ const signUpPage = () => {
   }
 
   return (
-    <View className={`flex-1 items-center ${applyViewTheme}`}>
-      <View className="w-[85%] max-w-md">
-        <Text
-          className={`text-2xl font-bold mb-8 text-center  ${applyViewTheme}`}
-        >
-          Create Account
-        </Text>
-        <TextInput
-          className={inputStyle}
-          placeholder="Email"
-          onChangeText={(emailAddress) => setEmail(emailAddress)}
-          value={emailAddress}
-        />
-        <TextInput
-          className={inputStyle}
-          placeholder="Username"
-          onChangeText={(username) => setUsername(username)}
-          value={username}
-        />
-        <TextInput
-          className={inputStyle}
-          secureTextEntry={true}
-          placeholder="Password"
-          onChangeText={(password) => setPassword(password)}
-          value={password}
-        />
-        <TextInput
-          className={inputStyle}
-          secureTextEntry={true}
-          placeholder="Confirm Password"
-          onChangeText={(confirmPassword) =>
-            setConfirmPassword(confirmPassword)
-          }
-          value={confirmPassword}
-        />
-        {/* <TextInput
+    <SafeAreaView className={`${styles.page}`}>
+      <View className={`flex-row justify-between mb-4 px-4 pt-2 ${styles.separator}`}>
+        <Link href="/" className={`${styles.homeLink}`}>
+          <Ionicons
+            name="home-outline"
+            size={24}
+            color={isDark ? "#f65275" : "#1f2937"}
+          />
+        </Link>
+        <Text className={`${styles.title} mb-6`}>Create Account</Text>
+        <View />
+      </View>
+      <View className={`flex-1 items-center`}>
+        <View className="w-[85%] max-w-md">
+          <TextInput
+            className={inputStyle}
+            placeholder="Email"
+            onChangeText={(emailAddress) => setEmail(emailAddress)}
+            value={emailAddress}
+          />
+          <TextInput
+            className={inputStyle}
+            placeholder="Username"
+            onChangeText={(username) => setUsername(username)}
+            value={username}
+          />
+          <TextInput
+            className={inputStyle}
+            secureTextEntry={true}
+            placeholder="Password"
+            onChangeText={(password) => setPassword(password)}
+            value={password}
+          />
+          <TextInput
+            className={inputStyle}
+            secureTextEntry={true}
+            placeholder="Confirm Password"
+            onChangeText={(confirmPassword) =>
+              setConfirmPassword(confirmPassword)
+            }
+            value={confirmPassword}
+          />
+          {/* <TextInput
           className={`text-l mb-5 ${applyTheme}`}
           placeholder="Introduce yourself in a few words!"
           numberOfLines={2}
           onChangeText={(description) => setDescription(description)}
           value={description}
         /> */}
-        <TouchableOpacity
-          className="w-full h-12 bg-blue-500 rounded-lg items-center justify-center mb-6"
-          onPress={onSignUpPress}
-        >
-          <Text>Sign Up</Text>
-        </TouchableOpacity>
-
-        <Text className={`text-l mb-5 ${applyViewTheme}`}>
-          Already have an account?
-          <Link
-            href="/logInPage"
-            className={`m-1 text-blue-500 underline font-bold`}
+          <TouchableOpacity
+            className="w-full h-12 bg-blue-500 rounded-lg items-center justify-center mb-6"
+            onPress={onSignUpPress}
           >
-            Log In
-          </Link>
-        </Text>
-        {isError ? <Text className={`color-red-500`}>Error creating an account, please check your entries</Text> : null}
+            <Text>Sign Up</Text>
+          </TouchableOpacity>
+
+          <Text className={`text-l mb-5 pl-[10%]`}>
+            Already have an account?
+            <Link
+              href="/logInPage"
+              className={`m-1 text-blue-500 underline font-bold`}
+            >
+              Log In
+            </Link>
+          </Text>
+          {isError ? <Text className={`color-red-500`}>Error creating an account, please check your entries</Text> : null}
+        </View>
       </View>
-    </View>
+    </SafeAreaView >
   );
 };
 
