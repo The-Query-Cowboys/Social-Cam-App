@@ -140,7 +140,7 @@ const OngoingEvents = () => {
       isDark ? "bg-background-dark" : "bg-background-light"
     }`,
     header: {
-      container: `flex-row justify-between mb-4 px-4 pt-2 border-b-2 my-4 ${
+      container: `flex-row justify-between mb-4 px-4 pt-2 border-b-2 my-2 ${
         isDark
           ? "border-primary-dark text-white"
           : "border-primary-light text-black"
