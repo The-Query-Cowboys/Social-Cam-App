@@ -4,8 +4,8 @@ import { getUserEvents, getAlbumPictures } from "../api/api";
 import { SafeAreaView, Text, ScrollView, View, FlatList } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
 import AlbumCard from "./albumCard";
-import {Link} from "expo-router";
-import {Ionicons} from "@expo/vector-icons";
+import { Link } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 interface Event {
   event_id: number;
@@ -45,21 +45,21 @@ const AlbumList = () => {
 
   const styles = {
     container: `flex-1 text-xl ${isDark ? "text-white" : "text-black"}`,
-    header: `"p-4 mb-10 flex-row justify-between items-center border-b" ${isDark ? "text-white" : "text-black"}`,
+    header: `"p-4 mb-10 flex-row justify-between items-center border-b" ${
+      isDark ? "text-white" : "text-black"
+    }`,
     loadingContainer: "flex-1 justify-center items-center",
     errorText: `text-center p-4 ${isDark ? "text-white" : "text-black"}`,
-    page: `flex-1 ${
-        isDark ? "bg-background-dark" : "bg-background-light"
-    }`,
+    page: `flex-1 ${isDark ? "bg-background-dark" : "bg-background-light"}`,
     homeLink: `font-bold ${
-        isDark ? "text-foreground-dark" : "text-primary-light"
+      isDark ? "text-foreground-dark" : "text-primary-light"
     }`,
     title: `text-xl font-bold ${
-        isDark ? "text-foreground-dark" : "text-primary-light"
+      isDark ? "text-foreground-dark" : "text-primary-light"
     }`,
     separator: `border-b-2 my-4 ${
-        isDark ? "border-pinkRed-700" : "border-pinkRed-500"
-    }`
+      isDark ? "border-primary-dark" : "border-primary-light"
+    }`,
   };
 
   const transformAlbumData = (
@@ -139,29 +139,29 @@ const AlbumList = () => {
 
   return (
     <SafeAreaView className={`${styles.page}`}>
-      <View className={`flex-row justify-between mb-4 px-4 pt-2 ${styles.separator}`}>
+      <View
+        className={`flex-row justify-between mb-4 px-4 pt-2 ${styles.separator}`}
+      >
         <Link href="/" className={`${styles.homeLink}`}>
           <Ionicons
-              name="home-outline"
-              size={24}
-              color={isDark ? "#f65275" : "#1f2937"}
+            name="home-outline"
+            size={24}
+            color={isDark ? "#f65275" : "#1f2937"}
           />
         </Link>
         <Text className={`${styles.title} mb-6`}>Your Albums</Text>
       </View>
-      {
-        albums.length > 0 ? <FlatList
-            data={albums}
-            keyExtractor={(item) => item.album_id.toString()}
-            renderItem={({ item }) => <AlbumCard album={item} />}
-            contentContainerStyle={{ padding: 16, flexGrow: 1 }}
-            showsVerticalScrollIndicator={false}
-        /> :
-            <Text className={styles.container}>
-              You don't have any albums yet
-            </Text>
-      }
-
+      {albums.length > 0 ? (
+        <FlatList
+          data={albums}
+          keyExtractor={(item) => item.album_id.toString()}
+          renderItem={({ item }) => <AlbumCard album={item} />}
+          contentContainerStyle={{ padding: 16, flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
+        />
+      ) : (
+        <Text className={styles.container}>You don't have any albums yet</Text>
+      )}
     </SafeAreaView>
   );
 };

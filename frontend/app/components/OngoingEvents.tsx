@@ -136,15 +136,24 @@ const OngoingEvents = () => {
   const { isDark } = useTheme();
 
   const styles = {
-    container: `flex-1 ${isDark ? "bg-background-dark" : "bg-background-light"
-      }`,
+    container: `flex-1 ${
+      isDark ? "bg-background-dark" : "bg-background-light"
+    }`,
     header: {
-      container: "p-4 flex-row justify-between items-center border-b",
-      border: isDark ? "border-primary-dark" : "border-gray-300",
-      title: `text-xl font-bold ${isDark ? "text-foreground-dark" : "text-primary-light"
-        }`,
-      homeLink: `py-2 font-bold ${isDark ? "text-foreground-dark" : "text-primary-light"
-        }`,
+      container: `flex-row justify-between mb-4 px-4 pt-2 border-b ${
+        isDark
+          ? "border-primary-dark text-white"
+          : "border-primary-light text-black"
+      }`,
+      border: `border-b-2 my-4 ${
+        isDark ? "border-primary-dark" : "border-primary-light"
+      }`,
+      title: `text-xl font-bold ${
+        isDark ? "text-foreground-dark" : "text-primary-light"
+      }`,
+      homeLink: `py-2 font-bold ${
+        isDark ? "text-foreground-dark" : "text-primary-light"
+      }`,
       tabContainer: "flex-row rounded-lg overflow-hidden",
       tab: `py-2 px-4`,
       activeTab: isDark ? "bg-primary-dark" : "bg-surface-light",
@@ -154,43 +163,52 @@ const OngoingEvents = () => {
         : "text-foreground-light font-bold",
       inactiveTabText: isDark ? "text-gray-300" : "text-gray-600",
     },
-    emptyMessage: `text-center p-4 ${isDark ? "text-text-dark" : "text-text-light"
-      }`,
+    emptyMessage: `text-center p-4 ${
+      isDark ? "text-text-dark" : "text-text-light"
+    }`,
     loadingContainer: "flex-1 justify-center items-center",
     loadingColor: isDark ? "#f65275" : "#1f2937",
     errorText: `text-center text-pinkRed-600 p-4`,
 
     eventCard: {
-      container: `mb-4 rounded-lg overflow-hidden border ${isDark
-        ? "bg-surface-dark border-primary-dark"
-        : "bg-surface-light border-gray-300"
-        }`,
+      container: `mb-4 rounded-lg overflow-hidden border ${
+        isDark
+          ? "bg-surface-dark border-primary-dark"
+          : "bg-surface-light border-gray-300"
+      }`,
       row: "flex-row",
       imageContainer: "w-24 h-24 justify-left items-center bg-gray-200",
       image: "w-full h-full",
       content: "flex-1 p-3 justify-between",
-      title: `font-bold text-lg ${isDark ? "text-foreground-dark" : "text-primary-light"
-        }`,
+      title: `font-bold text-lg ${
+        isDark ? "text-foreground-dark" : "text-primary-light"
+      }`,
       detailsRow: "flex-row items-center mt-1",
       detailText: `text-sm ${isDark ? "text-text-dark" : "text-text-light"}`,
       icon: {
         marginRight: 4,
         color: isDark ? "#f65275" : "#1f2937",
       },
-      badge: `px-2 py-1 rounded-full mt-1 self-start ${isDark ? "bg-neonGreen-700" : "bg-neonGreen-500"
-        }`,
+      badge: `px-2 py-1 rounded-full mt-1 self-start ${
+        isDark ? "bg-neonGreen-700" : "bg-neonGreen-500"
+      }`,
       badgeText: "text-white text-xs font-bold",
-      cameraButton: `mt-2 py-2 px-4 rounded-lg self-start flex-row items-center ${isDark ? "bg-secondary-dark" : "bg-secondary-light"
-        }`,
-      buttonText: `font-medium ${isDark ? "text-background-dark" : "text-foreground-light"
-        }`,
+      cameraButton: `mt-2 py-2 px-4 rounded-lg self-start flex-row items-center ${
+        isDark ? "bg-secondary-dark" : "bg-secondary-light"
+      }`,
+      buttonText: `font-medium ${
+        isDark ? "text-background-dark" : "text-foreground-light"
+      }`,
     },
-    homeLink: `font-bold ${isDark ? "text-foreground-dark" : "text-primary-light"
-      }`,
-    title: `text-xl font-bold ${isDark ? "text-foreground-dark" : "text-primary-light"
-      }`,
-    separator: `border-b-2 my-4 ${isDark ? "border-pinkRed-700" : "border-pinkRed-500"
-      }`
+    homeLink: `font-bold ${
+      isDark ? "text-foreground-dark" : "text-primary-light"
+    }`,
+    title: `text-xl font-bold ${
+      isDark ? "text-foreground-dark" : "text-primary-light"
+    }`,
+    separator: `border-b-2 my-4 ${
+      isDark ? "border-pinkRed-700" : "border-pinkRed-500"
+    }`,
   };
 
   useEffect(() => {
@@ -234,8 +252,8 @@ const OngoingEvents = () => {
 
   return (
     <SafeAreaView className={styles.container}>
-      <View className={`flex-row justify-between mb-4 px-4 pt-2 ${styles.separator}`}>
-        <Link href="/" className={`${styles.homeLink}`}>
+      <View className={styles.header.container}>
+        <Link href="/" className={styles.homeLink}>
           <Ionicons
             name="home-outline"
             size={24}
@@ -243,7 +261,6 @@ const OngoingEvents = () => {
           />
         </Link>
         <Text className={`${styles.title} mb-6`}>Live Events</Text>
-        <View />
       </View>
 
       {error ? (
