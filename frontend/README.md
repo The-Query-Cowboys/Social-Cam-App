@@ -29,6 +29,6 @@
 # 3. Run the app either through `Expo Go` or your browser
 For a better experience we recommend using the `Expo Go` phone app because the project was designed with it in mind
 
-- go to the frontend directory with your desired IDE (such as VScode or Webstorm) and run ` npx expo start --clear` 
+- go to the frontend directory with your IDE and run ` npx expo start --clear` 
 and click on the link to view it through your browser or use your `Expo Go` app to start it
 - *you can run the app either through the guest account or register one of your own
