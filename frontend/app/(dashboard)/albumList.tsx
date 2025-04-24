@@ -139,9 +139,7 @@ const AlbumList = () => {
 
   return (
     <SafeAreaView className={`${styles.page}`}>
-      <View
-        className={`${styles.separator}`}
-      >
+      <View className={`${styles.separator}`}>
         <Link href="/" className={`${styles.homeLink}`}>
           <Ionicons
             name="home-outline"
