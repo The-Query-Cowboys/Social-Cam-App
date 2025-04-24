@@ -148,7 +148,6 @@ const AlbumList = () => {
           />
         </Link>
         <Text className={`${styles.title} mb-6`}>Your Albums</Text>
-        <View/>
       </View>
       {
         albums.length > 0 ? <FlatList
