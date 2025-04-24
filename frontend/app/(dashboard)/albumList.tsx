@@ -45,7 +45,7 @@ const AlbumList = () => {
 
   const styles = {
     container: `flex-1 text-xl ${isDark ? "text-white" : "text-black"}`,
-    header: `"p-4 mb-10 flex-row justify-between items-center border-b" ${
+    header: `"p-4 mb-10 flex-row justify-between items-center border-b-2" ${
       isDark ? "text-white" : "text-black"
     }`,
     loadingContainer: "flex-1 justify-center items-center",
@@ -57,7 +57,7 @@ const AlbumList = () => {
     title: `text-xl font-bold ${
       isDark ? "text-foreground-dark" : "text-primary-light"
     }`,
-    separator: `border-b-2 my-4 ${
+    separator: `flex-row justify-between mb-4 px-4 pt-2 border-b-2 my-4 ${
       isDark ? "border-primary-dark" : "border-primary-light"
     }`,
   };
@@ -140,7 +140,7 @@ const AlbumList = () => {
   return (
     <SafeAreaView className={`${styles.page}`}>
       <View
-        className={`flex-row justify-between mb-4 px-4 pt-2 ${styles.separator}`}
+        className={`${styles.separator}`}
       >
         <Link href="/" className={`${styles.homeLink}`}>
           <Ionicons
