@@ -4,6 +4,8 @@ import { getUserEvents, getAlbumPictures } from "../api/api";
 import { SafeAreaView, Text, ScrollView, View, FlatList } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
 import AlbumCard from "./albumCard";
+import {Link} from "expo-router";
+import {Ionicons} from "@expo/vector-icons";
 
 interface Event {
   event_id: number;
@@ -42,10 +44,22 @@ const AlbumList = () => {
   const { user } = useUser();
 
   const styles = {
-    container: `flex-1 ${isDark ? "bg-gray-900" : "bg-gray-100"}`,
-    header: `text-xl font-bold p-4 ${isDark ? "text-white" : "text-black"}`,
+    container: `flex-1 text-xl ${isDark ? "text-white" : "text-black"}`,
+    header: `"p-4 mb-10 flex-row justify-between items-center border-b" ${isDark ? "text-white" : "text-black"}`,
     loadingContainer: "flex-1 justify-center items-center",
     errorText: `text-center p-4 ${isDark ? "text-white" : "text-black"}`,
+    page: `flex-1 ${
+        isDark ? "bg-background-dark" : "bg-background-light"
+    }`,
+    homeLink: `font-bold ${
+        isDark ? "text-foreground-dark" : "text-primary-light"
+    }`,
+    title: `text-xl font-bold ${
+        isDark ? "text-foreground-dark" : "text-primary-light"
+    }`,
+    separator: `border-b-2 my-4 ${
+        isDark ? "border-pinkRed-700" : "border-pinkRed-500"
+    }`
   };
 
   const transformAlbumData = (
@@ -124,15 +138,31 @@ const AlbumList = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1">
-      <Text>Your Albums</Text>
-      <FlatList
-        data={albums}
-        keyExtractor={(item) => item.album_id.toString()}
-        renderItem={({ item }) => <AlbumCard album={item} />}
-        contentContainerStyle={{ padding: 16, flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}
-      />
+    <SafeAreaView className={`${styles.page}`}>
+      <View className={`flex-row justify-between mb-4 px-4 pt-2 ${styles.separator}`}>
+        <Link href="/" className={`${styles.homeLink}`}>
+          <Ionicons
+              name="home-outline"
+              size={24}
+              color={isDark ? "#f65275" : "#1f2937"}
+          />
+        </Link>
+        <Text className={`${styles.title} mb-6`}>Your Albums</Text>
+        <View/>
+      </View>
+      {
+        albums.length > 0 ? <FlatList
+            data={albums}
+            keyExtractor={(item) => item.album_id.toString()}
+            renderItem={({ item }) => <AlbumCard album={item} />}
+            contentContainerStyle={{ padding: 16, flexGrow: 1 }}
+            showsVerticalScrollIndicator={false}
+        /> :
+            <Text className={styles.container}>
+              You don't have any albums yet
+            </Text>
+      }
+
     </SafeAreaView>
   );
 };
