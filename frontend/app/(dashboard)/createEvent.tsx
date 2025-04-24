@@ -135,6 +135,7 @@ const createEvent = () => {
       let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
       let fTime = tempDate.getHours() + ':' + tempDate.getMinutes();
       setStartText(`Date is ${fDate}\nTime is ${fTime}`);
+
       setFormData(prev => ({
         ...prev,
         event_date: currentDate.toISOString()
@@ -154,6 +155,7 @@ const createEvent = () => {
       let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
       let fTime = tempDate.getHours() + ':' + tempDate.getMinutes();
       setEndText(`Date is ${fDate}\nTime is ${fTime}`);
+
       setFormData(prev => ({
         ...prev,
         event_date_end: currentDate.toISOString()
@@ -337,7 +339,6 @@ const createEvent = () => {
             <Text className={`${applyTheme} text-md mt-5`}>{endText}</Text>
           </View>
         </View>
-
         <View className={`flex-row justify-center items-center ${applyTheme}`}>
           <Text className={`${applyTheme} font-bold text-lg `}>Upload Event Image</Text>
           <TouchableOpacity

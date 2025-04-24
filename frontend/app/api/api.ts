@@ -38,6 +38,15 @@ export const getUserEvents = async (userId: number, status?: number[]) => {
   return response.data;
 };
 
+export const getEventUsers = async (eventId: number, status?: number[]) => {
+  let url = `events/${eventId}/users`;
+  if (status && status.length > 0) {
+    url += `?status=${status.join(",")}`;
+  }
+  const response = await api.get(url);
+  return response.data;
+};
+
 export const createUser = async (
   username: string,
   email: string,
@@ -191,4 +200,14 @@ export const deletePushToken = async (userId: number, token: string) => {
     console.error("Error deleting push token:", error);
     throw error;
   }
+};
+
+export const deleteUserEvent = async (eventId: number, userId: number) => {
+  const response = await api.delete(`events/${eventId}/invite/${userId}`);
+  return response.data;
+};
+
+export const getUserEventStatus = async (eventId: number, userId: number) => {
+  const response = await api.get(`users/${userId}/events/${eventId}/status`);
+  return response.data;
 };

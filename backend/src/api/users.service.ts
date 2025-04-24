@@ -93,6 +93,20 @@ export class UsersService {
     }
   }
 
+  async getUserEventStatus(userId, eventId): Promise<number> {
+    const userEvent = await this.prisma.userEvent.findFirst({
+      where: { user_id: userId, event_id: eventId },
+    });
+
+    if (!userEvent) {
+      throw new NotFoundException(
+        `A User Event with User ID ${userId} and Event ID ${eventId} was not found`,
+      );
+    }
+
+    return userEvent.status_id;
+  }
+
   async createUser(createUserDto): Promise<User | null> {
     const usernameTaken = await this.prisma.user.findFirst({
       where: { username: createUserDto.username },

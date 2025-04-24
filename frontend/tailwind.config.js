@@ -18,7 +18,7 @@ module.exports = {
     extend: {
       colors: {
         background: {
-          //Background
+          //Background bgColor = isDark ? bg-background-dark: bg-background-light
           light: "#cbd3ea",
           dark: "#101820",
         },
@@ -28,7 +28,7 @@ module.exports = {
           dark: "#f65275",
         },
         primary: {
-          light: "#1f2937",
+          light: "#F9679A",
           dark: "#f65275",
         },
         secondary: {
@@ -40,6 +40,7 @@ module.exports = {
           dark: "#ffffff",
         },
         surface: {
+          //card backgrounds
           light: "#eedaea",
           dark: "#151f6d",
         },
@@ -92,10 +93,10 @@ module.exports = {
         },
       },
       spacing: {
-        '80': '20rem',
-        '100': '25rem',
-        '120': '30rem'
-      }
+        80: "20rem",
+        100: "25rem",
+        120: "30rem",
+      },
     },
   },
   plugins: [],
