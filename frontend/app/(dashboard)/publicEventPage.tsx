@@ -143,10 +143,22 @@ const PublicEventPage = () => {
       try {
         if (isPublic) {
           const data = await getEvents();
-          setEvents(data);
+          const upcoming = data.filter((event) => {
+            const eventDate = new Date(event.event_date);
+            const today = new Date();
+
+            return eventDate >= today;
+          });
+          setEvents(upcoming);
         } else if (user) {
           const userEvents = await getUserEvents(user.user_id, [1, 2]);
-          setEvents(userEvents);
+          const upcoming = userEvents.filter((event) => {
+            const eventDate = new Date(event.event_date);
+            const today = new Date();
+
+            return eventDate >= today;
+          });
+          setEvents(upcoming);
         }
       } catch (err) {
         console.error(err);
