@@ -46,7 +46,7 @@ const PublicEventPage = () => {
     // Header section
     header: {
       container: "p-4 flex-row justify-between items-center border-b",
-      border: `border-b-2 my-4 ${
+      border: `border-b-2 ${
         isDark ? "border-primary-dark" : "border-primary-light"
       }`,
 
