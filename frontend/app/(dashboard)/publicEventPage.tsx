@@ -30,7 +30,7 @@ const PublicEventPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [attendingUsers, setAttendingUsers] = useState([]);
   const [invitedUsers, setInvitedUsers] = useState([]);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const { isDark } = useTheme();
 
   // Grouped styles object
@@ -55,7 +55,7 @@ const PublicEventPage = () => {
       }`,
       tabContainer: "flex-row rounded-lg overflow-hidden",
       tab: `py-2 px-4`,
-      activeTab: isDark ? "bg-primary-dark" : "bg-primary-light",
+      activeTab: isDark ? "bg-primary-dark" : "bg-surface-light",
       inactiveTab: isDark ? "bg-gray-700" : "bg-gray-200",
       activeTabText: isDark
         ? "text-background-dark font-bold"

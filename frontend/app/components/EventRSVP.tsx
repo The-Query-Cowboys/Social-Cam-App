@@ -11,24 +11,24 @@ import {
   updateUserEventStatus,
   deleteUserEvent,
   getUserEventStatus,
+  inviteToEvent,
 } from "../api/api";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../../context/ThemeContext";
 
 const EventRSVP = ({ eventId }) => {
-  const [status, setStatus] = useState(1); // Default to "invited" status
+  const [status, setStatus] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const { user } = useUser();
   const { isDark } = useTheme();
+  const [messageText, setMessageText] = useState("");
 
   // Fetch the current user event status when component mounts
   useEffect(() => {
     async function getStatus() {
       try {
-        console.log(user.user_id, eventId, "<-- user id and event id");
         const currStatus = await getUserEventStatus(eventId, user.user_id);
-        console.log(currStatus);
         setStatus(currStatus);
       } catch (error) {
         console.error("Failed to get event status:", error);
@@ -51,6 +51,21 @@ const EventRSVP = ({ eventId }) => {
     return () => clearTimeout(timer);
   }, [showMessage]);
 
+  const handleJoinEvent = async () => {
+    setIsLoading(true);
+    try {
+      await inviteToEvent(eventId, user.user_id);
+      await updateUserEventStatus(eventId, user.user_id, 2);
+      setStatus(2);
+      setMessageText("You've joined this event!");
+      setShowMessage(true);
+    } catch (err) {
+      Alert.alert("Error", "Failed to join event");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleUserStatusChange = async () => {
     // Toggle between invited (1) and attending (2)
     const newStatus = status === 1 ? 2 : 1;
@@ -61,8 +76,13 @@ const EventRSVP = ({ eventId }) => {
       await updateUserEventStatus(eventId, user.user_id, newStatus);
       setStatus(newStatus);
 
-      // Show success message when attending
       if (newStatus === 2) {
+        setMessageText("You're no longer attending this event!");
+        setShowMessage(true);
+      }
+
+      if (newStatus === 2) {
+        setMessaageText("You're now attending this event!");
         setShowMessage(true);
       }
     } catch (error) {
@@ -90,6 +110,7 @@ const EventRSVP = ({ eventId }) => {
             setIsLoading(true);
             try {
               await deleteUserEvent(eventId, user.user_id);
+              setStatus(null);
             } catch (error) {
               Alert.alert("Error", "Failed to remove event");
               console.error(error);
@@ -102,11 +123,11 @@ const EventRSVP = ({ eventId }) => {
     );
   };
 
-  // Define styles based on theme
   const textColor = isDark ? "text-white" : "text-gray-800";
   const bgAttending = isDark ? "bg-neonGreen-700" : "bg-neonGreen-500";
   const bgInvited = isDark ? "bg-deepBlue-700" : "bg-deepBlue-500";
   const bgDelete = isDark ? "bg-pinkRed-700" : "bg-pinkRed-500";
+  const bgJoin = isDark ? "bg-deepBlue-600" : "bg-deepBlue-500";
 
   const messageStyles = {
     container: `absolute top-2 left-0 right-0 p-3 rounded-lg mx-4 z-10 
@@ -115,6 +136,41 @@ const EventRSVP = ({ eventId }) => {
     text: "text-white text-center font-bold",
     icon: { marginRight: 6 },
   };
+
+  if (status === null) {
+    return (
+      <SafeAreaView>
+        {/* Success message */}
+        {showMessage && (
+          <View className={messageStyles.container}>
+            <View className="flex-row items-center justify-center">
+              <Ionicons
+                name="checkmark-circle"
+                size={20}
+                color="white"
+                style={messageStyles.icon}
+              />
+              <Text className={messageStyles.text}>{messageText}</Text>
+            </View>
+          </View>
+        )}
+
+        <View className="p-4">
+          <TouchableOpacity
+            onPress={handleJoinEvent}
+            disabled={isLoading}
+            className={`py-3 px-6 rounded-lg ${bgJoin} ${
+              isLoading ? "opacity-50" : ""
+            }`}
+          >
+            <Text className="text-white text-center font-semibold">
+              {isLoading ? "Joining..." : "Join Event"}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView>
@@ -128,9 +184,7 @@ const EventRSVP = ({ eventId }) => {
               color="white"
               style={messageStyles.icon}
             />
-            <Text className={messageStyles.text}>
-              You're now attending this event!
-            </Text>
+            <Text className={messageStyles.text}>{messageText}</Text>
           </View>
         </View>
       )}
