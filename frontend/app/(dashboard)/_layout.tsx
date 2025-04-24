@@ -8,8 +8,6 @@ import { useEffect, useState } from "react";
 const dashboardLayout = () => {
   const { isDark } = useTheme();
   // not sure if this is necessary, tab styles don't use the same nomenclature as nativewind for strings
-  const tabBarBackground = isDark ? " #101820" : "#eedaea";
-  const tabBarActive = isDark ? "#aadb1e" : "#4ECDC4";
   const [tabColors, setTabColors] = useState({
     background: isDark ? "#101820" : "#eedaea",
     active: isDark ? "#aadb1e" : "#4ECDC4",
@@ -58,6 +56,16 @@ const dashboardLayout = () => {
             title: "Upcoming Events",
             tabBarIcon: ({ color }) => (
               <Ionicons name="calendar-outline" size={24} color={color} />
+            ),
+          }}
+        />
+
+        <Tabs.Screen
+          name="ongoingEvents"
+          options={{
+            title: "Live Events",
+            tabBarIcon: ({ color }) => (
+              <Ionicons name="radio-outline" size={24} color={color} />
             ),
           }}
         />
