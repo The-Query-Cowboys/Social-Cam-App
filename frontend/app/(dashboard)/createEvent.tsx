@@ -39,7 +39,7 @@ const createEvent = () => {
   const opacityStyle = colorScheme === 'dark' ? "text-text-dark bg-secondary-dark" : "text-text-light bg-secondary-light";
   const styles = {
     header: {
-      container: "p-4 flex-row justify-between items-center border-b",
+      container: "p-4 flex-row justify-between items-center border-b-2",
       border: isDark ? "border-primary-dark" : "border-primary-light",
       title: `text-xl font-bold ${isDark ? "text-foreground-dark" : "text-primary-light"
         }`,
