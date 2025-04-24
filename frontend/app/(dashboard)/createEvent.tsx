@@ -6,7 +6,7 @@ import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/dat
 import { useState, useEffect } from 'react';
 import * as MediaLibrary from 'expo-media-library';
 import * as ImagePicker from 'expo-image-picker';
-
+import { Ionicons } from '@expo/vector-icons';
 import { useUser } from '../../context/UserContext';
 
 import { createEvent as postEventApi } from '../api/api'
@@ -29,10 +29,32 @@ interface EventData {
   event_date_end: string;
 }
 
+
+
 const createEvent = () => {
   const router = useRouter();
-  const { colorScheme } = useTheme();
-  const applyTheme = `${colorScheme === 'dark' ? 'text-white bg-black' : 'text-black bg-white'}`;
+  const { colorScheme, isDark } = useTheme();
+  const applyTheme = `${colorScheme === 'dark' ? 'text-white bg-background-dark' : 'text-black bg-background-light'}`;
+  const inputTextStyle = colorScheme === 'dark' ? "text-text-dark border-border-light" : "text-text-light border-border-dark";
+  const opacityStyle = colorScheme === 'dark' ? "text-text-dark bg-secondary-dark" : "text-text-light bg-secondary-light";
+  const styles = {
+    header: {
+      container: "p-4 flex-row justify-between items-center border-b",
+      border: isDark ? "border-primary-dark" : "border-primary-light",
+      title: `text-xl font-bold ${isDark ? "text-foreground-dark" : "text-primary-light"
+        }`,
+      homeLink: `py-2 font-bold ${isDark ? "text-foreground-dark" : "text-primary-light"
+        }`,
+      tabContainer: "flex-row rounded-lg overflow-hidden",
+      tab: `py-2 px-4`,
+      activeTab: isDark ? "bg-primary-dark" : "bg-surface-light",
+      inactiveTab: isDark ? "bg-gray-700" : "bg-gray-200",
+      activeTabText: isDark
+        ? "text-background-dark font-bold"
+        : "text-foreground-light font-bold",
+      inactiveTabText: isDark ? "text-gray-300" : "text-gray-600",
+    },
+  }
 
   const [formData, setFormData] = useState<EventData>({
     event_owner_id: 0,
@@ -48,7 +70,7 @@ const createEvent = () => {
   });
 
   const { user } = useUser();
-  
+
   useEffect(() => {
     if (user?.user_id) {
       setFormData((prev: EventData) => ({
@@ -64,8 +86,8 @@ const createEvent = () => {
   const [showStartTimePicker, setShowStartTimePicker] = useState(false);
   const [showEndDatePicker, setShowEndDatePicker] = useState(false);
   const [showEndTimePicker, setShowEndTimePicker] = useState(false);
-  const [startText, setStartText] = useState('No start date and time selected yet');
-  const [endText, setEndText] = useState('No end date and time selected yet');
+  const [startText, setStartText] = useState('Not selected yet');
+  const [endText, setEndText] = useState('Not selected yet');
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isPosting, setIsPosting] = useState(false)
@@ -95,7 +117,7 @@ const createEvent = () => {
   const createEventApi = async (eventData: EventData) => {
     return axios.post('/api/events', eventData);
   };
-  
+
 
   const handleInputChange = (field: keyof EventData, value: string) => {
     setFormData(prev => ({
@@ -112,7 +134,7 @@ const createEvent = () => {
       let tempDate = new Date(currentDate);
       let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
       let fTime = tempDate.getHours() + ':' + tempDate.getMinutes();
-      setStartText('Selected start date and time is:\n' + fDate + '\n' + fTime);
+      setStartText(`Date is ${fDate}\nTime is ${fTime}`);
       setFormData(prev => ({
         ...prev,
         event_date: currentDate.toISOString()
@@ -131,7 +153,7 @@ const createEvent = () => {
       let tempDate = new Date(currentDate);
       let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
       let fTime = tempDate.getHours() + ':' + tempDate.getMinutes();
-      setEndText('Selected end date and time is:\n' + fDate + '\n' + fTime);
+      setEndText(`Date is ${fDate}\nTime is ${fTime}`);
       setFormData(prev => ({
         ...prev,
         event_date_end: currentDate.toISOString()
@@ -142,16 +164,15 @@ const createEvent = () => {
     setShowEndTimePicker(false);
   };
 
-  const uploadUri = async() => {
-    if (!selectedImage) { 
+  const uploadUri = async () => {
+    if (!selectedImage) {
       alert("Theres a problem, no selectedImage is passed")
-      return 
-     }
-     if (selectedImage){
+      return
+    }
+    if (selectedImage) {
       const result = await uploadImageToAppwrite(selectedImage)
-      console.log(result.$id,"<<<< result.$id")
       return result.$id
-     }
+    }
   }
 
   const handleSubmit = async (selectedImage: string) => {
@@ -166,10 +187,9 @@ const createEvent = () => {
     }
 
     if (formData.event_title && formData.event_location && formData.event_date && formData.event_description && formData.event_date_end && selectedImage) {
-      //add context for getting owner_id , storage_id , album_delay etc....
       const storage_Id = await uploadUri()
       const eventData = {
-        event_owner_id: user.user_id, 
+        event_owner_id: user.user_id,
         event_title: formData.event_title,
         event_description: formData.event_description,
         storage_id: storage_Id,
@@ -180,161 +200,176 @@ const createEvent = () => {
         event_date_end: formData.event_date_end
       }
       const postedEvent = postEventApi(eventData)
-      console.log(postedEvent, "<<< postedevent") 
-      alert(`Event ${eventData.event_title} is created !`)     
-    }else{
+      alert(`Event ${eventData.event_title} is created !`)
+    } else {
       alert("fill in all the forms!")
-      return 
+      return
     }
   };
 
   return (
-    <View className={`flex-1 justify-center items-center ${applyTheme}`}>
-
-      <Text className={`${applyTheme} font-bold text-lg mb-1`}>Event title</Text>
-      <TextInput
-        className='w-full border-2 border-black rounded p-4 rounded my-2'
-        placeholder='Event title'
-        placeholderTextColor="#666"
-        value={formData.event_title}
-        onChangeText={(value) => handleInputChange('event_title', value)}
-      />
-
-      <Text className={`${applyTheme} font-bold text-lg mb-1`}>Event Description</Text>
-      <TextInput
-        className='w-full border-2 border-black rounded p-4 rounded my-2'
-        placeholder='Event description'
-        placeholderTextColor="#666"
-        value={formData.event_description}
-        onChangeText={(value) => handleInputChange('event_description', value)}
-        multiline
-        numberOfLines={4}
-      />
-
-      <Text className={`${applyTheme} font-bold text-lg mb-1`}>Event Location</Text>
-      <TextInput
-        className='w-full border-2 border-black rounded p-4 rounded my-2'
-        placeholder='Event location'
-        placeholderTextColor="#666"
-        value={formData.event_location}
-        onChangeText={(value) => handleInputChange('event_location', value)}
-      />
-
-      <View className={`mb-4 justify-center items-center ${applyTheme}`}>
-        <Text className={`${applyTheme} font-bold text-lg mb-2`}>Event Date and Time</Text>
-
-        <View className={`mb-4 justify-center items-center ${applyTheme}`}>
-          <Text className={`${applyTheme} font-bold text-md mb-1`}>Start Date & Time</Text>
-          <View className="flex-row space-x-2 mb-2">
-            <TouchableOpacity
-              className="bg-blue-500 px-4 py-2 rounded"
-              onPress={() => setShowStartDatePicker(true)}
-            >
-              <Text className="text-white">Select Start Date</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              className="bg-blue-500 px-4 py-2 rounded"
-              onPress={() => setShowStartTimePicker(true)}
-            >
-              <Text className="text-white">Select Start Time</Text>
-            </TouchableOpacity>
-          </View>
-          <Text className={`${applyTheme} text-md mb-2`}>{startText}</Text>
-          {showStartDatePicker && (
-            <DateTimePicker
-              testID="startDatePicker"
-              value={startDate}
-              mode="date"
-              display="default"
-              onChange={handleStartDateTimeChange}
-            />
-          )}
-          {showStartTimePicker && (
-            <DateTimePicker
-              testID="startTimePicker"
-              value={startDate}
-              mode="time"
-              display="default"
-              onChange={handleStartDateTimeChange}
-            />
-          )}
-        </View>
-
-        <View className={`mb-4 justify-center items-center ${applyTheme}`}>
-          <Text className={`${applyTheme} font-bold text-md mb-1`}>End Date & Time</Text>
-          <View className="flex-row space-x-2 mb-2">
-            <TouchableOpacity
-              className="bg-blue-500 px-4 py-2 rounded"
-              onPress={() => setShowEndDatePicker(true)}
-            >
-              <Text className="text-white">Select End Date</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              className="bg-blue-500 px-4 py-2 rounded"
-              onPress={() => setShowEndTimePicker(true)}
-            >
-              <Text className="text-white">Select End Time</Text>
-            </TouchableOpacity>
-          </View>
-          <Text className={`${applyTheme} text-md mb-2`}>{endText}</Text>
-          {showEndDatePicker && (
-            <DateTimePicker
-              testID="endDatePicker"
-              value={endDate}
-              mode="date"
-              display="default"
-              onChange={handleEndDateTimeChange}
-            />
-          )}
-          {showEndTimePicker && (
-            <DateTimePicker
-              testID="endTimePicker"
-              value={endDate}
-              mode="time"
-              display="default"
-              onChange={handleEndDateTimeChange}
-            />
-          )}
-        </View>
+    <SafeAreaView className={`flex-1  ${applyTheme}`}>
+      <View className={`${styles.header.container} ${styles.header.border}`}>
+        <Link href="/" className={styles.header.homeLink}>
+          <Ionicons
+            name="home-outline"
+            size={24}
+            color={isDark ? "#F65275" : "#1F2937"}
+          />
+        </Link>
+        <Text className={styles.header.title}>Create Event</Text>
       </View>
-
-      <View className={`flex-row justify-center items-center ${applyTheme}`}>
-        <Text className={`${applyTheme} font-bold text-lg mb-1`}>Upload Event Image</Text>
-        <TouchableOpacity
-          className="bg-blue-500 px-4 py-2 rounded mb-1"
-          onPress={() => { pickImage("gallery") }}
-        >
-          <Text className="text-white">Select Image</Text>
-        </TouchableOpacity>
-        <Image
-          source={{ uri: selectedImage }}
-          className="w-32 h-32 rounded mt-2"
+      {/**start View form*/}
+      <View className='justify-center items-center my-15 '>
+        <Text className={`${applyTheme} font-bold text-lg `}>Event title</Text>
+        <TextInput
+          className={` ${inputTextStyle} w-[95%] border-2 rounded p-4 rounded mb-1`}
+          placeholder='Event title'
+          placeholderTextColor="#666"
+          value={formData.event_title}
+          onChangeText={(value) => handleInputChange('event_title', value)}
         />
-      </View>
 
-      <View className="flex-row items-center mb-1">
-        <Text className={`${applyTheme} font-bold text-lg mr-2`}>Private Event:</Text>
+        <Text className={`${applyTheme} font-bold text-lg `}>Event Description</Text>
+        <TextInput
+          className={` ${inputTextStyle} w-[95%] border-2 rounded p-4 rounded mb-1`}
+          placeholder='Event description'
+          placeholderTextColor="#666"
+          value={formData.event_description}
+          onChangeText={(value) => handleInputChange('event_description', value)}
+          multiline
+          numberOfLines={4}
+        />
+
+        <Text className={`${applyTheme} font-bold text-lg `}>Event Location</Text>
+        <TextInput
+          className={` ${inputTextStyle} w-[95%] border-2 rounded p-4 rounded mb-1`}
+          placeholder='Event location'
+          placeholderTextColor="#666"
+          value={formData.event_location}
+          onChangeText={(value) => handleInputChange('event_location', value)}
+        />
+
+
+        {/* starting View*/}
+        <Text className={`${applyTheme} font-bold text-lg `}>Event Date and Time</Text>
+        <View className={`w-full flex-row space-x-200 justify-between  items-center ${applyTheme}`}>
+          {/* second layer View start-date*/}
+          <View className={` justify-between items-center ${applyTheme}`}>
+            <Text className={`${applyTheme} font-bold text-md mb-1`}>Start Date & Time</Text>
+            {/* Third layer View TouchOpacity*/}
+            <View className="flex-row space-x-1 mb-2">
+              {/*Add theme button css */}
+              <TouchableOpacity
+                className={`px-4 py-2 rounded h-15 w-15 justify-center ${opacityStyle}`}
+                onPress={() => setShowStartDatePicker(true)}
+              >
+                <Ionicons name="calendar-outline" size={25} color="white" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                className={`px-4 py-2 rounded h-15 w-15 justify-center ${opacityStyle}`}
+                onPress={() => setShowStartTimePicker(true)}
+              >
+                <Ionicons name="time-outline" size={25} color="white" />
+              </TouchableOpacity>
+            </View>
+            {showStartDatePicker && (
+              <DateTimePicker
+                testID="startDatePicker"
+                value={startDate}
+                mode="date"
+                display="default"
+                onChange={handleStartDateTimeChange}
+              />
+            )}
+
+            {showStartTimePicker && (
+              <DateTimePicker
+                testID="startTimePicker"
+                value={startDate}
+                mode="time"
+                display="default"
+                onChange={handleStartDateTimeChange}
+              />
+            )}
+            <Text className={`${applyTheme} text-md mt-5`}>{startText}</Text>
+          </View>
+
+          {/* second layer View end-date*/}
+          <View className={`justify-between items-center ${applyTheme}`}>
+            <Text className={`${applyTheme} font-bold text-md mb-1`}>End Date & Time</Text>
+            {/* Third layer View end-date*/}
+            <View className="flex-row space-x-1 mb-2">
+              {/*Add theme button css */}
+              <TouchableOpacity
+                className={`px-4 py-2 rounded h-15 w-15 justify-center ${opacityStyle}`}
+                onPress={() => setShowEndDatePicker(true)}
+              >
+                <Ionicons name="calendar-outline" size={25} color="white" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                className={`px-4 py-2 rounded h-15 w-15 justify-center ${opacityStyle}`}
+                onPress={() => setShowEndTimePicker(true)}
+              >
+                <Ionicons name="time-outline" size={25} color="white" />
+              </TouchableOpacity>
+            </View>
+
+            {showEndDatePicker && (
+              <DateTimePicker
+                testID="endDatePicker"
+                value={endDate}
+                mode="date"
+                display="default"
+                onChange={handleEndDateTimeChange}
+              />
+            )}
+            {showEndTimePicker && (
+              <DateTimePicker
+                testID="endTimePicker"
+                value={endDate}
+                mode="time"
+                display="default"
+                onChange={handleEndDateTimeChange}
+              />
+            )}
+
+            <Text className={`${applyTheme} text-md mt-5`}>{endText}</Text>
+          </View>
+        </View>
+
+        <View className={`flex-row justify-center items-center ${applyTheme}`}>
+          <Text className={`${applyTheme} font-bold text-lg `}>Upload Event Image</Text>
+          <TouchableOpacity
+            className= {` ${opacityStyle} px-4 py-2 rounded`}
+            onPress={() => { pickImage("gallery") }}
+          >
+            <Text className="text-white">Select Image</Text>
+          </TouchableOpacity>
+          <Image
+            source={{ uri: selectedImage }}
+            className="w-32 h-32 rounded mt-2"
+          />
+        </View>
+
+        <View className="flex-row items-center ">
+          <Text className={`${applyTheme} font-bold text-lg mr-2`}>Private Event:</Text>
+          <TouchableOpacity
+            className={`0 p-2 rounded ${formData.private ? opacityStyle : opacityStyle }`}
+            onPress={() => setFormData(prev => ({ ...prev, private: !prev.private }))}
+          >
+            <Text className="text-white">{formData.private ? 'Yes' : 'No'}</Text>
+          </TouchableOpacity>
+        </View>
+
         <TouchableOpacity
-          className={`p-2 rounded ${formData.private ? 'bg-blue-500' : 'bg-gray-300'}`}
-          onPress={() => setFormData(prev => ({ ...prev, private: !prev.private }))}
+          className={`${opacityStyle} w-4/5 p-2 bg-green-200 border border-gray-300 rounded items-center`}
+          onPress={handleSubmit}
         >
-          <Text className="text-white">{formData.private ? 'Yes' : 'No'}</Text>
+          <Text className='text-black'>{isPosting ? 'Creating...' : 'Create'}</Text>
         </TouchableOpacity>
       </View>
-
-      <TouchableOpacity
-        className=' w-4/5 p-2 bg-green-200 border border-gray-300 rounded items-center'
-        onPress={handleSubmit}
-        // disabled={isPosting}
-      >
-        <Text className='text-black'>{isPosting ? 'Creating...' : 'Create'}</Text>
-      </TouchableOpacity>
-
-      <View className={`flex-row mt-2 mx-10 ${applyTheme}`}>
-        <Link href='/' className='my-1 text-white'>Home</Link>
-        <Link href='/publicEventPage' className='my-1 text-white'>Event Page</Link>
-      </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
