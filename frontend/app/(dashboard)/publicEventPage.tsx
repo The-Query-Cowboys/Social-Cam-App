@@ -46,7 +46,9 @@ const PublicEventPage = () => {
     // Header section
     header: {
       container: "p-4 flex-row justify-between items-center border-b",
-      border: isDark ? "border-primary-dark" : "border-gray-300",
+      border: `border-b-2 my-4 ${
+        isDark ? "border-pinkRed-700" : "border-pinkRed-500"
+      }`,
       title: `text-xl font-bold ${
         isDark ? "text-foreground-dark" : "text-primary-light"
       }`,
